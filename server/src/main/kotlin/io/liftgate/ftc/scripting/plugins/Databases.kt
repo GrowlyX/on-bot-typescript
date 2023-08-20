@@ -8,6 +8,7 @@ import io.ktor.server.routing.*
 import io.liftgate.ftc.scripting.scripting.Script
 import io.liftgate.ftc.scripting.scripting.ScriptService
 import org.jetbrains.exposed.sql.*
+import java.time.LocalDateTime
 
 var scriptService: ScriptService? = null
 
@@ -37,31 +38,64 @@ fun Application.configureDatabases()
     val scriptService = createScriptService()
 
     routing {
+        get("/api/scripts/list") {
+            call.respond(
+                scriptService.readAll()
+            )
+        }
+
         post("/api/scripts/create") {
-            val user = call.receive<Script>()
-            val id = scriptService.create(user)
+            data class CreateScript(
+                val fileName: String
+            )
+
+            val user = call.receive<CreateScript>()
+
+            if (scriptService.read(user.fileName) != null)
+            {
+                throw IllegalArgumentException(
+                    "Script by file name already exists."
+                )
+            }
+
+            val id = scriptService.create(
+                Script(
+                    fileName = user.fileName,
+                    "// Write your code here!",
+                    LocalDateTime.now()
+                )
+            )
+
             call.respond(HttpStatusCode.Created, id)
         }
 
-        get("/api/scripts/get/{id}") {
-            val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException("Invalid ID")
-            val user = scriptService.read(id)
+        get("/api/scripts/{id}") {
+            val id = call.parameters["id"]?.toInt()
+                ?: throw IllegalArgumentException("Invalid ID")
+
+            val script = scriptService.read(id)
                 ?: return@get call.respond(
                     HttpStatusCode.NotFound, "Script $id not found"
                 )
 
-            call.respond(HttpStatusCode.OK, user)
+            call.respond(HttpStatusCode.OK, script)
         }
 
-        put("/api/scripts/update/{id}") {
-            val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException("Invalid ID")
-            val user = call.receive<Script>()
-            scriptService.update(id, user)
+        put("/api/scripts/{id}") {
+            val id = call.parameters["id"]?.toInt()
+                ?: throw IllegalArgumentException("Invalid ID")
+
+            val script = call.receive<Script>()
+            script.lastEdited = LocalDateTime.now()
+
+            scriptService.update(id, script)
             call.respond(HttpStatusCode.OK)
         }
 
-        delete("/api/scripts/delete/{id}") {
-            val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException("Invalid ID")
+        delete("/api/scripts/{id}") {
+            val id = call.parameters["id"]?.toInt()
+                ?: throw IllegalArgumentException("Invalid ID")
+
             scriptService.delete(id)
             call.respond(HttpStatusCode.OK)
         }

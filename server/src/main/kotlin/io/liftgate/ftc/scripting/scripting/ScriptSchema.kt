@@ -17,7 +17,7 @@ import javax.script.ScriptEngineManager
 data class Script(
     val fileName: String,
     val fileContent: String,
-    val lastEdited: @Contextual LocalDateTime
+    var lastEdited: @Contextual LocalDateTime
 )
 {
     inline fun run(
@@ -90,20 +90,29 @@ class ScriptService(database: Database)
         }[Scripts.id]
     }
 
+    private fun Query.mapToScript() = map {
+        Script(
+            it[Scripts.fileName],
+            it[Scripts.fileContent],
+            it[Scripts.lastEdited]
+        )
+    }
+
+    suspend fun readAll() = asyncTransaction {
+        Scripts.selectAll()
+            .mapToScript()
+            .toList()
+    }
+
     suspend fun read(id: Int) = read { Scripts.id eq id }
     suspend fun read(name: String) = read { Scripts.fileName eq name }
 
     suspend fun read(selection: SqlExpressionBuilder.() -> Op<Boolean>): Script?
     {
         return asyncTransaction {
-            Scripts.select(selection)
-                .map {
-                    Script(
-                        it[Scripts.fileName],
-                        it[Scripts.fileContent],
-                        it[Scripts.lastEdited]
-                    )
-                }
+            Scripts
+                .select(selection)
+                .mapToScript()
                 .singleOrNull()
         }
     }
