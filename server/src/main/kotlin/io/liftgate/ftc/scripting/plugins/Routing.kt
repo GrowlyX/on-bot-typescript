@@ -17,16 +17,16 @@ private fun Routing.configureSPA()
     // if we are in development, we don't want to serve SPA
     // with SPA enabled, we can't see 404s from the API with ease
     // as it redirects to the SPA
-
     if (development)
     {
         println("Skipping SPA configuration as a development environment has been detected.")
         return
     }
 
-    // configure KTor to serve React content
+    // configure KTor to serve Svelte content
     singlePageApplication {
-        react("static")
         useResources = true
+        filesPath = "static"
+        defaultPage = "index.js"
     }
 }
