@@ -20,7 +20,7 @@ frontend {
 tasks {
     jar {
         dependsOn("assembleFrontend")
-        from("$buildDir/dist")
+        from("$buildDir/.svelte-kit/output/server")
         into("static")
     }
 }
