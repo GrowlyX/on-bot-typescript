@@ -27,13 +27,13 @@ fun Application.configureDatabases()
     val scriptService = createScriptService()
 
     routing {
-        post("/scripts/create") {
+        post("/api/scripts/create") {
             val user = call.receive<Script>()
             val id = scriptService.create(user)
             call.respond(HttpStatusCode.Created, id)
         }
 
-        get("/scripts/get/{id}") {
+        get("/api/scripts/get/{id}") {
             val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException("Invalid ID")
             val user = scriptService.read(id)
                 ?: return@get call.respond(
@@ -43,14 +43,14 @@ fun Application.configureDatabases()
             call.respond(HttpStatusCode.OK, user)
         }
 
-        put("/scripts/update/{id}") {
+        put("/api/scripts/update/{id}") {
             val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException("Invalid ID")
             val user = call.receive<Script>()
             scriptService.update(id, user)
             call.respond(HttpStatusCode.OK)
         }
 
-        delete("/scripts/delete/{id}") {
+        delete("/api/scripts/delete/{id}") {
             val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException("Invalid ID")
             scriptService.delete(id)
             call.respond(HttpStatusCode.OK)
