@@ -14,11 +14,9 @@ plugins {
     id("org.jetbrains.gradle.plugin.idea-ext") version "1.1.6"
 }
 
-fun getGitCommit() = System.getenv()["GIT_COMMIT"] ?: "local"
-
 allprojects {
     group = "io.liftgate.ftc.scripting"
-    version = "1.0-${getGitCommit()}-SNAPSHOT"
+    version = "1.0-SNAPSHOT"
 
     repositories {
         mavenLocal()
@@ -64,6 +62,10 @@ subprojects {
     }
 
     publishing {
+        repositories {
+            configureLiftgateRepository()
+        }
+
         publications {
             register(
                 name = "mavenJava",
@@ -73,9 +75,33 @@ subprojects {
         }
     }
 
+    tasks["build"]
+        .dependsOn(
+            "publishMavenJavaPublicationToMavenLocal"
+        )
+
     idea {
         module {
             isDownloadSources = true
+        }
+    }
+}
+
+fun RepositoryHandler.configureLiftgateRepository()
+{
+    val contextUrl = runCatching {
+        property("liftgate_artifactory_contextUrl")
+    }.getOrNull() ?: run {
+        println("Skipping Artifactory configuration.")
+        return
+    }
+
+    maven("$contextUrl/opensource") {
+        name = "liftgate"
+
+        credentials {
+            username = property("liftgate_artifactory_user").toString()
+            password = property("liftgate_artifactory_password").toString()
         }
     }
 }

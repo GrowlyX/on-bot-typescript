@@ -13,8 +13,3 @@ dependencies {
     api(project(":frontend"))
     api(project(":backend"))
 }
-
-tasks["build"]
-    .dependsOn(
-        "publishMavenJavaPublicationToMavenLocal"
-    )
