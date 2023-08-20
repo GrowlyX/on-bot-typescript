@@ -10,6 +10,8 @@ class ScriptApplicationRunner
 {
     private var thread: Thread? = null
 
+    fun isRunning() = thread != null && thread!!.isAlive
+
     @JvmOverloads
     fun startApplication(
         address: String = "0.0.0.0",
@@ -29,6 +31,12 @@ class ScriptApplicationRunner
         ) {
             main(address, port)
         }
+
+        Runtime.getRuntime()
+            .addShutdownHook(object : Thread()
+            {
+                override fun run() = destroy()
+            })
     }
 
     fun destroy()

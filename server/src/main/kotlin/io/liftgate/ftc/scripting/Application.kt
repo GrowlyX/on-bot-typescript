@@ -6,8 +6,13 @@ import io.ktor.server.netty.*
 import io.liftgate.ftc.scripting.plugins.configureRouting
 import io.liftgate.ftc.scripting.plugins.configureDatabases
 import io.liftgate.ftc.scripting.plugins.configureSerialization
+import io.liftgate.ftc.scripting.scripting.Script
+
+val scriptApp by lazy(::ScriptApplicationRunner)
 
 var stopRequester: (() -> Unit)? = null
+var scriptUpdateHook: ((Script) -> Unit)? = null
+var scriptAppStartHook: (() -> Unit)? = null
 
 // used for local testing purposes
 fun main() = main("0.0.0.0", 6969)
@@ -30,6 +35,8 @@ fun Application.module()
             (environment as ApplicationEngineEnvironment).stop()
         }
     }
+
+    scriptAppStartHook?.invoke()
 }
 
 val development = System

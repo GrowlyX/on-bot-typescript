@@ -4,26 +4,27 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import io.liftgate.ftc.scripting.ScriptApplicationRunner
 
 /**
- * Creates an OpMode that starts up a web scripting
+ * An OpMode that starts up a web scripting
  * environment on the local network.
  *
  * @author GrowlyX
  * @since 8/20/2023
  */
-abstract class EditorEnabledLinearOpMode : LinearOpMode()
+abstract class StopEditorOpMode : LinearOpMode()
 {
     private val scriptApp by lazy(::ScriptApplicationRunner)
 
     override fun runOpMode()
     {
-        scriptApp.startApplication()
-
-        while (!isStopRequested)
+        if (!scriptApp.isRunning())
         {
-            // sleep while the opmode is running
-            Thread.sleep(100L)
+            throw IllegalStateException(
+                "The script application is not yet running!"
+            )
         }
 
         scriptApp.destroy()
+        telemetry.addLine("Destroyed script application!")
+        telemetry.update()
     }
 }
