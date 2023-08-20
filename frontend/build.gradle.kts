@@ -17,7 +17,6 @@ buildscript {
 
 frontend {
     nodeVersion.set("18.16.0")
-    cleanScript.set("run clean")
     installScript.set("install")
     assembleScript.set("run build")
 }

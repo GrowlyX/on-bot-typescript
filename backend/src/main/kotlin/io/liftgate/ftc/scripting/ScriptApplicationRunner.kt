@@ -35,7 +35,10 @@ class ScriptApplicationRunner
         Runtime.getRuntime()
             .addShutdownHook(object : Thread()
             {
-                override fun run() = destroy()
+                override fun run()
+                {
+                    destroy()
+                }
             })
     }
 

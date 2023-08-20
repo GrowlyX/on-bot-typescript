@@ -14,9 +14,11 @@ plugins {
     id("org.jetbrains.gradle.plugin.idea-ext") version "1.1.6"
 }
 
+fun getGitCommit() = System.getenv()["GIT_COMMIT"] ?: "local"
+
 allprojects {
     group = "io.liftgate.ftc.scripting"
-    version = "1.0-SNAPSHOT"
+    version = "1.0-${getGitCommit()}-SNAPSHOT"
 
     repositories {
         mavenLocal()
