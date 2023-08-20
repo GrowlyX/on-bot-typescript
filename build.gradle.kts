@@ -9,7 +9,6 @@ plugins {
     java
     kotlin("jvm") version "1.9.0"
     kotlin("kapt") version "1.9.0"
-    id("io.ktor.plugin") version "2.3.3"
     id("org.jetbrains.kotlin.plugin.serialization") version "1.9.0"
     id("com.github.johnrengelman.shadow") version "7.1.2"
     id("org.jetbrains.gradle.plugin.idea-ext") version "1.1.6"
@@ -30,7 +29,6 @@ subprojects {
     apply(plugin = "org.jetbrains.kotlin.kapt")
     apply(plugin = "org.jetbrains.kotlin.plugin.serialization")
     apply(plugin = "com.github.johnrengelman.shadow")
-    apply(plugin = "io.ktor.plugin")
     apply(plugin = "org.jetbrains.gradle.plugin.idea-ext")
     apply(plugin = "maven-publish")
 
@@ -50,9 +48,11 @@ subprojects {
     }
 
     tasks.withType<KotlinCompile> {
-        kotlinOptions.javaParameters = true
-        // for compat purposes
-        kotlinOptions.jvmTarget = "1.8"
+        kotlinOptions {
+            // for compat purposes
+            javaParameters = true
+            jvmTarget = "1.8"
+        }
     }
 
     tasks.withType<JavaCompile> {
@@ -70,13 +70,6 @@ subprojects {
             )
         }
     }
-
-    tasks["build"]
-        .dependsOn(
-            "shadowJar",
-            "publishMavenJavaPublicationToMavenLocal"
-        )
-
 
     idea {
         module {

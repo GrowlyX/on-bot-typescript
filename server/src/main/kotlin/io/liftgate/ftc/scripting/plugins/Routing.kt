@@ -27,6 +27,6 @@ private fun Routing.configureSPA()
     singlePageApplication {
         useResources = true
         filesPath = "static"
-        defaultPage = "index.js"
+        defaultPage = "index.html"
     }
 }

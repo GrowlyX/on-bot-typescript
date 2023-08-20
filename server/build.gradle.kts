@@ -1,3 +1,7 @@
+plugins {
+    id("io.ktor.plugin") version "2.3.3"
+}
+
 val ktor_version: String by project
 val kotlin_version: String by project
 val logback_version: String by project
