@@ -8,5 +8,9 @@ node_modules
 !.env.example
 .vercel
 .output
+/.frontend-gradle-plugin
+/.yarn
+/node
+yarn.lock
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
