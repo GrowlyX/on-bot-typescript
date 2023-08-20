@@ -8,6 +8,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.serialization.Contextual
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.javatime.datetime
+import org.reflections.Reflections
+import org.reflections.scanners.Scanners
 import java.time.LocalDateTime
 import javax.script.ScriptEngineManager
 
@@ -19,21 +21,36 @@ data class Script(
 )
 {
     inline fun run(
+        packageImports: List<String>,
         vararg context: Pair<String, Any>,
-        failure: (Throwable) -> Unit
+        failure: (Throwable) -> Unit,
+        debug: (String) -> Unit = ::println
     )
     {
-        ScriptEngineManager()
+        val engine = ScriptEngineManager()
             .getEngineByExtension("kts")
-            .apply {
-                context.forEach { (k, v) -> put(k, v) }
 
-                runCatching {
-                    eval(fileContent)
-                }.onFailure {
-                    failure(it)
-                }
+        with(engine) {
+            var script = ""
+            context.forEach { (k, v) -> put(k, v) }
+
+            packageImports.forEach {
+                Reflections(it)
+                    .getAll(Scanners.SubTypes)
+                    .forEach { import ->
+                        debug("importing $import")
+                        script += "import $import\n"
+                    }
             }
+
+            script += fileContent
+
+            runCatching {
+                eval(script)
+            }.onFailure {
+                failure(it)
+            }
+        }
     }
 }
 

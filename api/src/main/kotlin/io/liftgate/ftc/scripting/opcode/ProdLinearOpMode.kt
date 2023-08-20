@@ -24,6 +24,12 @@ abstract class ProdLinearOpMode : LinearOpMode()
      */
     abstract fun environment(): List<Pair<String, Any>>
 
+    open fun packageImports() = emptyList<String>()
+
+    private fun defaultPackageImports() = listOf(
+        "com.qualcomm.robotcore",
+    )
+
     private fun defaultEnvironmentalVariables() = listOf(
         "telemetry" to telemetry,
         "hardwareMap" to hardwareMap,
@@ -56,10 +62,15 @@ abstract class ProdLinearOpMode : LinearOpMode()
         )
 
         script.run(
+            listOf(
+                *defaultPackageImports().toTypedArray(),
+                *packageImports().toTypedArray()
+            ),
             *defaultEnvironmentalVariables().toTypedArray(),
-            *environment().toTypedArray()
-        ) {
-            throw ScriptRunException(it)
-        }
+            *environment().toTypedArray(),
+            failure = {
+                throw ScriptRunException(it)
+            }
+        )
     }
 }
