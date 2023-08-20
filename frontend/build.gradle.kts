@@ -3,6 +3,7 @@ import kotlin.io.path.Path
 import org.siouan.frontendgradleplugin.infrastructure.gradle.InstallFrontendTask
 
 plugins {
+    // TODO: compat issues with Android?
     id("org.siouan.frontend-jdk11") version "7.0.0"
     java
 }
