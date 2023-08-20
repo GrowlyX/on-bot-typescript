@@ -39,7 +39,7 @@ subprojects {
     }
 
     kotlin {
-        jvmToolchain(jdkVersion = 8)
+        jvmToolchain(jdkVersion = 11)
     }
 
     tasks.withType<ShadowJar> {
@@ -53,7 +53,7 @@ subprojects {
         kotlinOptions {
             // for compat purposes
             javaParameters = true
-            jvmTarget = "1.8"
+            jvmTarget = "11"
         }
     }
 
