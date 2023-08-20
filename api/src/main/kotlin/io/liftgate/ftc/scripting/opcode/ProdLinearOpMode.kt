@@ -2,6 +2,7 @@ package io.liftgate.ftc.scripting.opcode
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import io.liftgate.ftc.scripting.plugins.createScriptService
+import io.liftgate.ftc.scripting.plugins.scriptService
 import kotlinx.coroutines.runBlocking
 
 /**
@@ -10,7 +11,7 @@ import kotlinx.coroutines.runBlocking
  * @author GrowlyX
  * @since 8/20/2023
  */
-abstract class ProdLinearOpCode : LinearOpMode()
+abstract class ProdLinearOpMode : LinearOpMode()
 {
     /**
      * Get the OpMode kts name.
@@ -32,14 +33,17 @@ abstract class ProdLinearOpCode : LinearOpMode()
 
     override fun runOpMode()
     {
+        val existing = scriptService != null
         val dbService = createScriptService()
-        telemetry.addLine("Initialized the H2 script database")
+        telemetry.addLine("Initialized the H2 script database${
+            if (existing) " using existing resources from the script web editor" else ""
+        }")
         telemetry.update()
 
         val script = runBlocking {
             dbService.read(getScriptName())
         } ?: run {
-            telemetry.addLine("[!] No script by name ${getScriptName()} exists in our local database!")
+            telemetry.addLine("No script by name ${getScriptName()} exists in our local database. Stopping!")
             telemetry.update()
             return
         }

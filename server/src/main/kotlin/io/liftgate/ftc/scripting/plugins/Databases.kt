@@ -9,8 +9,15 @@ import io.liftgate.ftc.scripting.scripting.Script
 import io.liftgate.ftc.scripting.scripting.ScriptService
 import org.jetbrains.exposed.sql.*
 
+var scriptService: ScriptService? = null
+
 fun createScriptService(): ScriptService
 {
+    if (scriptService != null)
+    {
+        return scriptService!!
+    }
+
     // a default h2 database
     val url = "jdbc:h2:file:./scripts"
     val database = Database.connect(
@@ -20,6 +27,9 @@ fun createScriptService(): ScriptService
         password = ""
     )
     return ScriptService(database)
+        .apply {
+            scriptService = this
+        }
 }
 
 fun Application.configureDatabases()

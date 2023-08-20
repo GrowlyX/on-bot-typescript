@@ -10,7 +10,7 @@ import io.liftgate.ftc.scripting.ScriptApplicationRunner
  * @author GrowlyX
  * @since 8/20/2023
  */
-abstract class DevLinearOpCode : LinearOpMode()
+abstract class EditorEnabledLinearOpMode : LinearOpMode()
 {
     private val scriptApp by lazy(::ScriptApplicationRunner)
 
