@@ -44,6 +44,7 @@ data class Script(
             }
 
             script += fileContent
+            debug("evaluating")
 
             runCatching {
                 eval(script)

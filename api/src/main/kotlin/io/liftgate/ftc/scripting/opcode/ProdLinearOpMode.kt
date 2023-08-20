@@ -70,6 +70,15 @@ abstract class ProdLinearOpMode : LinearOpMode()
             *environment().toTypedArray(),
             failure = {
                 throw ScriptRunException(it)
+            },
+            debug = {
+                telemetry.addLine(it)
+
+                if (it == "evaluating")
+                {
+                    // update prior to evaluation
+                    telemetry.update()
+                }
             }
         )
     }
