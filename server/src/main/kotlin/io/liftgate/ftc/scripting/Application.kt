@@ -7,9 +7,14 @@ import io.liftgate.ftc.scripting.plugins.configureRouting
 import io.liftgate.ftc.scripting.plugins.configureDatabases
 import io.liftgate.ftc.scripting.plugins.configureSerialization
 
-fun main()
+var stopRequester: (() -> Unit)? = null
+
+// used for local testing purposes
+fun main() = main("0.0.0.0", 6969)
+
+fun main(address: String, port: Int)
 {
-    embeddedServer(Netty, port = 6969, host = "0.0.0.0", module = Application::module)
+    embeddedServer(Netty, port = port, host = address, module = Application::module)
         .start(wait = true)
 }
 
@@ -18,6 +23,13 @@ fun Application.module()
     configureSerialization()
     configureDatabases()
     configureRouting()
+
+    if (environment is ApplicationEngineEnvironment)
+    {
+        stopRequester = {
+            (environment as ApplicationEngineEnvironment).stop()
+        }
+    }
 }
 
 val development = System

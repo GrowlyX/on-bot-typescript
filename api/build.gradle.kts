@@ -5,6 +5,7 @@ dependencies {
     api(kotlin("compiler-embeddable"))
 
     compileOnly(fileTree("ftc-libs"))
+    api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
 
     runtimeOnly(kotlin("scripting-compiler-embeddable"))
 

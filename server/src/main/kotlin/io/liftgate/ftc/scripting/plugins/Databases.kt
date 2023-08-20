@@ -9,7 +9,7 @@ import io.liftgate.ftc.scripting.scripting.Script
 import io.liftgate.ftc.scripting.scripting.ScriptService
 import org.jetbrains.exposed.sql.*
 
-fun Application.configureDatabases()
+fun createScriptService(): ScriptService
 {
     // a default h2 database
     val url = "jdbc:h2:file:./scripts"
@@ -19,13 +19,20 @@ fun Application.configureDatabases()
         driver = "org.h2.Driver",
         password = ""
     )
-    val scriptService = ScriptService(database)
+    return ScriptService(database)
+}
+
+fun Application.configureDatabases()
+{
+    val scriptService = createScriptService()
+
     routing {
         post("/scripts/create") {
             val user = call.receive<Script>()
             val id = scriptService.create(user)
             call.respond(HttpStatusCode.Created, id)
         }
+
         get("/scripts/get/{id}") {
             val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException("Invalid ID")
             val user = scriptService.read(id)
@@ -35,12 +42,14 @@ fun Application.configureDatabases()
 
             call.respond(HttpStatusCode.OK, user)
         }
+
         put("/scripts/update/{id}") {
             val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException("Invalid ID")
             val user = call.receive<Script>()
             scriptService.update(id, user)
             call.respond(HttpStatusCode.OK)
         }
+
         delete("/scripts/delete/{id}") {
             val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException("Invalid ID")
             scriptService.delete(id)

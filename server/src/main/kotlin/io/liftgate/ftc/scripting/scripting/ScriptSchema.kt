@@ -18,8 +18,8 @@ data class Script(
     val lastEdited: @Contextual LocalDateTime
 )
 {
-    fun run(
-        context: Map<String, Any>,
+    inline fun run(
+        vararg context: Pair<String, Any>,
         failure: (Throwable) -> Unit
     )
     {
@@ -72,10 +72,13 @@ class ScriptService(database: Database)
         }[Scripts.id]
     }
 
-    suspend fun read(id: Int): Script?
+    suspend fun read(id: Int) = read { Scripts.id eq id }
+    suspend fun read(name: String) = read { Scripts.fileName eq name }
+
+    suspend fun read(selection: SqlExpressionBuilder.() -> Op<Boolean>): Script?
     {
         return asyncTransaction {
-            Scripts.select { Scripts.id eq id }
+            Scripts.select(selection)
                 .map {
                     Script(
                         it[Scripts.fileName],
