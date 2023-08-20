@@ -1,2 +1,3 @@
 install:
+  - chmod 777 gradlew
   - ./gradlew api:build
