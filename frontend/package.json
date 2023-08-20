@@ -1,11 +1,12 @@
 {
 	"name": "ftcscript-frontend",
 	"version": "0.0.1",
+	"packageManager": "yarn@3.6.1",
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build",
 		"preview": "vite preview",
-		"clean": "rm -rf .svelte-kit",
+		"clean": "rd /s /q .svelte-kit",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
 	},
