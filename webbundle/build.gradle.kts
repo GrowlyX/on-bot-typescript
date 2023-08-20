@@ -4,7 +4,7 @@ plugins {
 
 dependencies {
     implementation(project(":frontend"))
-    implementation(project(":server"))
+    implementation(project(":backend"))
 }
 
 application {

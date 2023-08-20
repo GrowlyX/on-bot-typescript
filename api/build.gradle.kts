@@ -11,7 +11,7 @@ dependencies {
     runtimeOnly(kotlin("scripting-compiler-embeddable"))
 
     api(project(":frontend"))
-    api(project(":server"))
+    api(project(":backend"))
 }
 
 tasks["build"]

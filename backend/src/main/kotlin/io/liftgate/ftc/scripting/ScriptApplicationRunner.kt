@@ -42,5 +42,8 @@ class ScriptApplicationRunner
     fun destroy()
     {
         stopRequester?.invoke() ?: thread?.interrupt()
+            ?.apply {
+                thread = null
+            }
     }
 }
