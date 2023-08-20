@@ -1,3 +1,5 @@
+apply(from = "../build.ftc.dependencies.gradle")
+
 dependencies {
     api(kotlin("stdlib"))
     api(kotlin("reflect"))
@@ -6,6 +8,6 @@ dependencies {
 
     runtimeOnly(kotlin("scripting-compiler-embeddable"))
 
-//    api(project(":frontend"))
+    api(project(":frontend"))
     api(project(":server"))
 }

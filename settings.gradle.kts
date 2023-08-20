@@ -10,4 +10,4 @@ plugins {
 }
 
 rootProject.name = "ftcscript"
-include("server", "api")
+include("server", "api", "frontend")

@@ -1,0 +1,16 @@
+repositories {
+    mavenCentral()
+    google() // Needed for androidx
+}
+
+dependencies {
+    /*def ftcVersion = "8.2.0"
+    compileOnly "org.firstinspires.ftc:Inspection:$ftcVersion"
+    compileOnly "org.firstinspires.ftc:Blocks:$ftcVersion"
+    compileOnly "org.firstinspires.ftc:Tfod:$ftcVersion"
+    compileOnly "org.firstinspires.ftc:RobotCore:$ftcVersion"
+    compileOnly "org.firstinspires.ftc:RobotServer:$ftcVersion"
+    compileOnly "org.firstinspires.ftc:OnBotJava:$ftcVersion"
+    compileOnly "org.firstinspires.ftc:Hardware:$ftcVersion"
+    compileOnly "org.firstinspires.ftc:FtcCommon:$ftcVersion"*/
+}
