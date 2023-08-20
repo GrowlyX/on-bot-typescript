@@ -28,6 +28,7 @@ abstract class ProdLinearOpMode : LinearOpMode()
 
     private fun defaultPackageImports() = listOf(
         "com.qualcomm.robotcore",
+        "org.firstinspires.ftc.robotcore"
     )
 
     private fun defaultEnvironmentalVariables() = listOf(
