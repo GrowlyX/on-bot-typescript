@@ -76,6 +76,8 @@ abstract class ProdLinearOpMode : LinearOpMode(), KotlinScript
             throwable
         )
 
+        waitForStart()
+
         internal.localRunnerThread = thread {
             script.run(
                 listOf(
