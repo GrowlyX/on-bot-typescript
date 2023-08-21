@@ -1,6 +1,10 @@
 package io.liftgate.ftc.scripting.opcode
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
+import com.qualcomm.robotcore.hardware.DcMotorEx
+import com.qualcomm.robotcore.hardware.HardwareDevice
+import com.qualcomm.robotcore.hardware.HardwareMap
+import io.liftgate.ftc.scripting.KotlinScript
 import io.liftgate.ftc.scripting.plugins.createScriptService
 import io.liftgate.ftc.scripting.plugins.scriptService
 import kotlinx.coroutines.runBlocking
@@ -12,22 +16,13 @@ import kotlin.concurrent.thread
  * @author GrowlyX
  * @since 8/20/2023
  */
-abstract class ProdLinearOpMode : LinearOpMode()
+
+// public abstract class ProdLinearOpMode extends LinearOpMode implements KotlinScript
+abstract class ProdLinearOpMode : LinearOpMode(), KotlinScript
 {
     private val logger by lazy {
         TelemetryPersistentLogger(telemetry)
     }
-
-    /**
-     * Get the OpMode kts name.
-     */
-    abstract fun getScriptName(): String
-
-    /**
-     * Provide implicit local variables
-     * or the script [getScriptName].
-     */
-    abstract fun environment(): List<Pair<String, Any>>
 
     open fun packageImports() = emptyList<String>()
 
@@ -40,13 +35,14 @@ abstract class ProdLinearOpMode : LinearOpMode()
         "telemetry" to telemetry,
         "hardwareMap" to hardwareMap,
         "gamepad1" to gamepad1,
-        "gamepad2" to gamepad2
+        "gamepad2" to gamepad2,
+        "isStopRequested" to isStopRequested
     )
 
     protected class Internal
     {
         var localRunnerThread: Thread? = null
-        var joinLocalRunner: Boolean = true
+        var joinLocalRunner = true
     }
 
     protected val internal = Internal()
@@ -55,9 +51,11 @@ abstract class ProdLinearOpMode : LinearOpMode()
     {
         val existing = scriptService != null
         val dbService = createScriptService()
-        logger.log("Initialized the H2 script database${
-            if (existing) " using existing resources from the script web editor" else ""
-        }")
+        logger.log(
+            "Initialized the H2 script database${
+                if (existing) " using existing resources from the script web editor" else ""
+            }"
+        )
 
         val script = runBlocking {
             dbService.read(getScriptName())
@@ -82,7 +80,9 @@ abstract class ProdLinearOpMode : LinearOpMode()
                     *packageImports().toTypedArray()
                 ),
                 *defaultEnvironmentalVariables().toTypedArray(),
-                *environment().toTypedArray(),
+                *impliedVariables
+                    .map { it.name to it.instance }
+                    .toTypedArray(),
                 failure = {
                     if (internal.joinLocalRunner)
                     {

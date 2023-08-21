@@ -1,5 +1,4 @@
 dependencies {
-    api(kotlin("stdlib"))
     api(kotlin("reflect"))
     api(kotlin("script-runtime"))
     api(kotlin("compiler-embeddable"))
