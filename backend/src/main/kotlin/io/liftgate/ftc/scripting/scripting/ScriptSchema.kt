@@ -11,6 +11,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import org.reflections.Reflections
 import org.reflections.scanners.Scanners
 import java.time.LocalDateTime
+import java.util.concurrent.CompletableFuture
 import java.util.concurrent.ConcurrentHashMap
 import javax.script.Bindings
 import javax.script.ScriptContext
@@ -19,29 +20,47 @@ import javax.script.ScriptEngineManager
 
 object ScriptEngineService
 {
-    var lock = Any()
+    private var lock = Any()
     var ktsEngine: ScriptEngine? = null
+
+    fun initializeEngine(): CompletableFuture<Void>
+    {
+        // this is wonky, but it's thread-safe & nonblocking
+        return CompletableFuture
+            .runAsync {
+                synchronized(lock) {
+                    if (ktsEngine != null)
+                    {
+                        return@runAsync
+                    }
+
+                    ktsEngine = ScriptEngineManager()
+                        .getEngineByExtension("kts")
+
+                    // Seems to take around 5 seconds? should definitely
+                    ktsEngine!!.eval("println(\"test\")")
+                }
+            }
+    }
 
     inline fun useEngine(
         block: (ScriptEngine, Bindings) -> Unit
     )
     {
-        synchronized(lock) {
-            if (ktsEngine == null)
-            {
-                ktsEngine = ScriptEngineManager()
-                    .getEngineByExtension("kts")
-            }
-
-            val bindings = ktsEngine!!
-                .createBindings()
-
-            ktsEngine!!.setBindings(
-                bindings,
-                ScriptContext.ENGINE_SCOPE
-            )
-            block(ktsEngine!!, bindings)
+        if (ktsEngine == null)
+        {
+            ktsEngine = ScriptEngineManager()
+                .getEngineByExtension("kts")
         }
+
+        val bindings = ktsEngine!!
+            .createBindings()
+
+        ktsEngine!!.setBindings(
+            bindings,
+            ScriptContext.ENGINE_SCOPE
+        )
+        block(ktsEngine!!, bindings)
     }
 }
 

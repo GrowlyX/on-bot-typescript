@@ -1,26 +1,34 @@
 package io.liftgate.ftc.scripting.test
 
-import javax.script.ScriptEngineManager
-import kotlin.system.measureTimeMillis
+import org.jetbrains.kotlin.utils.addToStdlib.measureTimeMillisWithResult
+import org.junit.Test
+import org.reflections.Reflections
+import org.reflections.scanners.MethodAnnotationsScanner
+import org.reflections.scanners.Scanners
+import org.reflections.scanners.SubTypesScanner
+import org.reflections.util.ConfigurationBuilder
 
 /**
  * @author GrowlyX
  * @since 8/21/2023
  */
-fun main()
+class Jsr223Test
 {
-    val engine = ScriptEngineManager()
-        .getEngineByExtension("kts")
-
-    val script = """
-        println(listOf("hi")) 
-    """.trimIndent()
-
-    println(measureTimeMillis {
-        engine.eval(script)
-    })
-
-    println(measureTimeMillis {
-        engine.eval(script)
-    })
+    @Test
+    fun test()
+    {
+        println(measureTimeMillisWithResult {
+            Reflections(
+                ConfigurationBuilder()
+                    .forPackage(
+                        "com.qualcomm.robotcore"
+                    )
+                    .addScanners(
+                        Scanners.SubTypes
+                    )
+            ).getAll(
+                Scanners.SubTypes
+            )
+        }.second)
+    }
 }

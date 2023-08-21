@@ -5,6 +5,7 @@ import io.liftgate.ftc.scripting.KotlinScript
 import io.liftgate.ftc.scripting.logger.PersistentTelemetryLog
 import io.liftgate.ftc.scripting.plugins.createScriptService
 import io.liftgate.ftc.scripting.plugins.scriptService
+import io.liftgate.ftc.scripting.scripting.ScriptEngineService
 import kotlinx.coroutines.runBlocking
 import kotlin.concurrent.thread
 
@@ -14,12 +15,16 @@ import kotlin.concurrent.thread
  * @author GrowlyX
  * @since 8/20/2023
  */
-
-// public abstract class ProdLinearOpMode extends LinearOpMode implements KotlinScript
 abstract class ProdLinearOpMode : LinearOpMode(), KotlinScript
 {
     private val logger by lazy {
         PersistentTelemetryLog(telemetry)
+    }
+
+    init
+    {
+        // pre-initialize the ScriptEngine which may take up to 10 seconds to configure itself
+        ScriptEngineService.initializeEngine()
     }
 
     open fun packageImports() = emptyList<String>()

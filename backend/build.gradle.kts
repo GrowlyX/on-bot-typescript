@@ -10,7 +10,7 @@ val exposed_version: String by project
 val h2_version: String by project
 
 dependencies {
-    implementation("org.reflections:reflections:0.10.2")
+    compileOnly("org.reflections:reflections:0.10.2")
     implementation("io.ktor:ktor-server-core-jvm")
     implementation("io.ktor:ktor-server-host-common-jvm")
     implementation("io.ktor:ktor-server-content-negotiation-jvm")
