@@ -1,10 +1,8 @@
-package io.liftgate.ftc.scripting.opcode
+package io.liftgate.ftc.scripting.opmode
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
-import com.qualcomm.robotcore.hardware.DcMotorEx
-import com.qualcomm.robotcore.hardware.HardwareDevice
-import com.qualcomm.robotcore.hardware.HardwareMap
 import io.liftgate.ftc.scripting.KotlinScript
+import io.liftgate.ftc.scripting.logger.PersistentTelemetryLog
 import io.liftgate.ftc.scripting.plugins.createScriptService
 import io.liftgate.ftc.scripting.plugins.scriptService
 import kotlinx.coroutines.runBlocking
@@ -21,7 +19,7 @@ import kotlin.concurrent.thread
 abstract class ProdLinearOpMode : LinearOpMode(), KotlinScript
 {
     private val logger by lazy {
-        TelemetryPersistentLogger(telemetry)
+        PersistentTelemetryLog(telemetry)
     }
 
     open fun packageImports() = emptyList<String>()
@@ -92,8 +90,7 @@ abstract class ProdLinearOpMode : LinearOpMode(), KotlinScript
                     // TODO: what do we do now?
                     logger.log("Exception occurred!")
                     logger.log(it.stackTraceToString())
-                },
-                debug = logger::log
+                }
             )
         }
 

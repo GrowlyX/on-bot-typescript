@@ -1,5 +1,6 @@
-package io.liftgate.ftc.scripting.opcode
+package io.liftgate.ftc.scripting.opmode
 
+import io.liftgate.ftc.scripting.logger.PersistentTelemetryLog
 import io.liftgate.ftc.scripting.scriptApp
 import io.liftgate.ftc.scripting.scriptUpdateHook
 
@@ -10,7 +11,7 @@ import io.liftgate.ftc.scripting.scriptUpdateHook
 abstract class ProdWithStartEditorLinearOpMode : ProdLinearOpMode()
 {
     private val logger by lazy {
-        TelemetryPersistentLogger(telemetry)
+        PersistentTelemetryLog(telemetry)
     }
 
     override fun runOpMode()

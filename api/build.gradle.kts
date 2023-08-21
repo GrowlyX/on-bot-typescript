@@ -1,6 +1,8 @@
 dependencies {
     api(kotlin("reflect"))
     api(kotlin("script-runtime"))
+
+    runtimeOnly(kotlin("scripting-jsr223"))
     api(kotlin("compiler-embeddable"))
 
     compileOnly(fileTree("ftc-libs"))

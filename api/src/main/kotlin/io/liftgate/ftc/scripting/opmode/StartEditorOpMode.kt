@@ -1,4 +1,4 @@
-package io.liftgate.ftc.scripting.opcode
+package io.liftgate.ftc.scripting.opmode
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import io.liftgate.ftc.scripting.ScriptApplicationRunner

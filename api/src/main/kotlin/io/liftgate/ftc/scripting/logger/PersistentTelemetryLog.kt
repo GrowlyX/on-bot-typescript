@@ -1,4 +1,4 @@
-package io.liftgate.ftc.scripting.opcode
+package io.liftgate.ftc.scripting.logger
 
 import org.firstinspires.ftc.robotcore.external.Telemetry
 import kotlin.concurrent.thread
@@ -7,7 +7,7 @@ import kotlin.concurrent.thread
  * @author GrowlyX
  * @since 8/20/2023
  */
-class TelemetryPersistentLogger(
+class PersistentTelemetryLog(
     private val telemetry: Telemetry
 )
 {

@@ -1,17 +1,51 @@
 package io.liftgate.ftc.scripting.scripting
 
-import org.jetbrains.exposed.sql.transactions.transaction
-import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import kotlinx.serialization.Serializable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.serialization.Contextual
+import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.javatime.datetime
+import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
+import org.jetbrains.exposed.sql.transactions.transaction
 import org.reflections.Reflections
 import org.reflections.scanners.Scanners
 import java.time.LocalDateTime
+import java.util.concurrent.ConcurrentHashMap
+import javax.script.Bindings
+import javax.script.ScriptContext
+import javax.script.ScriptEngine
 import javax.script.ScriptEngineManager
+
+object ScriptEngineService
+{
+    var lock = Any()
+    var ktsEngine: ScriptEngine? = null
+
+    inline fun useEngine(
+        block: (ScriptEngine, Bindings) -> Unit
+    )
+    {
+        synchronized(lock) {
+            if (ktsEngine == null)
+            {
+                ktsEngine = ScriptEngineManager()
+                    .getEngineByExtension("kts")
+            }
+
+            val bindings = ktsEngine!!
+                .createBindings()
+
+            ktsEngine!!.setBindings(
+                bindings,
+                ScriptContext.ENGINE_SCOPE
+            )
+            block(ktsEngine!!, bindings)
+        }
+    }
+}
+
+val reflectionsMappings = ConcurrentHashMap<String, Reflections>()
 
 @Serializable
 data class Script(
@@ -20,37 +54,29 @@ data class Script(
     var lastEdited: @Contextual LocalDateTime
 )
 {
-    inline fun run(
+    fun run(
         packageImports: List<String>,
         vararg context: Pair<String, Any>,
-        failure: (Throwable) -> Unit,
-        debug: (String) -> Unit = ::println
+        failure: (Throwable) -> Unit
     )
     {
-        val engine = ScriptEngineManager()
-            .getEngineByExtension("kts")
-
-        with(engine) {
+        ScriptEngineService.useEngine { engine, bindings ->
             var script = ""
-            context.forEach { (k, v) -> put(k, v) }
+            bindings.putAll(context)
 
             packageImports.forEach {
-                Reflections(it)
+                script += reflectionsMappings
+                    .computeIfAbsent(it, ::Reflections)
                     .getAll(Scanners.SubTypes)
-                    .forEach { import ->
-                        debug("importing $import")
-                        script += "import $import\n"
+                    .joinToString("\n") { type ->
+                        "import $type"
                     }
             }
 
             script += fileContent
-            debug("evaluating")
 
-            runCatching {
-                eval(script)
-            }.onFailure {
-                failure(it)
-            }
+            runCatching { engine.eval(script) }
+                .onFailure(failure::invoke)
         }
     }
 }
