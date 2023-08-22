@@ -38,10 +38,6 @@ fun Application.configureDatabases()
     val scriptService = createScriptService()
 
     routing {
-        get("/api/ping") {
-            call.respond("worked")
-        }
-
         get("/api/scripts/list") {
             call.respond(
                 scriptService.readAll()

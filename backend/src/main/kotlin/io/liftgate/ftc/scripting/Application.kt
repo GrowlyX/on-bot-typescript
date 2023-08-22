@@ -5,7 +5,6 @@ import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import io.liftgate.ftc.scripting.plugins.configureRouting
 import io.liftgate.ftc.scripting.plugins.configureDatabases
-import io.liftgate.ftc.scripting.plugins.configureSerialization
 import io.liftgate.ftc.scripting.scripting.Script
 
 val scriptApp by lazy(::ScriptApplicationRunner)
@@ -25,7 +24,6 @@ fun main(address: String, port: Int)
 
 fun Application.module()
 {
-    configureSerialization()
     configureDatabases()
     configureRouting()
 
