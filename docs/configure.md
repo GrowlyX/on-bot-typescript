@@ -94,7 +94,7 @@ public class ProdScriptedTeleOp extends ProdLinearOpMode {
 ```
 
 To explicitly start/stop the web editor, you must create your own implementations of `StartEditorOpMode` and `StopEditorOpMode`.
-> [!INFO]
+> [!WARNING]
 > It is good practice to stop your web editor (or not start it in the first place) before competitions or actual trial runs. 
 
 ```java
