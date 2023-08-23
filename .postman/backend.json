@@ -18,7 +18,7 @@
 			"response": [
 				{
 					"id": "a617b5d5-2079-42d5-9f28-935ecbe8a151",
-					"name": "Example Status",
+					"name": "Example with all settings disabled",
 					"originalRequest": {
 						"method": "GET",
 						"header": [],
