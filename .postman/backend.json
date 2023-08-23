@@ -18,7 +18,7 @@
 			"response": []
 		},
 		{
-			"name": "New Request",
+			"name": "List All Scripts",
 			"id": "b6762dd0-f267-4a28-aa4a-8ae94a84d92d",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
