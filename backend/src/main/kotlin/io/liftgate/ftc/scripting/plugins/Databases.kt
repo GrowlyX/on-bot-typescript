@@ -58,15 +58,20 @@ fun Application.configureDatabases()
                 )
             }
 
+            val creationDate = LocalDateTime.now()
+
             val id = scriptService.create(
                 Script(
                     fileName = user.fileName,
                     "// Write your code here!",
-                    LocalDateTime.now()
+                    creationDate
                 )
             )
 
-            call.respond(HttpStatusCode.Created, id)
+            call.respond(HttpStatusCode.Created, mapOf(
+                "id" to id,
+                "creationDate" to creationDate
+            ))
         }
 
         get("/api/scripts/{id}") {
@@ -78,7 +83,7 @@ fun Application.configureDatabases()
                     HttpStatusCode.NotFound, "Script $id not found"
                 )
 
-            call.respond(HttpStatusCode.OK, script)
+            call.respond(script)
         }
 
         put("/api/scripts/{id}") {
@@ -89,7 +94,9 @@ fun Application.configureDatabases()
             script.lastEdited = LocalDateTime.now()
 
             scriptService.update(id, script)
-            call.respond(HttpStatusCode.OK)
+            call.respond(mapOf(
+                "lastEdited" to script.lastEdited
+            ))
         }
 
         delete("/api/scripts/{id}") {
