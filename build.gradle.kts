@@ -16,7 +16,7 @@ plugins {
 
 allprojects {
     group = "io.liftgate.ftc.scripting"
-    version = "1.0.1-SNAPSHOT"
+    version = "1.0.2-SNAPSHOT"
 
     repositories {
         mavenLocal()

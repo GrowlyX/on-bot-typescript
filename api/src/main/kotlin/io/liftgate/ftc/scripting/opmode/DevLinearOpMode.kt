@@ -8,7 +8,7 @@ import io.liftgate.ftc.scripting.scriptUpdateHook
  * @author GrowlyX
  * @since 8/20/2023
  */
-abstract class ProdWithStartEditorLinearOpMode : ProdLinearOpMode()
+abstract class DevLinearOpMode : ProdLinearOpMode()
 {
     private val logger by lazy {
         PersistentTelemetryLog(telemetry)

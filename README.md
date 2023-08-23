@@ -10,6 +10,7 @@ Rapidly edit, test, and run OpModes through the use of Kotlin scripts.
 - [Setting up FTCScript locally](https://github.com/GrowlyX/ftc-scripting/blob/master/docs/configure.md)
 
 ## Getting started:
+Current Version: `1.0.2-SNAPSHOT`
 ### Maven:
 ```xml
 <repositories>
