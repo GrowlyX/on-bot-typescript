@@ -153,7 +153,7 @@
 			]
 		},
 		{
-			"name": "New Request",
+			"name": "Find Script by ID",
 			"id": "9aaa447f-4790-4f85-9d82-28a9cc822423",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
