@@ -1,11 +1,14 @@
 package io.liftgate.ftc.scripting
 
+import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
+import io.ktor.server.plugins.contentnegotiation.*
 import io.liftgate.ftc.scripting.plugins.configureRouting
 import io.liftgate.ftc.scripting.plugins.configureDatabases
 import io.liftgate.ftc.scripting.scripting.Script
+import kotlinx.serialization.json.Json
 
 val scriptApp by lazy(::ScriptApplicationRunner)
 
@@ -25,6 +28,13 @@ fun Application.module()
 {
     configureDatabases()
     configureRouting()
+
+    install(ContentNegotiation) {
+        json(Json {
+            prettyPrint = true
+            isLenient = true
+        })
+    }
 
     if (environment is ApplicationEngineEnvironment)
     {
