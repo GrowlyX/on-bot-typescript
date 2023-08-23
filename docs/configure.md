@@ -115,3 +115,29 @@ public class StartWebEditor extends StopEditorOpMode {
     
 }
 ```
+
+## Script Layout
+Scripts should be laid out in the following structure:
+```
+dev |
+    | DevTeleOp.kts
+    | DevAutonomous.kts
+
+prod |
+     | ProdTeleOp.kts
+     | ProdAutonomous.kts
+
+Shared.kts
+```
+
+### Shared Script
+The shared script is applied to every other script in the database. For example:
+```kotlin
+// Shared script:
+import java.lang.System
+
+// DevTeleOp.kts
+System.gc() // You're able to use the System class as it was automatically-imported by the Shared script.
+```
+
+The Shared script must be in the root directory on your web editor, and must be named `Shared.kts`.
