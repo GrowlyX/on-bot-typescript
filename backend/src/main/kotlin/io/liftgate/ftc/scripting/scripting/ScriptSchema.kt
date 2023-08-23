@@ -5,12 +5,14 @@ import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import org.jetbrains.exposed.sql.javatime.datetime
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.reflections.Reflections
 import org.reflections.scanners.Scanners
-import java.time.LocalDateTime
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.toKotlinLocalDateTime
+import org.jetbrains.exposed.sql.kotlin.datetime.CurrentDateTime
+import org.jetbrains.exposed.sql.kotlin.datetime.datetime
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.ConcurrentHashMap
 import javax.script.Bindings
@@ -76,7 +78,8 @@ val reflectionsMappings = ConcurrentHashMap<String, Reflections>()
 data class Script(
     val fileName: String,
     val fileContent: String,
-    var lastEdited: @Contextual LocalDateTime
+    var lastEdited: @Contextual LocalDateTime =
+        java.time.LocalDateTime.now().toKotlinLocalDateTime()
 )
 {
     inline fun run(
@@ -117,10 +120,8 @@ class ScriptService(database: Database)
         val fileName = varchar("name", length = 25)
         val fileContent = text("fileContent", eagerLoading = true)
 
-        val lastEdited = datetime("last_edited")
-            .clientDefault {
-                LocalDateTime.now()
-            }
+        val lastEdited = datetime("date_created")
+            .defaultExpression(CurrentDateTime)
 
         override val primaryKey = PrimaryKey(id)
     }

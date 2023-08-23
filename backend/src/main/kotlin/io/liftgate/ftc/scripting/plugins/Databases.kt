@@ -7,6 +7,10 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.liftgate.ftc.scripting.scripting.Script
 import io.liftgate.ftc.scripting.scripting.ScriptService
+import kotlinx.datetime.toKotlinLocalDateTime
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import org.jetbrains.exposed.sql.*
 import java.time.LocalDateTime
 
@@ -45,9 +49,8 @@ fun Application.configureDatabases()
         }
 
         post("/api/scripts/create") {
-            data class CreateScript(
-                val fileName: String
-            )
+            @Serializable
+            data class CreateScript(val fileName: String)
 
             val scriptCreation = call.receive<CreateScript>()
 
@@ -65,40 +68,51 @@ fun Application.configureDatabases()
                 )
             }
 
-            val creationDate = LocalDateTime.now()
-
-            val id = scriptService.create(
-                Script(
-                    fileName = scriptCreation.fileName,
-                    "// Write your code here!",
-                    creationDate
-                )
+            val script = Script(
+                fileName = scriptCreation.fileName,
+                "// Write your code here!"
             )
 
-            call.respond(HttpStatusCode.Created, mapOf(
-                "id" to id,
-                "creationDate" to creationDate
-            ))
+            val id = scriptService.create(script)
+
+            @Serializable
+            data class ScriptCreated(
+                val id: Int,
+                val creationDate: kotlinx.datetime.LocalDateTime
+            )
+
+            call.respond(
+                HttpStatusCode.Created,
+                ScriptCreated(id, script.lastEdited)
+            )
         }
 
         get("/api/scripts/find/{id}") {
             val id = call.parameters["id"]?.toInt()
-                ?: throw IllegalArgumentException("Invalid ID")
+                ?: return@get call.respond(
+                    HttpStatusCode.NotFound,
+                    mapOf("message" to "Script id parameter is not an integer")
+                )
 
             val script = scriptService.read(id)
                 ?: return@get call.respond(
-                    HttpStatusCode.NotFound, "Script $id not found"
+                    HttpStatusCode.NotFound,
+                    mapOf("message" to "Script $id does not exist in the database")
                 )
 
             call.respond(script)
         }
 
-        put("/api/scripts/{id}") {
+        put("/api/scripts/update-content/{id}") {
             val id = call.parameters["id"]?.toInt()
-                ?: throw IllegalArgumentException("Invalid ID")
+                ?: return@put call.respond(
+                    HttpStatusCode.NotFound,
+                    mapOf("message" to "Script id parameter is not an integer")
+                )
 
             val script = call.receive<Script>()
             script.lastEdited = LocalDateTime.now()
+                .toKotlinLocalDateTime()
 
             scriptService.update(id, script)
             call.respond(mapOf(
@@ -106,9 +120,12 @@ fun Application.configureDatabases()
             ))
         }
 
-        delete("/api/scripts/{id}") {
+        delete("/api/scripts/delete/{id}") {
             val id = call.parameters["id"]?.toInt()
-                ?: throw IllegalArgumentException("Invalid ID")
+                ?: return@delete call.respond(
+                    HttpStatusCode.NotFound,
+                    mapOf("message" to "Script id parameter is not an integer")
+                )
 
             scriptService.delete(id)
             call.respond(HttpStatusCode.OK)
