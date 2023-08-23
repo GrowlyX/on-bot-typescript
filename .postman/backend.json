@@ -6,7 +6,7 @@
 	},
 	"item": [
 		{
-			"name": "New Request",
+			"name": "API Status",
 			"id": "47455b56-05db-48f5-b0e5-12468d9a7d57",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
