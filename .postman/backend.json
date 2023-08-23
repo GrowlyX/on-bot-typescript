@@ -62,7 +62,7 @@
 			"response": [
 				{
 					"id": "6c215254-1eea-4e55-bfd1-5a17eae7f443",
-					"name": "New Request",
+					"name": "Example response of Scripts",
 					"originalRequest": {
 						"method": "GET",
 						"header": [],
