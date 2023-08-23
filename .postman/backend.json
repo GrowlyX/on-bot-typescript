@@ -13,13 +13,57 @@
 			},
 			"request": {
 				"method": "GET",
-				"header": []
+				"header": [],
+				"url": "http://127.0.0.1:6969/api/status"
 			},
-			"response": []
+			"response": [
+				{
+					"id": "a617b5d5-2079-42d5-9f28-935ecbe8a151",
+					"name": "Example with all settings disabled",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": "http://127.0.0.1:6969/api/status"
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Length",
+							"value": "66"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"responseTime": null,
+					"body": "{\n    \"hotReloadEnabled\": false,\n    \"scriptEngineBooted\": false\n}"
+				}
+			]
 		},
 		{
 			"name": "List All Scripts",
 			"id": "b6762dd0-f267-4a28-aa4a-8ae94a84d92d",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://127.0.0.1:6969/api/scripts/list"
+			},
+			"response": []
+		},
+		{
+			"name": "Create Script",
+			"id": "fe6e6407-ce21-46c7-b4a0-e8a61bdc405b",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
