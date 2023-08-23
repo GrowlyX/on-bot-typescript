@@ -60,7 +60,7 @@
 			"response": []
 		},
 		{
-			"name": "New Request",
+			"name": "Create Script",
 			"id": "fe6e6407-ce21-46c7-b4a0-e8a61bdc405b",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
