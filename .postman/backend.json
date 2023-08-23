@@ -74,7 +74,7 @@
 			"response": [
 				{
 					"id": "8a01ad80-9bb0-4d13-9c04-0f6e5d8b531c",
-					"name": "Creation response",
+					"name": "Example creation response",
 					"originalRequest": {
 						"method": "POST",
 						"header": [],
