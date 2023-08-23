@@ -20,47 +20,48 @@ import javax.script.ScriptEngineManager
 
 object ScriptEngineService
 {
-    private var lock = Any()
+    var lock = Any()
     var ktsEngine: ScriptEngine? = null
 
     fun initializeEngine(): CompletableFuture<Void>
     {
-        // this is wonky, but it's thread-safe & nonblocking
-        return CompletableFuture
-            .runAsync {
-                synchronized(lock) {
-                    if (ktsEngine != null)
-                    {
-                        return@runAsync
-                    }
+        return synchronized(lock) {
+            if (ktsEngine != null)
+            {
+                return@synchronized CompletableFuture
+                    .completedFuture(null)
+            }
 
-                    ktsEngine = ScriptEngineManager()
+            CompletableFuture
+                .runAsync {
+                    val engine = ScriptEngineManager()
                         .getEngineByExtension("kts")
 
-                    // Seems to take around 5 seconds? should definitely
-                    ktsEngine!!.eval("println(\"test\")")
+                    // Seems to take around 5 seconds for initial start?
+                    engine!!.eval("println(\"test\")")
+                    ktsEngine = engine
                 }
-            }
+        }
     }
 
     inline fun useEngine(
         block: (ScriptEngine, Bindings) -> Unit
     )
     {
-        if (ktsEngine == null)
-        {
-            ktsEngine = ScriptEngineManager()
-                .getEngineByExtension("kts")
+        synchronized(lock) {
+            checkNotNull(ktsEngine) {
+                "KTS scripting engine has not yet been configured!"
+            }
+
+            val bindings = ktsEngine!!
+                .createBindings()
+
+            ktsEngine!!.setBindings(
+                bindings,
+                ScriptContext.ENGINE_SCOPE
+            )
+            block(ktsEngine!!, bindings)
         }
-
-        val bindings = ktsEngine!!
-            .createBindings()
-
-        ktsEngine!!.setBindings(
-            bindings,
-            ScriptContext.ENGINE_SCOPE
-        )
-        block(ktsEngine!!, bindings)
     }
 }
 
@@ -73,7 +74,7 @@ data class Script(
     var lastEdited: @Contextual LocalDateTime
 )
 {
-    fun run(
+    inline fun run(
         packageImports: List<String>,
         vararg context: Pair<String, Any>,
         failure: (Throwable) -> Unit
@@ -95,7 +96,9 @@ data class Script(
             script += fileContent
 
             runCatching { engine.eval(script) }
-                .onFailure(failure::invoke)
+                .onFailure {
+                    failure(it)
+                }
         }
     }
 }

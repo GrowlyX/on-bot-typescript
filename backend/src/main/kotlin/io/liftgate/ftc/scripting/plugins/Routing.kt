@@ -5,14 +5,19 @@ import io.ktor.server.http.content.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.liftgate.ftc.scripting.development
+import io.liftgate.ftc.scripting.scriptUpdateHook
+import io.liftgate.ftc.scripting.scripting.ScriptEngineService
 
 fun Application.configureRouting()
 {
     routing {
         configureSPA()
 
-        get("/api/ping") {
-            call.respond("worked")
+        get("/api/status") {
+            call.respond(mapOf(
+                "hotReloadEnabled" to (scriptUpdateHook != null),
+                "scriptEngineBooted" to (ScriptEngineService.ktsEngine != null)
+            ))
         }
     }
 }

@@ -1,6 +1,8 @@
 package io.liftgate.ftc.scripting.opmode
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
+import com.qualcomm.robotcore.hardware.DcMotorEx
+import com.qualcomm.robotcore.util.Range
 import io.liftgate.ftc.scripting.KotlinScript
 import io.liftgate.ftc.scripting.logger.PersistentTelemetryLog
 import io.liftgate.ftc.scripting.plugins.createScriptService
@@ -8,6 +10,8 @@ import io.liftgate.ftc.scripting.plugins.scriptService
 import io.liftgate.ftc.scripting.scripting.ScriptEngineService
 import kotlinx.coroutines.runBlocking
 import kotlin.concurrent.thread
+import kotlin.properties.ReadOnlyProperty
+import kotlin.reflect.KProperty
 
 /**
  * A production-ready script engine OpMode.
@@ -23,7 +27,13 @@ abstract class ProdLinearOpMode : LinearOpMode(), KotlinScript
 
     init
     {
-        // pre-initialize the ScriptEngine which may take up to 10 seconds to configure itself
+        /**
+         * Initializes the ScriptEngine which may take up to 10 seconds to properly
+         * boot. This is done in the background, so there won't be any lag with the robot itself.
+         *
+         * ScriptEngineService is properly synchronized, so we won't get any issues with sub-implementations
+         * of ProdLinearOpMode re-initializing the engine.
+         */
         ScriptEngineService.initializeEngine()
     }
 
@@ -94,11 +104,12 @@ abstract class ProdLinearOpMode : LinearOpMode(), KotlinScript
                         throw ScriptRunException(it)
                     }
 
-                    // TODO: what do we do now?
                     logger.log("Exception occurred!")
                     logger.log(it.stackTraceToString())
                 }
             )
+
+            internal.localRunnerThread = null
         }
 
         if (internal.joinLocalRunner)
