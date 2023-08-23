@@ -9,9 +9,7 @@ import io.liftgate.ftc.scripting.scripting.Script
 import io.liftgate.ftc.scripting.scripting.ScriptService
 import kotlinx.datetime.toKotlinLocalDateTime
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
-import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.Database
 import java.time.LocalDateTime
 
 var scriptService: ScriptService? = null

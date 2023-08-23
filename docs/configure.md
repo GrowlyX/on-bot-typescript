@@ -93,8 +93,8 @@ public class ProdScriptedTeleOp extends ProdLinearOpMode {
 }
 ```
 
-To explicitly start/stop the web editor, you must create your own implementations of `StartEditorOpMode` and `StopEditorOpMode`.
-> [!WARNING]
+To explicitly start/stop the web editor, you must create your own implementations of `StartEditorOpMode` and `StopEditorOpMode`. The behavior of these OpModes are self explanatory.
+> [!IMPORTANT]
 > It is good practice to stop your web editor (or not start it in the first place) before competitions or actual trial runs. 
 
 ```java
@@ -106,7 +106,6 @@ public class StartWebEditor extends StartEditorOpMode {
     
 }
 ```
-
 ```java
 @TeleOp(
         name = "Stop",
@@ -116,4 +115,3 @@ public class StartWebEditor extends StopEditorOpMode {
     
 }
 ```
-When these OpModes are run on the robot, they will call their respective actions and stop instantly.

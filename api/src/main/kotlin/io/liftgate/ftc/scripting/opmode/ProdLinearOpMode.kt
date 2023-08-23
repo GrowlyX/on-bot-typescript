@@ -70,6 +70,10 @@ abstract class ProdLinearOpMode : LinearOpMode(), KotlinScript
             }"
         )
 
+        check(getScriptName() != "Shared.kts") {
+            "Shared script cannot be executed by an OpMode"
+        }
+
         val script = runBlocking {
             dbService.read(getScriptName())
         } ?: run {
@@ -89,25 +93,27 @@ abstract class ProdLinearOpMode : LinearOpMode(), KotlinScript
         waitForStart()
 
         internal.localRunnerThread = thread {
-            script.run(
-                listOf(
-                    *defaultPackageImports().toTypedArray(),
-                    *packageImports().toTypedArray()
-                ),
-                *defaultEnvironmentalVariables().toTypedArray(),
-                *impliedVariables
-                    .map { it.name to it.instance }
-                    .toTypedArray(),
-                failure = {
-                    if (internal.joinLocalRunner)
-                    {
-                        throw ScriptRunException(it)
-                    }
+            runBlocking {
+                script.run(
+                    listOf(
+                        *defaultPackageImports().toTypedArray(),
+                        *packageImports().toTypedArray()
+                    ),
+                    *defaultEnvironmentalVariables().toTypedArray(),
+                    *impliedVariables
+                        .map { it.name to it.instance }
+                        .toTypedArray(),
+                    failure = {
+                        if (internal.joinLocalRunner)
+                        {
+                            throw ScriptRunException(it)
+                        }
 
-                    logger.log("Exception occurred!")
-                    logger.log(it.stackTraceToString())
-                }
-            )
+                        logger.log("Exception occurred!")
+                        logger.log(it.stackTraceToString())
+                    }
+                )
+            }
 
             internal.localRunnerThread = null
         }

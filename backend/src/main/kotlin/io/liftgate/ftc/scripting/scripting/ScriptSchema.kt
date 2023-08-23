@@ -1,5 +1,7 @@
 package io.liftgate.ftc.scripting.scripting
 
+import io.liftgate.ftc.scripting.plugins.createScriptService
+import io.liftgate.ftc.scripting.plugins.scriptService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
@@ -82,7 +84,7 @@ data class Script(
         java.time.LocalDateTime.now().toKotlinLocalDateTime()
 )
 {
-    inline fun run(
+    suspend inline fun run(
         packageImports: List<String>,
         vararg context: Pair<String, Any>,
         failure: (Throwable) -> Unit
@@ -100,6 +102,13 @@ data class Script(
                         "import $type"
                     }
             }
+
+            // Apply shared script onto this script instance
+            scriptService
+                ?.read("Shared.kts")
+                ?.apply {
+                    script += fileContent
+                }
 
             script += fileContent
 
