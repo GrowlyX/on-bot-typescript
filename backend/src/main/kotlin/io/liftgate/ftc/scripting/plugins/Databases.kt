@@ -49,12 +49,19 @@ fun Application.configureDatabases()
                 val fileName: String
             )
 
-            val user = call.receive<CreateScript>()
+            val scriptCreation = call.receive<CreateScript>()
 
-            if (scriptService.read(user.fileName) != null)
+            if (scriptService.read(scriptCreation.fileName) != null)
             {
                 throw IllegalArgumentException(
                     "Script by file name already exists."
+                )
+            }
+
+            if (!scriptCreation.fileName.endsWith(".kts"))
+            {
+                throw IllegalArgumentException(
+                    "Script name must end with the .kts extension!"
                 )
             }
 
@@ -62,7 +69,7 @@ fun Application.configureDatabases()
 
             val id = scriptService.create(
                 Script(
-                    fileName = user.fileName,
+                    fileName = scriptCreation.fileName,
                     "// Write your code here!",
                     creationDate
                 )
@@ -74,7 +81,7 @@ fun Application.configureDatabases()
             ))
         }
 
-        get("/api/scripts/{id}") {
+        get("/api/scripts/find/{id}") {
             val id = call.parameters["id"]?.toInt()
                 ?: throw IllegalArgumentException("Invalid ID")
 
