@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "46595ae7-f747-4aca-a1a4-453fb4d0f913",
-		"name": "New Collection",
+		"name": "Backend API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
 	},
 	"item": []
