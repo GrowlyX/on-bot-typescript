@@ -59,7 +59,37 @@
 				"header": [],
 				"url": "http://127.0.0.1:6969/api/scripts/list"
 			},
-			"response": []
+			"response": [
+				{
+					"id": "6c215254-1eea-4e55-bfd1-5a17eae7f443",
+					"name": "Example response of Scripts",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": "http://127.0.0.1:6969/api/scripts/list"
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Length",
+							"value": "158"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"responseTime": null,
+					"body": "[\n    {\n        \"fileName\": \"TestTeleOp.kts\",\n        \"fileContent\": \"// Write your code here!\",\n        \"lastEdited\": \"2023-08-23T18:37:17.034953700\"\n    }\n]"
+				}
+			]
 		},
 		{
 			"name": "Create Script",
@@ -68,10 +98,101 @@
 				"disableBodyPruning": true
 			},
 			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"fileName\": \"TestTeleOp.kts\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://127.0.0.1:6969/api/scripts/create"
+			},
+			"response": [
+				{
+					"id": "8a01ad80-9bb0-4d13-9c04-0f6e5d8b531c",
+					"name": "Example creation response",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"fileName\": \"TestTeleOp.kts\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://127.0.0.1:6969/api/scripts/create"
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Length",
+							"value": "68"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"responseTime": null,
+					"body": "{\n    \"id\": 1,\n    \"creationDate\": \"2023-08-23T18:37:17.034953700\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Find Script",
+			"id": "9aaa447f-4790-4f85-9d82-28a9cc822423",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
 				"method": "GET",
 				"header": []
 			},
-			"response": []
+			"response": [
+				{
+					"id": "667356f8-7ed2-419a-b237-fe0a0fb12293",
+					"name": "Example Script response",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": "http://127.0.0.1:6969/api/scripts/find/1"
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Length",
+							"value": "134"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"responseTime": null,
+					"body": "{\n    \"fileName\": \"TestTeleOp.kts\",\n    \"fileContent\": \"// Write your code here!\",\n    \"lastEdited\": \"2023-08-23T18:37:17.034953700\"\n}"
+				}
+			]
 		}
 	]
 }
