@@ -18,7 +18,7 @@
 			"response": [
 				{
 					"id": "a617b5d5-2079-42d5-9f28-935ecbe8a151",
-					"name": "New Request",
+					"name": "Example Status",
 					"originalRequest": {
 						"method": "GET",
 						"header": [],
