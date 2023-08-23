@@ -59,7 +59,37 @@
 				"header": [],
 				"url": "http://127.0.0.1:6969/api/scripts/list"
 			},
-			"response": []
+			"response": [
+				{
+					"id": "6c215254-1eea-4e55-bfd1-5a17eae7f443",
+					"name": "New Request",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": "http://127.0.0.1:6969/api/scripts/list"
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Length",
+							"value": "158"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"responseTime": null,
+					"body": "[\n    {\n        \"fileName\": \"TestTeleOp.kts\",\n        \"fileContent\": \"// Write your code here!\",\n        \"lastEdited\": \"2023-08-23T18:37:17.034953700\"\n    }\n]"
+				}
+			]
 		},
 		{
 			"name": "Create Script",
