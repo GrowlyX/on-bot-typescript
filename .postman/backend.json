@@ -71,7 +71,46 @@
 				"method": "GET",
 				"header": []
 			},
-			"response": []
+			"response": [
+				{
+					"id": "8a01ad80-9bb0-4d13-9c04-0f6e5d8b531c",
+					"name": "New Request",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"fileName\": \"TestTeleOp.kts\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://127.0.0.1:6969/api/scripts/create"
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Length",
+							"value": "68"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"responseTime": null,
+					"body": "{\n    \"id\": 1,\n    \"creationDate\": \"2023-08-23T18:37:17.034953700\"\n}"
+				}
+			]
 		}
 	]
 }
