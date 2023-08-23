@@ -34,6 +34,11 @@ object ScriptEngineService
 
             CompletableFuture
                 .runAsync {
+                    System.setProperty(
+                        "kotlin.jsr223.experimental.resolve.dependencies.from.context.classloader",
+                        true.toString()
+                    )
+
                     val engine = ScriptEngineManager()
                         .getEngineByExtension("kts")
 

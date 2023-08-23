@@ -10,6 +10,7 @@ val exposed_version: String by project
 val h2_version: String by project
 
 dependencies {
+    compileOnly(kotlin("script-util"))
     compileOnly("org.reflections:reflections:0.10.2")
     implementation("io.ktor:ktor-server-core-jvm")
     implementation("io.ktor:ktor-server-host-common-jvm")
