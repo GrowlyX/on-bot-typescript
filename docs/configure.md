@@ -1,6 +1,7 @@
 # Configure
 
-## Install Dependency
+## Configure Dependency
+Current Version: `0.1.2-SNAPSHOT`
 
 ### Maven:
 ```xml
