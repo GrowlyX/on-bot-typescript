@@ -1,8 +1,7 @@
 package io.liftgate.ftc.scripting.opmode
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
-import com.qualcomm.robotcore.hardware.DcMotorEx
-import com.qualcomm.robotcore.util.Range
+import io.liftgate.ftc.scripting.Experimental
 import io.liftgate.ftc.scripting.KotlinScript
 import io.liftgate.ftc.scripting.logger.PersistentTelemetryLog
 import io.liftgate.ftc.scripting.plugins.createScriptService
@@ -10,12 +9,8 @@ import io.liftgate.ftc.scripting.plugins.scriptService
 import io.liftgate.ftc.scripting.scripting.ScriptEngineService
 import kotlinx.coroutines.runBlocking
 import kotlin.concurrent.thread
-import kotlin.properties.ReadOnlyProperty
-import kotlin.reflect.KProperty
 
 /**
- * A production-ready script engine OpMode.
- *
  * @author GrowlyX
  * @since 8/20/2023
  */
@@ -37,8 +32,10 @@ abstract class ProdLinearOpMode : LinearOpMode(), KotlinScript
         ScriptEngineService.initializeEngine()
     }
 
+    @Experimental
     open fun packageImports() = emptyList<String>()
 
+    @Experimental
     private fun defaultPackageImports() = listOf(
         "com.qualcomm.robotcore",
         "org.firstinspires.ftc.robotcore"
