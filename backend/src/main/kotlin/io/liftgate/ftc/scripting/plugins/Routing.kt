@@ -29,7 +29,7 @@ private fun Routing.configureSPA()
     // as it redirects to the SPA
     if (development)
     {
-        println("Skipping SPA configuration as a development environment has been detected.")
+        application.log.info("Skipping SPA configuration as a development environment has been detected.")
         return
     }
 

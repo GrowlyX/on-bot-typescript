@@ -3,9 +3,7 @@ package io.liftgate.ftc.scripting.test
 import org.jetbrains.kotlin.utils.addToStdlib.measureTimeMillisWithResult
 import org.junit.Test
 import org.reflections.Reflections
-import org.reflections.scanners.MethodAnnotationsScanner
 import org.reflections.scanners.Scanners
-import org.reflections.scanners.SubTypesScanner
 import org.reflections.util.ConfigurationBuilder
 
 /**
@@ -21,7 +19,7 @@ class Jsr223Test
             Reflections(
                 ConfigurationBuilder()
                     .forPackage(
-                        "com.qualcomm.robotcore"
+                        "org.jetbrains.exposed"
                     )
                     .addScanners(
                         Scanners.SubTypes

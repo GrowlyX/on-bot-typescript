@@ -1,6 +1,7 @@
 dependencies {
     api(kotlin("reflect"))
     api(kotlin("script-runtime"))
+    compileOnly("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
 
     runtimeOnly(kotlin("scripting-jsr223"))
     api(kotlin("compiler-embeddable"))

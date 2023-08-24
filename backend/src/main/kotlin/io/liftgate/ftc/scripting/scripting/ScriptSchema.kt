@@ -3,6 +3,7 @@ package io.liftgate.ftc.scripting.scripting
 import io.liftgate.ftc.scripting.plugins.createScriptService
 import io.liftgate.ftc.scripting.plugins.scriptService
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.sql.*
@@ -15,6 +16,7 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.toKotlinLocalDateTime
 import org.jetbrains.exposed.sql.kotlin.datetime.CurrentDateTime
 import org.jetbrains.exposed.sql.kotlin.datetime.datetime
+import org.reflections.util.ConfigurationBuilder
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.ConcurrentHashMap
 import javax.script.Bindings
@@ -84,7 +86,7 @@ data class Script(
         java.time.LocalDateTime.now().toKotlinLocalDateTime()
 )
 {
-    suspend inline fun run(
+    inline fun run(
         packageImports: List<String>,
         vararg context: Pair<String, Any>,
         failure: (Throwable) -> Unit
@@ -96,7 +98,13 @@ data class Script(
 
             packageImports.forEach {
                 script += reflectionsMappings
-                    .computeIfAbsent(it, ::Reflections)
+                    .computeIfAbsent(it) { pkg ->
+                        Reflections(
+                            ConfigurationBuilder()
+                                .addScanners(Scanners.SubTypes)
+                                .forPackages(pkg)
+                        )
+                    }
                     .getAll(Scanners.SubTypes)
                     .joinToString("\n") { type ->
                         "import $type"
@@ -104,11 +112,13 @@ data class Script(
             }
 
             // Apply shared script onto this script instance
-            scriptService
-                ?.read("Shared.kts")
-                ?.apply {
-                    script += fileContent
-                }
+            runBlocking {
+                scriptService
+                    ?.read("Shared.kts")
+                    ?.apply {
+                        script += fileContent
+                    }
+            }
 
             script += fileContent
 
