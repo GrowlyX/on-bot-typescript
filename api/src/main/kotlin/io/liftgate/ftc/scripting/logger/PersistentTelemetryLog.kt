@@ -14,6 +14,8 @@ class PersistentTelemetryLog(
     private val logs = mutableListOf<String>()
     private var thread: Thread? = null
 
+    fun clear() = synchronized(logs) { logs.clear() }
+
     init
     {
         thread = thread {
@@ -29,7 +31,9 @@ class PersistentTelemetryLog(
 
     fun log(message: String)
     {
-        logs += message
+        synchronized(logs) {
+            logs += message
+        }
     }
 
     fun destroy()
