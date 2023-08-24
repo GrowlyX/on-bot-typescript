@@ -5,6 +5,7 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import io.liftgate.ftc.scripting.development
 import io.liftgate.ftc.scripting.scripting.Script
 import io.liftgate.ftc.scripting.scripting.ScriptService
 import kotlinx.datetime.toKotlinLocalDateTime
@@ -23,8 +24,12 @@ fun createScriptService(): ScriptService
 
     // a default h2 database
     val url = "jdbc:h2:file:./scripts"
+    val devUrl = "jdbc:h2:mem:myDb"
+
     val database = Database.connect(
-        url = "$url;DB_CLOSE_DELAY=-1",
+        url = "${
+            if (development) devUrl else url
+        };DB_CLOSE_DELAY=-1",
         user = "root",
         driver = "org.h2.Driver",
         password = ""

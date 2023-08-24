@@ -8,6 +8,9 @@
 - Frontend: `SvelteKit`
 - Backend: `Ktor, JetBrains Exposed`
 
+### Storage configuration:
+
+
 ### Setting up:
 - Clone this project using `git clone https://github.com/GrowlyX/ftcscript`.
 - **Editing frontend:** 

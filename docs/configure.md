@@ -1,4 +1,49 @@
 # Configure
+
+## Install Dependency
+
+### Maven:
+```xml
+<repositories>
+    <repository>
+        <id>artifactory.scala.gg</id>
+        <url>https://artifactory.scala.gg/artifactory/opensource</url>
+    </repository>
+</repositories>
+
+<dependencies>
+    <dependency>
+        <groupId>io.liftgate.ftc.scripting</groupId>
+        <artifactId>[module]</artifactId> 
+        <version>[version]</version>
+    </dependency>
+</dependencies>
+```
+
+### Gradle:
+Groovy:
+```groovy
+repositories {
+    maven {
+        url = "https://artifactory.scala.gg/artifactory/opensource"
+    }
+}
+
+dependencies {
+    implementation("io.liftgate.ftc.scripting:[module]:[version]")
+}
+```
+Kotlin:
+```kotlin
+repositories {
+    maven(url = "https://artifactory.scala.gg/artifactory/opensource")
+}
+
+dependencies {
+    implementation("io.liftgate.ftc.scripting:[module]:[version]")
+}
+```
+
 Once you have configured the maven/gradle dependency for FTCScript, follow the instructions below to start writing scripts!
 
 1. Create your OpMode(s):
