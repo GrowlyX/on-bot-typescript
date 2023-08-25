@@ -4,6 +4,7 @@
     import type {Script} from "$lib/models/models";
     import { onMount } from "svelte";
     import {findAllScripts} from "$lib/util/findAllScripts";
+    import {fetchAPIStatus} from "$lib/util/fetchAPIStatus";
 
     // TODO: handle no files :)
     let files: string[] = []
@@ -14,6 +15,11 @@
             .map((script: Script) =>
                 script.fileName
             )
+
+        // TODO: api status sidebar thing
+        console.log(
+            await fetchAPIStatus()
+        )
     })
 </script>
 

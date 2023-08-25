@@ -14,3 +14,8 @@ export type CreateScriptResponse = {
 export type ScriptGenericResponse = {
     lastEdited: string
 }
+
+export type APIStatus = {
+    hotReloadEnabled: boolean
+    scriptEngineBooted: boolean
+}
