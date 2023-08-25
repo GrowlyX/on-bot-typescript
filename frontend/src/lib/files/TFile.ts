@@ -1,0 +1,1 @@
+export type TFile = { name: string, files: TFile[] }
