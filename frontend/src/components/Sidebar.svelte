@@ -5,16 +5,19 @@
     import { onMount } from "svelte";
     import {findAllScripts} from "$lib/util/findAllScripts";
     import {fetchAPIStatus} from "$lib/util/fetchAPIStatus";
+    import {writable} from "svelte/store";
 
     // TODO: handle no files :)
-    let files: string[] = []
+    const files = writable<string[]>([])
 
     onMount(async () => {
         const scripts = await findAllScripts()
-        files = scripts
-            .map((script: Script) =>
-                script.fileName
-            )
+        files.set(
+            scripts
+                .map((script: Script) =>
+                    script.fileName
+                )
+        )
 
         // TODO: api status sidebar thing
         console.log(
@@ -24,7 +27,7 @@
 </script>
 
 <aside>
-    <FileTree {files}/>
+    <FileTree files={$files}/>
 
     <Runner/>
 </aside>

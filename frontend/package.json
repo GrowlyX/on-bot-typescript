@@ -27,7 +27,6 @@
 		"vite": "^4.4.2"
 	},
 	"type": "module",
-	"proxy": "http://localhost:6969/",
 	"dependencies": {
 		"monaco-editor": "^0.40.0"
 	}
