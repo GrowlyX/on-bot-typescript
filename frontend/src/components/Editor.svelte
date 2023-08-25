@@ -45,6 +45,7 @@ while (!isStopRequested) {
             "kotlin",
             monaco.Uri.file("sample.kt")
         );
+        // TODO: use model.getValue() to publish to the api
         editor.setModel(model);
     });
 
