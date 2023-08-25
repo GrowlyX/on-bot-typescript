@@ -6,13 +6,10 @@
     export let files: string[];
 
     let root = pathsToTree(files);
-    
-    // console.log(root)
-    console.log(merge(root))
 </script>
 
 <ul class="p-5 m-5 rounded-md menu bg-zinc-700">
     <!-- TODO: map on each node of `root` instead of one big root element because that's scuffed -->
 
-    <Folder name="cry" files={root} isRoot />
+    <Folder name="ratio + didn't ask + cope" files={root} isRoot />
 </ul>
