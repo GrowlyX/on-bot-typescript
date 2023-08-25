@@ -3,8 +3,8 @@
     import Runner from "./Runner.svelte";
     import type {Script} from "$lib/models/models";
     import { onMount } from "svelte";
-    import {findAllScripts} from "$lib/util/findAllScripts";
-    import {fetchAPIStatus} from "$lib/util/fetchAPIStatus";
+    import {findAllScripts} from "$lib/util/api/script/findAllScripts";
+    import {fetchAPIStatus} from "$lib/util/api/fetchAPIStatus";
     import {writable} from "svelte/store";
 
     // TODO: handle no files :)
