@@ -131,7 +131,9 @@ fun Application.configureDatabases()
                 )
 
             scriptService.delete(id)
-            call.respond(HttpStatusCode.OK)
+            call.respond(HttpStatusCode.OK, mapOf(
+                "lastEdited" to ""
+            ))
         }
     }
 }

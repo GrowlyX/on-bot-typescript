@@ -3,21 +3,16 @@
     import Runner from "./Runner.svelte";
     import type {Script} from "$lib/models/models";
     import { onMount } from "svelte";
+    import {findAllScripts} from "$lib/util/findAllScripts";
 
     // TODO: handle no files :)
     let files: string[] = []
 
     onMount(async () => {
-        fetch("/api/scripts/list")
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`response was not ok: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(values => {
+        findAllScripts()
+            .then((values: Script[]) => {
                 files = values
-                    .map((script: Script) => script.fileName)
+                    .map((script) => script.fileName)
             })
     })
 </script>
