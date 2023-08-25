@@ -12,7 +12,7 @@
 Scripts are stored in a H2 database stored in the directory of the app. If the backend server is started in development mode, an in-memory H2 instance will be used instead.
 
 ### Setting up:
-- Clone this project using `git clone https://github.com/GrowlyX/ftcscript`.
+- Clone this project using `git clone https://github.com/GrowlyX/on-bot-kotlin`.
 - **Editing frontend:** 
   - Start a development environment using: 
     - `npm run dev`

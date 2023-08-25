@@ -9,5 +9,5 @@ plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "0.5.0"
 }
 
-rootProject.name = "ftcscript"
+rootProject.name = "on-bot-kotlin"
 include("backend", "api", "frontend", "webbundle")

@@ -45,7 +45,7 @@ dependencies {
 }
 ```
 
-Once you have configured the maven/gradle dependency for FTCScript, follow the instructions below to start writing scripts!
+Once you have configured the maven/gradle dependency for on-bot-kotlin, follow the instructions below to start writing scripts!
 
 1. Create your OpMode(s):
 ```java
@@ -79,7 +79,7 @@ public class DevScriptedTeleOp extends DevLinearOpMode {
          * having to define them directly. Implied variables can be either methods
          * or variables.
          * 
-         * FTCScript offers default implied variables, which can be found in the 
+         * on-bot-kotlin offers default implied variables, which can be found in the 
          * {@link ProdLinearOpMode} class on GitHub.
          * 
          * Example script using the following implied variables:

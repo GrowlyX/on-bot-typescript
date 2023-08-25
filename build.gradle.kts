@@ -43,7 +43,7 @@ subprojects {
     tasks.withType<ShadowJar> {
         archiveClassifier.set("")
         archiveFileName.set(
-            "ftcscript-${project.name}.jar"
+            "on-bot-kotlin-${project.name}.jar"
         )
     }
 

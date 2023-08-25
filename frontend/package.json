@@ -1,5 +1,5 @@
 {
-	"name": "ftcscript-frontend",
+	"name": "on-bot-kotlin-frontend",
 	"version": "0.0.1",
 	"private": true,
 	"packageManager": "yarn@3.6.1",
