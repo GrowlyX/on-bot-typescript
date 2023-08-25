@@ -9,11 +9,11 @@
     let files: string[] = []
 
     onMount(async () => {
-        findAllScripts()
-            .then((values: Script[]) => {
-                files = values
-                    .map((script) => script.fileName)
-            })
+        const scripts = await findAllScripts()
+        files = scripts
+            .map((script: Script) =>
+                script.fileName
+            )
     })
 </script>
 
