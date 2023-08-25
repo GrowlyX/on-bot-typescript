@@ -21,7 +21,9 @@ class PersistentTelemetryLog(
         thread = thread {
             while (true)
             {
-                logs.forEach(telemetry::addLine)
+                synchronized(logs) {
+                    logs.forEach(telemetry::addLine)
+                }
                 telemetry.update()
 
                 Thread.sleep(100L)
