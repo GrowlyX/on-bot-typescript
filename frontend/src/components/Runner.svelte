@@ -1,15 +1,24 @@
 <script lang="ts">
     import {viewingScript} from "../stores";
     import {updateScriptContent} from "$lib/util/api/script/updateScriptContent";
+    import { getNotificationsContext } from 'svelte-notifications';
+
+    const { addNotification } = getNotificationsContext();
 
     async function saveFile() {
-        // gray it out?
+        // TODO: gray it out?
         if ($viewingScript == null) {
             return
         }
 
         const resp = await updateScriptContent($viewingScript)
         console.log("Updated script content: " + resp)
+
+        // TODO: lol doesn't work
+        addNotification({
+            text: "Saved file!",
+            position: 'bottom-left',
+        })
     }
 </script>
 
