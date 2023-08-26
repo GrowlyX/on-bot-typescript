@@ -106,22 +106,6 @@ fun Application.configureDatabases()
             call.respond(script)
         }
 
-        get("/api/scripts/find-name/{id}") {
-            val scriptName = call.parameters["id"]
-                ?: return@get call.respond(
-                    HttpStatusCode.NotFound,
-                    mapOf("message" to "Script id parameter was not provided")
-                )
-
-            val script = scriptService.read(scriptName)
-                ?: return@get call.respond(
-                    HttpStatusCode.NotFound,
-                    mapOf("message" to "Script $scriptName does not exist in the database")
-                )
-
-            call.respond(script)
-        }
-
         post("/api/scripts/update-content") {
             @Serializable
             data class ScriptContent(val fileName: String, val fileContent: String)
@@ -156,17 +140,28 @@ fun Application.configureDatabases()
             ))
         }
 
-        delete("/api/scripts/delete-name/{id}") {
-            val scriptName = call.parameters["id"]
-                ?: return@delete call.respond(
+        @Serializable
+        data class ScriptReference(val name: String)
+
+        post("/api/scripts/find-name/") {
+            val ref = call.receive<ScriptReference>()
+
+            val script = scriptService.read(ref.name)
+                ?: return@post call.respond(
                     HttpStatusCode.NotFound,
-                    mapOf("message" to "Script id parameter was not provided")
+                    mapOf("message" to "Script ${ref.name} does not exist in the database")
                 )
 
-            val script = scriptService.read(scriptName)
-                ?: return@delete call.respond(
+            call.respond(script)
+        }
+
+        post("/api/scripts/delete-name/") {
+            val ref = call.receive<ScriptReference>()
+
+            val script = scriptService.read(ref.name)
+                ?: return@post call.respond(
                     HttpStatusCode.NotFound,
-                    mapOf("message" to "Script $scriptName does not exist in the database")
+                    mapOf("message" to "Script ${ref.name} does not exist in the database")
                 )
 
             scriptService.delete(script.fileName)
