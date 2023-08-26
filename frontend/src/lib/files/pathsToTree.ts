@@ -9,7 +9,7 @@ export const merge = (trees: TFile[]): TFile[] => {
         const existing = trees.filter(item => item.name === tree.name)
         const files = existing.map(it => it.files).flat()
 
-        result.push({ name: tree.name, files })
+        result.push({ name: tree.name, path: "__node__", files })
     }
 
     // TODO: actually spend time in this function so that the logic isn't shit
@@ -19,8 +19,8 @@ export const merge = (trees: TFile[]): TFile[] => {
 
 export const pathToTree = (path: string): TFile => {
     const lineage = (path: string) => path.split("/");
-    const asFiles = (lineage: string[]) => lineage.map(name => ({ name, files: [] }))
-    const nest = (files: TFile[]) => files.reduce((parent, child) => ({ name: parent.name, files: [child] }))
+    const asFiles = (lineage: string[]) => lineage.map(name => ({ name, path, files: [] }))
+    const nest = (files: TFile[]) => files.reduce((parent, child) => ({ name: parent.name, path, files: [child] }))
 
     return compose(nest, asFiles, lineage)(path);
 }

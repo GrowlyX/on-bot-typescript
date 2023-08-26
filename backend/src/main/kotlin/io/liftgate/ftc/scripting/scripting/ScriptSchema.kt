@@ -202,6 +202,13 @@ class ScriptService(database: Database)
         }
     }
 
+    suspend fun delete(name: String)
+    {
+        asyncTransaction {
+            Scripts.deleteWhere { fileName eq name }
+        }
+    }
+
     suspend fun delete(id: Int)
     {
         asyncTransaction {

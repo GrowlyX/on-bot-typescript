@@ -1,1 +1,1 @@
-export type TFile = { name: string, files: TFile[] }
+export type TFile = { name: string, path: string, files: TFile[] }

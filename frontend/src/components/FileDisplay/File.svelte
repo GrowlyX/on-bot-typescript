@@ -1,14 +1,14 @@
 <script lang="ts">
-    import {findScript, findScriptByName} from "$lib/util/api/script/findScript";
+    import {findScriptByName} from "$lib/util/api/script/findScript";
     import {viewingScript} from "../../stores";
-    import type {Script} from "$lib/models/models";
 
     export let name: string;
+    export let path: string;
 
     // TODO: not integrated properly in the frontend
     export function isViewingScript(): boolean {
         if ($viewingScript != null) {
-            if ($viewingScript.fileName == name) {
+            if ($viewingScript.fileName == path) {
                 return true
             }
         }
@@ -18,12 +18,12 @@
 
     export async function handleClick() {
         if ($viewingScript != null) {
-            if ($viewingScript.fileName == name) {
+            if ($viewingScript.fileName == path) {
                 return
             }
         }
 
-        const script = await findScriptByName(name)
+        const script = await findScriptByName(path)
         viewingScript.set(script)
     }
 </script>

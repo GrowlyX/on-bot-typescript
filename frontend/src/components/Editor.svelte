@@ -22,13 +22,13 @@
         monaco.editor.setTheme("vs-dark");
 
         viewingScript.subscribe((script: any) => {
-            if (script != null) {
-                editor.getModel()?.dispose()
+            editor.getModel()?.dispose()
 
+            if (script != null) {
                 const model = monaco.editor.createModel(
                     script.fileContent,
                     "kotlin",
-                    monaco.Uri.file(script.fileName)
+                    undefined
                 );
                 editor.setModel(model)
             }

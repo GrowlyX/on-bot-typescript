@@ -155,5 +155,25 @@ fun Application.configureDatabases()
                 "lastEdited" to ""
             ))
         }
+
+        delete("/api/scripts/delete-name/{id}") {
+            val scriptName = call.parameters["id"]
+                ?: return@delete call.respond(
+                    HttpStatusCode.NotFound,
+                    mapOf("message" to "Script id parameter was not provided")
+                )
+
+            val script = scriptService.read(scriptName)
+                ?: return@delete call.respond(
+                    HttpStatusCode.NotFound,
+                    mapOf("message" to "Script $scriptName does not exist in the database")
+                )
+
+            scriptService.delete(script.fileName)
+
+            call.respond(mapOf(
+                "lastEdited" to ""
+            ))
+        }
     }
 }
