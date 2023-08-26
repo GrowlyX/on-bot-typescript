@@ -6,7 +6,7 @@ export async function deleteScript(id: number): Promise<ScriptGenericResponse> {
 }
 
 export async function deleteScriptByName(name: string): Promise<ScriptGenericResponse> {
-    return postData(`/api/scripts/delete-name`, {
+    return postData(`/api/scripts/delete-name/`, {
         name: name
     })
 }

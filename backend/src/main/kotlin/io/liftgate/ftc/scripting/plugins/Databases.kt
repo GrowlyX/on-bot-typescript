@@ -73,7 +73,10 @@ fun Application.configureDatabases()
 
             val script = Script(
                 fileName = scriptCreation.fileName,
-                "// Write your code here!"
+                """
+                    // This is a new script named: ${scriptCreation.fileName}
+                    // Write your OpMode code below!
+                """.trimIndent()
             )
 
             val id = scriptService.create(script)

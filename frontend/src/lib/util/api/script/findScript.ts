@@ -6,7 +6,7 @@ export async function findScript(id: number): Promise<Script> {
 }
 
 export async function findScriptByName(name: string): Promise<Script> {
-    return postData(`/api/scripts/find-name`, {
+    return postData(`/api/scripts/find-name/`, {
         name: name
     })
 }
