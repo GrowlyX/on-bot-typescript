@@ -106,18 +106,38 @@ fun Application.configureDatabases()
             call.respond(script)
         }
 
-        put("/api/scripts/update-content/{id}") {
-            val id = call.parameters["id"]?.toInt()
-                ?: return@put call.respond(
+        get("/api/scripts/find-name/{id}") {
+            val scriptName = call.parameters["id"]
+                ?: return@get call.respond(
                     HttpStatusCode.NotFound,
-                    mapOf("message" to "Script id parameter is not an integer")
+                    mapOf("message" to "Script id parameter was not provided")
                 )
 
-            val script = call.receive<Script>()
+            val script = scriptService.read(scriptName)
+                ?: return@get call.respond(
+                    HttpStatusCode.NotFound,
+                    mapOf("message" to "Script $scriptName does not exist in the database")
+                )
+
+            call.respond(script)
+        }
+
+        post("/api/scripts/update-content") {
+            @Serializable
+            data class ScriptContent(val fileName: String, val fileContent: String)
+
+            val scriptContent = call.receive<ScriptContent>()
+            val script = scriptService.read(scriptContent.fileName)
+                ?: return@post call.respond(
+                    HttpStatusCode.NotFound,
+                    mapOf("message" to "Script ${scriptContent.fileName} does not exist in the database")
+                )
+
+            script.fileContent = scriptContent.fileContent
             script.lastEdited = LocalDateTime.now()
                 .toKotlinLocalDateTime()
 
-            scriptService.update(id, script)
+            scriptService.update(script)
             call.respond(mapOf(
                 "lastEdited" to script.lastEdited
             ))

@@ -2,6 +2,8 @@
     import loader from "@monaco-editor/loader";
     import { onDestroy, onMount } from "svelte";
     import type * as Monaco from "monaco-editor/esm/vs/editor/editor.api";
+    import {viewingScript} from "../stores";
+    import type {Script} from "$lib/models/models";
 
     let editor: Monaco.editor.IStandaloneCodeEditor;
     let monaco: typeof Monaco;
@@ -16,37 +18,30 @@
         monaco = await loader.init();
 
         // Your monaco instance is ready, let's display some code!
-        const editor = monaco.editor.create(editorContainer);
-
+        editor = monaco.editor.create(editorContainer);
         monaco.editor.setTheme("vs-dark");
 
-        const model = monaco.editor.createModel(
-            `logger.log("Starting script")
+        viewingScript.subscribe((script: any) => {
+            if (script != null) {
+                editor.getModel()?.dispose()
 
-val leftDrive = hardwareMap.get(DcMotorEx::class.java, "leftDrive")
-val rightDrive = hardwareMap.get(DcMotorEx::class.java, "rightDrive")
+                const model = monaco.editor.createModel(
+                    script.fileContent,
+                    "kotlin",
+                    monaco.Uri.file(script.fileName)
+                );
+                editor.setModel(model)
+            }
+        })
 
-while (!isStopRequested) {
-    val drive = -gamepad1.left_stick_y.toDouble()
-    val turn = gamepad1.right_stick_x.toDouble()
+        editor.onDidChangeModelContent(() => {
+            const backingScript = $viewingScript
 
-    val leftPower = Range.clip(drive + turn, -1.0, 1.0)
-    val rightPower = Range.clip(drive - turn, -1.0, 1.0)
-
-    // Tank Mode uses one stick to control each wheel.
-    // - This requires no math, but it is hard to drive forward slowly and keep straight.
-    // leftPower  = -gamepad1.left_stick_y ;
-    // rightPower = -gamepad1.right_stick_y ;
-
-    // Send calculated power to wheels
-    leftDrive.power = leftPower
-    rightDrive.power = rightPower
-}`,
-            "kotlin",
-            monaco.Uri.file("sample.kt")
-        );
-        // TODO: use model.getValue() to publish to the api
-        editor.setModel(model);
+            if (backingScript != null) {
+                const script = backingScript as Script
+                script.fileContent = editor.getValue()
+            }
+        })
     });
 
     onDestroy(() => {

@@ -1,6 +1,5 @@
 package io.liftgate.ftc.scripting.scripting
 
-import io.liftgate.ftc.scripting.plugins.createScriptService
 import io.liftgate.ftc.scripting.plugins.scriptService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
@@ -81,7 +80,7 @@ val reflectionsMappings = ConcurrentHashMap<String, Reflections>()
 @Serializable
 data class Script(
     val fileName: String,
-    val fileContent: String,
+    var fileContent: String,
     var lastEdited: @Contextual LocalDateTime =
         java.time.LocalDateTime.now().toKotlinLocalDateTime()
 )
@@ -137,9 +136,9 @@ class ScriptService(database: Database)
         val id = integer("id").autoIncrement()
 
         val fileName = varchar("name", length = 25)
-        val fileContent = text("fileContent", eagerLoading = true)
+        val fileContent = text("file_content", eagerLoading = true)
 
-        val lastEdited = datetime("date_created")
+        val lastEdited = datetime("last_edited")
             .defaultExpression(CurrentDateTime)
 
         override val primaryKey = PrimaryKey(id)
@@ -190,13 +189,15 @@ class ScriptService(database: Database)
         }
     }
 
-    suspend fun update(id: Int, user: Script)
+    suspend fun update(script: Script)
     {
         asyncTransaction {
-            Scripts.update({ Scripts.id eq id }) {
-                it[fileName] = user.fileName
-                it[fileContent] = user.fileContent
-                it[lastEdited] = user.lastEdited
+            Scripts.update({
+                Scripts.fileName eq script.fileName
+            }) {
+                it[fileName] = script.fileName
+                it[fileContent] = script.fileContent
+                it[lastEdited] = script.lastEdited
             }
         }
     }

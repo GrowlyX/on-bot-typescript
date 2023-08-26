@@ -2,10 +2,6 @@ export async function postData<T, U>(path: string, data: T): Promise<U> {
     return fetchDataWithBody(path, 'POST', data)
 }
 
-export async function putData<T, U>(path: string, data: T): Promise<U> {
-    return fetchDataWithBody(path, 'POST', data)
-}
-
 export async function deleteData<U>(path: string): Promise<U> {
     return fetchDataWithMethod(path, 'DELETE')
 }
@@ -45,7 +41,7 @@ async function fetchDataWithBody<T, U>(path: string, method: string, data: T): P
     });
 
     if (!response.ok) {
-        throw new Error(`response was not ok: ${response.status}`);
+        throw new Error(`response was not ok: ${response.status} ${await response.text()}`);
     }
 
     return await response.json() as U;
