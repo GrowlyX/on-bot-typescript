@@ -4,7 +4,7 @@
     import type * as Monaco from "monaco-editor/esm/vs/editor/editor.api";
     import { title, viewingScript, visitedTabs } from "../stores";
     import type {Script} from "$lib/models/models";
-    import { copyAndAddUniqueValue } from "$lib/util/copyAndAddUniqueValue";
+    import { copyArr } from "$lib/util/copyArr";
 
     let editor: Monaco.editor.IStandaloneCodeEditor;
     let monaco: typeof Monaco;
@@ -41,7 +41,7 @@
                     const fileName = _script.fileName as string
 
                     visitedTabs.set(
-                        copyAndAddUniqueValue($visitedTabs, fileName)
+                        copyArr($visitedTabs, fileName)
                     )
                 }
             } else {
