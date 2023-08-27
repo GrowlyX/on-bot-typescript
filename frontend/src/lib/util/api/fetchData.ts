@@ -1,22 +1,29 @@
-export async function postData<T, U>(path: string, data: T): Promise<U> {
+export async function postData<T, U extends Object>(path: string, data: T): Promise<U> {
     return fetchDataWithBody(path, 'POST', data)
 }
 
-export async function deleteData<U>(path: string): Promise<U> {
+export async function deleteData<U extends Object>(path: string): Promise<U> {
     return fetchDataWithMethod(path, 'DELETE')
 }
 
-export async function fetchData<T>(path: string): Promise<T> {
+export async function fetchData<T extends Object>(path: string): Promise<T> {
     const response = await fetch(path);
 
     if (!response.ok) {
-        throw new Error(`response was not ok: ${response.status}`);
+        await Promise.reject(response);
     }
 
-    return await response.json() as T;
+    const value = await response.json() as T
+
+    if (value.hasOwnProperty("error")) {
+        // @ts-ignore
+        await Promise.reject({ error: value.error })
+    }
+
+    return value;
 }
 
-async function fetchDataWithMethod<U>(path: string, method: string): Promise<U> {
+async function fetchDataWithMethod<U extends Object>(path: string, method: string): Promise<U> {
     const response = await fetch(path, {
         method: method,
         headers: {
@@ -25,13 +32,20 @@ async function fetchDataWithMethod<U>(path: string, method: string): Promise<U> 
     });
 
     if (!response.ok) {
-        throw new Error(`response was not ok: ${response.status}`);
+        await Promise.reject(response);
     }
 
-    return await response.json() as U;
+    const value = await response.json() as U
+
+    if (value.hasOwnProperty("error")) {
+        // @ts-ignore
+        await Promise.reject({ error: value.error })
+    }
+
+    return value;
 }
 
-async function fetchDataWithBody<T, U>(path: string, method: string, data: T): Promise<U> {
+async function fetchDataWithBody<T, U extends Object>(path: string, method: string, data: T): Promise<U> {
     const response = await fetch(path, {
         method: method,
         headers: {
@@ -41,8 +55,15 @@ async function fetchDataWithBody<T, U>(path: string, method: string, data: T): P
     });
 
     if (!response.ok) {
-        Promise.reject({ status: response.status, details: await response.text() });
+        await Promise.reject(response);
     }
 
-    return await response.json() as U;
+    const value = await response.json() as U
+
+    if (value.hasOwnProperty("error")) {
+        // @ts-ignore
+        await Promise.reject({ error: value.error })
+    }
+
+    return value;
 }

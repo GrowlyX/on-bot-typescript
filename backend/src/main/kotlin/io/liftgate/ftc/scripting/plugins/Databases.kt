@@ -60,8 +60,7 @@ fun Application.configureDatabases()
             if (scriptService.read(scriptCreation.fileName) != null)
             {
                 call.respond(
-                    HttpStatusCode.Conflict,
-                    "Script by file name already exists."
+                    mapOf("error" to "Script by file name already exists.")
                 )
                 return@post
             }
@@ -69,8 +68,7 @@ fun Application.configureDatabases()
             if (!scriptCreation.fileName.endsWith(".kts"))
             {
                 call.respond(
-                    HttpStatusCode.Conflict,
-                    "Script name must end with the .kts extension!"
+                    mapOf("error" to "Script name must end with the .kts extension!")
                 )
                 return@post
             }
@@ -100,14 +98,12 @@ fun Application.configureDatabases()
         get("/api/scripts/find/{id}") {
             val id = call.parameters["id"]?.toInt()
                 ?: return@get call.respond(
-                    HttpStatusCode.NotFound,
-                    mapOf("message" to "Script id parameter is not an integer")
+                    mapOf("error" to "Script id parameter is not an integer")
                 )
 
             val script = scriptService.read(id)
                 ?: return@get call.respond(
-                    HttpStatusCode.NotFound,
-                    mapOf("message" to "Script $id does not exist in the database")
+                    mapOf("error" to "Script $id does not exist in the database")
                 )
 
             call.respond(script)
@@ -120,8 +116,7 @@ fun Application.configureDatabases()
             val scriptContent = call.receive<ScriptContent>()
             val script = scriptService.read(scriptContent.fileName)
                 ?: return@post call.respond(
-                    HttpStatusCode.NotFound,
-                    mapOf("message" to "Script ${scriptContent.fileName} does not exist in the database")
+                    mapOf("error" to "Script ${scriptContent.fileName} does not exist in the database")
                 )
 
             script.fileContent = scriptContent.fileContent
@@ -137,8 +132,7 @@ fun Application.configureDatabases()
         delete("/api/scripts/delete/{id}") {
             val id = call.parameters["id"]?.toInt()
                 ?: return@delete call.respond(
-                    HttpStatusCode.NotFound,
-                    mapOf("message" to "Script id parameter is not an integer")
+                    mapOf("error" to "Script id parameter is not an integer")
                 )
 
             scriptService.delete(id)
@@ -155,8 +149,7 @@ fun Application.configureDatabases()
 
             val script = scriptService.read(ref.name)
                 ?: return@post call.respond(
-                    HttpStatusCode.NotFound,
-                    mapOf("message" to "Script ${ref.name} does not exist in the database")
+                    mapOf("error" to "Script ${ref.name} does not exist in the database")
                 )
 
             call.respond(script)
@@ -167,8 +160,7 @@ fun Application.configureDatabases()
 
             val script = scriptService.read(ref.name)
                 ?: return@post call.respond(
-                    HttpStatusCode.NotFound,
-                    mapOf("message" to "Script ${ref.name} does not exist in the database")
+                    mapOf("error" to "Script ${ref.name} does not exist in the database")
                 )
 
             scriptService.delete(script.fileName)

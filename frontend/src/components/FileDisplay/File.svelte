@@ -6,16 +6,18 @@
     export let name: string;
     export let path: string;
 
-    // TODO: not integrated properly in the frontend
-    export function isViewingScript(): boolean {
-        if ($viewingScript != null) {
-            if ($viewingScript.fileName == path) {
-                return true
+    let currentlyViewing = false
+
+    viewingScript.subscribe((script) => {
+        if (script != null) {
+            if (script.fileName == path) {
+                currentlyViewing = true
+                return
             }
         }
 
-        return false
-    }
+        currentlyViewing = false
+    })
 
     export async function handleClick() {
         const script = await findScriptByName(path)
@@ -25,5 +27,9 @@
 
 <!-- svelte-ignore a11y-missing-attribute -->
 <li>
-    <a class="icon octicon-file kotlin-icon" on:click|preventDefault={handleClick}>{name}</a>
+    {#if currentlyViewing}
+        <a class="icon octicon-file kotlin-icon">{name}</a>
+    {:else}
+        <a class="icon octicon-file kotlin-icon" on:click|preventDefault={handleClick}>{name}</a>
+    {/if}
 </li>

@@ -13,14 +13,33 @@
 
     let toastActive = false
     let toastText = ""
+    let toastStatus = ""
+    let activeToastTimeout = -1
 
     async function refreshFileList() {
         files.set(await getScriptNames());
     }
 
+    function activateToast(text: string, status: string) {
+        toastText = text
+        toastStatus = status
+        toastActive = true
+
+        if (activeToastTimeout !== -1) {
+            clearTimeout(activeToastTimeout)
+        }
+
+        activeToastTimeout = setTimeout(() => {
+            toastActive = false
+        }, 3000)
+    }
+
     async function syncScript() {
         const script = await findScriptByName($viewingScript?.fileName!!)
         viewingScript.set(script)
+
+
+        activateToast("Script was synced", "info")
     }
 
     async function deleteFile() {
@@ -37,26 +56,28 @@
 
         // reset the viewing script to dispose of current model
         viewingScript.set(null);
-        console.log("deleted");
+        activateToast("Script was deleted!", "success")
     }
 
     async function saveFile() {
-        const resp = await updateScriptContent($viewingScript!!)
-        console.log("Updated script content: " + resp);
+        await updateScriptContent($viewingScript!!)
+        activateToast("Script was saved!", "success")
     }
 
     async function createFile() {
         if (fileName.includes(' ') || !fileName.endsWith(".kts")) {
             // TODO: better input validation reporting
-            console.log('invalid name')
+            activateToast(`The script name "${fileName}" is invalid!`, "failure bg-red-600 text-white")
             return
         }
 
         try {
             await createScript({fileName})
             await refreshFileList();
+
+            activateToast("Your script was created!", "success")
         } catch (error: any) {
-            console.log('did not work: ' + error.toString())
+            activateToast(error.error, "failure bg-red-600 text-white")
         }
     }
 
@@ -65,7 +86,7 @@
 <section class="flex justify-center p-5">
     {#if toastActive}
         <div class="toast toast-start">
-            <div class="alert alert-info">
+            <div class="alert alert-{toastStatus}">
                 <span>{toastText}</span>
             </div>
         </div>
