@@ -11,6 +11,7 @@ export const merge = (trees: TFile[]): TFile[] => {
 
         result.push({
             name: tree.name,
+            // we assume that all directories contain at least one file due to the behavior of directories
             path: files.length == 0 ? tree.name : "__node__",
             files
         })
