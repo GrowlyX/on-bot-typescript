@@ -10,9 +10,6 @@
     files.subscribe((files: string[]) => {
         root.set(
             pathsToTree(files)
-                .sort((n1: TFile, n2: TFile) =>
-                    n2.files.length - n1.files.length
-                )
         )
     })
 </script>

@@ -19,6 +19,9 @@ export const merge = (trees: TFile[]): TFile[] => {
     }
 
     return uniqBy(result, "name")
+        .sort((n1: TFile, n2: TFile) =>
+            n2.files.length - n1.files.length
+        )
 }
 
 export const pathToTree = (path: string): TFile => {
