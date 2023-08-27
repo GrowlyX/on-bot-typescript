@@ -32,9 +32,4 @@ export const pathToTree = (path: string): TFile => {
     return compose(nest, asFiles, lineage)(path);
 }
 
-export const pathsToTree = (paths: string[]): TFile[] => {
-    const trees = paths.map(pathToTree)
-    console.log(trees)
-
-    return merge(trees);
-}
+export const pathsToTree = (paths: string[]): TFile[] => merge(paths.map(pathToTree))
