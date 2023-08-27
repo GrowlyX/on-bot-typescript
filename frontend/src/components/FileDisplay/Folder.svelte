@@ -11,22 +11,17 @@
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 {#if isRoot}
-    <li>
-        <details>
-            <summary>{name}</summary>
-            <ul>
-                {#each files as file}
-                    {#if isFile(file.name)}
-                        <File {...file} />
-                    {:else}
-                        <li>
-                            <svelte:self {...file} />
-                        </li>
-                    {/if}
-                {/each}
-            </ul>
-        </details>
-    </li>
+    <ul>
+        {#each files as file}
+            {#if isFile(file.name)}
+                <File {...file} />
+            {:else}
+                <li>
+                    <svelte:self {...file} />
+                </li>
+            {/if}
+        {/each}
+    </ul>
 {:else}
     <details>
         <summary>{name}</summary>
