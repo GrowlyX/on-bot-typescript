@@ -1,6 +1,6 @@
 export const uniqBy = <T>(arr: T[], predicate: string | ((e: T) => T)) => {
     const cb = typeof predicate === "function"
-        ? predicate 
+        ? predicate
         : (o: { [x: string]: any; }) => o[predicate];
 
     return [...arr.reduce((map, item) => {
