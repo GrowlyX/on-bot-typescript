@@ -32,7 +32,6 @@
                     undefined
                 );
                 editor.setModel(model)
-                title.set(`Editing script...`)
 
                 const backingScript = $viewingScript
 
@@ -40,6 +39,7 @@
                     const _script = backingScript as Script
                     const fileName = _script.fileName as string
 
+                    title.set(`Editing ${fileName}...`)
                     visitedTabs.set(
                         copyArr($visitedTabs, fileName)
                     )

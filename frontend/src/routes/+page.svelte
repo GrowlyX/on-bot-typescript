@@ -12,7 +12,7 @@
 
 <main>
     <div class="flex flex-row bg-zinc-800">
-        <div class="basis-[18%]">
+        <div class="basis-[19%]">
             <Sidebar/>
         </div>
 
@@ -29,17 +29,9 @@
                         {/if}
                     {/each}
                 </div>
-            {:else}
-                <div class="text-center m-20 text-blue-50">
-                    <h1 class="font-bold text-2xl">Not editing</h1>
-                    <p class="font-thin">Click a script on the sidebar to start editing!</p>
-                </div>
             {/if}
 
             <Editor/>
         </div>
     </div>
 </main>
-
-<style>
-</style>
