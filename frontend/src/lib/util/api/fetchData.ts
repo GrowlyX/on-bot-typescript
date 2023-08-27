@@ -41,7 +41,7 @@ async function fetchDataWithBody<T, U>(path: string, method: string, data: T): P
     });
 
     if (!response.ok) {
-        throw new Error(`response was not ok: ${response.status} ${await response.text()}`);
+        Promise.reject({ status: response.status, details: await response.text() });
     }
 
     return await response.json() as U;
