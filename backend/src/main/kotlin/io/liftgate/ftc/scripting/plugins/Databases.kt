@@ -59,16 +59,20 @@ fun Application.configureDatabases()
 
             if (scriptService.read(scriptCreation.fileName) != null)
             {
-                throw IllegalArgumentException(
+                call.respond(
+                    HttpStatusCode.Conflict,
                     "Script by file name already exists."
                 )
+                return@post
             }
 
             if (!scriptCreation.fileName.endsWith(".kts"))
             {
-                throw IllegalArgumentException(
+                call.respond(
+                    HttpStatusCode.Conflict,
                     "Script name must end with the .kts extension!"
                 )
+                return@post
             }
 
             val script = Script(
