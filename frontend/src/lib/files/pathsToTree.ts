@@ -9,7 +9,11 @@ export const merge = (trees: TFile[]): TFile[] => {
         const existing = trees.filter(item => item.name === tree.name)
         const files = existing.map(it => it.files).flat()
 
-        result.push({name: tree.name, path: "__node__", files})
+        result.push({
+            name: tree.name,
+            path: files.length == 0 ? tree.name : "__node__",
+            files
+        })
     }
 
     // TODO: actually spend time in this function so that the logic isn't shit

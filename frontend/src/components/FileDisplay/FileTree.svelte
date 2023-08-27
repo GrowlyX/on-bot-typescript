@@ -9,6 +9,7 @@
     let root = writable<TFile[]>([]);
 
     files.subscribe((files: string[]) => {
+        console.log(pathsToTree(files))
         root.set(pathsToTree(files))
     })
 </script>
