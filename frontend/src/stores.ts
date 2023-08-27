@@ -21,4 +21,6 @@ export const files = writable(
 );
 
 export const viewingScript = writable<Script | null>(null)
-export let title = writable<string>("Home")
+export const title = writable<string>("Home")
+
+export const visitedTabs = writable<string[]>([])

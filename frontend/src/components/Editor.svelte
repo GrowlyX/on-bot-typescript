@@ -2,8 +2,9 @@
     import loader from "@monaco-editor/loader";
     import { onDestroy, onMount } from "svelte";
     import type * as Monaco from "monaco-editor/esm/vs/editor/editor.api";
-    import { title, viewingScript } from "../stores";
+    import { title, viewingScript, visitedTabs } from "../stores";
     import type {Script} from "$lib/models/models";
+    import { copyAndAddUniqueValue } from "$lib/util/copyAndAddUniqueValue";
 
     let editor: Monaco.editor.IStandaloneCodeEditor;
     let monaco: typeof Monaco;
@@ -32,6 +33,17 @@
                 );
                 editor.setModel(model)
                 title.set(`Editing script...`)
+
+                const backingScript = $viewingScript
+
+                if (backingScript != null) {
+                    const _script = backingScript as Script
+                    const fileName = _script.fileName as string
+
+                    visitedTabs.set(
+                        copyAndAddUniqueValue($visitedTabs, fileName)
+                    )
+                }
             } else {
                 title.set("Home")
             }

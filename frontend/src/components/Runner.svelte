@@ -11,21 +11,6 @@
     files.set(await getScriptNames());
   }
 
-  async function handleFileNameSubmitted(event: CustomEvent<string>) {
-    let fileName = event.detail;
-
-    if (!fileName.endsWith(".kts")) {
-      console.log("invalid file name!");
-      return;
-    }
-
-    await createScript({
-      fileName: fileName,
-    });
-
-    await refreshFileList();
-  }
-
   async function deleteFile() {
     await deleteScriptByName($viewingScript?.fileName!!);
     await refreshFileList();
