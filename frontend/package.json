@@ -11,6 +11,7 @@
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
 	},
+	"suck": "my balls",
 	"devDependencies": {
 		"@monaco-editor/loader": "^1.3.3",
 		"@sveltejs/adapter-auto": "^2.0.0",
