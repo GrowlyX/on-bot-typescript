@@ -17,13 +17,6 @@
     }
 
     export async function handleClick() {
-        if ($viewingScript != null) {
-            if ($viewingScript.fileName == path) {
-                viewingScript.set(null)
-                return
-            }
-        }
-
         const script = await findScriptByName(path)
         viewingScript.set(script)
     }

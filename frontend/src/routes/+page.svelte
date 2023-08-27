@@ -5,11 +5,11 @@
 
 <main>
     <div class="flex flex-row bg-zinc-800">
-        <div class="basis-1/4">
+        <div class="basis-[18%]">
             <Sidebar />
         </div>
 
-        <div class="basis-3/4">
+        <div class="grow">
             <Editor />
         </div>
     </div>

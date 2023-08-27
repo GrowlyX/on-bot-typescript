@@ -1,85 +1,88 @@
 <script lang="ts">
-    import { files, getScriptNames, viewingScript } from "../stores";
-    import { updateScriptContent } from "$lib/util/api/script/updateScriptContent";
-    import { getNotificationsContext } from "svelte-notifications";
-    import { deleteScriptByName } from "$lib/util/api/script/deleteScript";
-    import { createScript } from "$lib/util/api/script/createScript";
+  import { files, getScriptNames, viewingScript } from "../stores";
+  import { updateScriptContent } from "$lib/util/api/script/updateScriptContent";
+  import { getNotificationsContext } from "svelte-notifications";
+  import { deleteScriptByName } from "$lib/util/api/script/deleteScript";
+  import { createScript } from "$lib/util/api/script/createScript";
 
-    let fileName = "example.kts"
+  let fileName = "example.kts"
 
-    async function refreshFileList() {
-        files.set(await getScriptNames());
+  async function handleFileNameSubmitted(event: CustomEvent<string>) {
+    let fileName = event.detail;
+
+    if (!fileName.endsWith(".kts")) {
+      console.log("invalid file name!");
+      return;
     }
 
-    async function handleFileNameSubmitted(event: CustomEvent<string>) {
-        let fileName = event.detail;
+    await createScript({
+      fileName: fileName,
+    });
 
-        if (!fileName.endsWith(".kts")) {
-            console.log("invalid file name!");
-            return;
-        }
+    files.set(await getScriptNames());
+  }
 
-        await createScript({
-            fileName: fileName,
-        });
+  async function deleteFile() {
+    await deleteScriptByName($viewingScript?.fileName!!);
+    files.set(await getScriptNames());
 
-        await refreshFileList();
-    }
+    // reset the viewing script to dispose of current model
+    viewingScript.set(null);
+    console.log("deleted");
+  }
 
-    async function deleteFile() {
-        await deleteScriptByName($viewingScript?.fileName!!);
-        await refreshFileList();
+  async function saveFile() {
+    const resp = await updateScriptContent($viewingScript!!);
+    console.log("Updated script content: " + resp);
 
-        // reset the viewing script to dispose of current model
-        viewingScript.set(null);
-        console.log("deleted");
-    }
+    const { addNotification } = getNotificationsContext();
 
-    async function saveFile() {
-        const resp = await updateScriptContent($viewingScript!!)
-        console.log("Updated script content: " + resp);
-    }
+    // TODO: lol doesn't work
+    addNotification({
+      text: "Saved file!",
+      position: "bottom-left",
+    });
+  }
 
-    async function createFile() {
-        if (fileName.includes(' ') || !fileName.endsWith(".kts")) {
-            // TODO: better input validation reporting
-            console.log('invalid name')
-            return
-        }
+  async function createFile() {
+    // todo: handle shit better
+    // input sanitization
+    createScript({ fileName })
+    .then(response => { })
+    .catch(error => error)
 
-        try {
-            await createScript({fileName})
-            await refreshFileList();
-        } catch (error: any) {
-            console.log('did not work: ' + error.toString())
-        }
-    }
+    files.set(await getScriptNames());
+  }
 
 </script>
 
 <section class="flex justify-center p-5 m-5 rounded-md bg-zinc-700">
-    {#if $viewingScript !== null}
-        <div class="justify-center w-full join">
-            <button on:click={saveFile} class="w-1/2 btn btn-success join-item">Save</button>
-            <button on:click={deleteFile} class="w-1/2 btn btn-danger join-item">Delete</button>
-        </div>
-    {:else}
-        <div class="justify-center w-full join">
-            <button class="w-1/2 btn btn-success join-item" onclick="fileCreateModal.showModal()">Create</button>
-        </div>
+  {#if $viewingScript !== null}
+    <div class="justify-center w-full join">
+      <button on:click={saveFile} class="w-1/2 btn btn-success join-item"
+        >Save</button
+      >
+      <button on:click={deleteFile} class="w-1/2 btn btn-danger join-item"
+        >Delete</button
+      >
+    </div>
+  {:else}
+    <div class="justify-center w-full join">
+      <button class="w-1/2 btn btn-success join-item" onclick="fileCreateModal.showModal()">Create</button>
+    </div>
 
-        <dialog id="fileCreateModal" class="modal">
-            <form on:submit={createFile} method="dialog" class="modal-box">
-                <div class="form-control w-full max-w-xs">
-                    <span class="label label-text">Enter a filename:</span>
-                    <input type="text" bind:value={fileName} class="input input-bordered w-full max-w-xs"/>
-                    <input class="hidden" type="submit"/>
-                </div>
-            </form>
-
-            <form method="dialog" class="modal-backdrop">
-                <button>close</button>
-            </form>
-        </dialog>
-    {/if}
+    <dialog id="fileCreateModal" class="modal">
+      <form on:submit={createFile} method="dialog" class="modal-box">
+        <div class="form-control w-full max-w-xs">
+            <span class="label label-text">Enter a filename:</span>
+            <input type="text" bind:value={fileName} class="input input-bordered w-full max-w-xs" />
+            <input class="hidden" type="submit" />
+          </div>
+      </form>
+      
+      <form method="dialog" class="modal-backdrop">
+        <button>close</button>
+      </form>
+    </dialog>
+  {/if}
 </section>

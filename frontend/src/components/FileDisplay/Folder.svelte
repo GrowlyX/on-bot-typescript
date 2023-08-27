@@ -23,7 +23,7 @@
         {/each}
     </ul>
 {:else}
-    <details>
+    <details open>
         <summary>{name}</summary>
         <ul>
             {#each files as file}
