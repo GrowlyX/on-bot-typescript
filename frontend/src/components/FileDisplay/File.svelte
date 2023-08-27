@@ -29,4 +29,6 @@
 </script>
 
 <!-- svelte-ignore a11y-missing-attribute -->
-<li><a on:click|preventDefault={handleClick} aria-pressed={isViewingScript()}>{name}</a></li>
+<li>
+    <a class="icon octicon-file kotlin-icon" on:click|preventDefault={handleClick} aria-pressed={isViewingScript()}>{name}</a>
+</li>

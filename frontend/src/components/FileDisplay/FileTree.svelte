@@ -14,6 +14,7 @@
 </script>
 
 <ul class="p-5 m-5 rounded-md menu bg-zinc-700">
+    <h1 class="text-center font-bold text-white">Your Scripts:</h1>
     <!-- TODO: map on each node of `root` instead of one big root element because that's scuffed -->
 
     <Folder name="ratio + didn't ask + cope" files={$root} isRoot />
