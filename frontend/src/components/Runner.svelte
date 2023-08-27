@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { files, getScriptNames, viewingScript, visitedTabs } from "../stores";
+    import { apiStatus, files, getScriptNames, viewingScript, visitedTabs } from "../stores";
     import { updateScriptContent } from "$lib/util/api/script/updateScriptContent";
     import { deleteScriptByName } from "$lib/util/api/script/deleteScript";
     import { createScript } from "$lib/util/api/script/createScript";
@@ -38,7 +38,6 @@
         const script = await findScriptByName($viewingScript?.fileName!!)
         viewingScript.set(script)
 
-
         activateToast("Script was synced", "info")
     }
 
@@ -66,7 +65,6 @@
 
     async function createFile() {
         if (fileName.includes(' ') || !fileName.endsWith(".kts")) {
-            // TODO: better input validation reporting
             activateToast(`The script name "${fileName}" is invalid!`, "failure bg-red-600 text-white")
             return
         }

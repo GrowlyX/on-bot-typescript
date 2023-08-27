@@ -22,9 +22,9 @@
                 <div class="tabs">
                     {#each $visitedTabs as tab}
                         {#if $viewingScript?.fileName === tab}
-                            <a class="tab tab-lifted tab-active">{tab}</a>
+                            <a class="tab-md tab-lifted tab-active">{tab}</a>
                         {:else}
-                            <a class="tab tab-lifted"
+                            <a class="tab tab-xs tab-lifted"
                                on:click={(event) => navigateToScript(event.target.innerText)}>{tab}</a>
                         {/if}
                     {/each}

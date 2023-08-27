@@ -15,12 +15,12 @@
 </script>
 
 <section>
-    <div on:click={() => { viewingScript.set(null) }} class="flex justify-center">
-        <img class="cursor-pointer active:bg-slate-700 rounded-md my-1"
+    <div on:click={() => { viewingScript.set(null) }} class="flex justify-center hover:drop-shadow-xl">
+        <img class="cursor-pointer hover:bg-zinc-800 rounded-md my-1 scale-75"
              src="logo.png" id="logo" alt="OnBot Kotlin Logo">
     </div>
 
-    <ul class="p-5 m-6 rounded-md menu bg-zinc-700">
+    <ul class="p-5 m-6 rounded-md menu bg-zinc-800 text-slate-200 hover:text-white">
         {#if $root.length === 0}
             <div class="flex justify-center">
                 <span class="loading loading-spinner loading-xs p-3" ></span>

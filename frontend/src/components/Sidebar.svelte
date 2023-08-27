@@ -4,7 +4,7 @@
     import {files} from "../stores";
 </script>
 
-<aside class="h-screen bg-zinc-900">
+<aside class="h-screen bg-zinc-900 drop-shadow-xl">
     <FileTree files={$files}/>
 
     <Runner/>

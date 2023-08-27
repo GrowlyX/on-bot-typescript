@@ -1,4 +1,6 @@
-# on-bot-kotlin
+<img src="https://github.com/GrowlyX/ftc-scripting/blob/master/frontend/static/logo.png" align="center">
+
+# On Bot Kotlin (OBK)
 Rapidly edit, test, and run OpModes through the use of Kotlin scripts.
 
 > [!WARNING]  
