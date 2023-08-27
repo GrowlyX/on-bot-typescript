@@ -13,7 +13,7 @@ export const merge = (trees: TFile[]): TFile[] => {
         result.push({
             name: tree.name,
             // we assume that all directories contain at least one file due to the behavior of directories
-            path: files.length == 0 ? tree.name : "__node__",
+            path: files.length == 0 ? tree.path :  "__node__",
             files: merge(files)
         })
     }
@@ -34,6 +34,7 @@ export const pathToTree = (path: string): TFile => {
 
 export const pathsToTree = (paths: string[]): TFile[] => {
     const trees = paths.map(pathToTree)
+    console.log(trees)
 
     return merge(trees);
 }
