@@ -14,24 +14,26 @@
     <ul>
         {#each files as file}
             {#if isFile(file.name)}
-                <File {...file} />
+                <File {...file}/>
             {:else}
                 <li>
-                    <svelte:self {...file} />
+                    <svelte:self {...file}/>
                 </li>
             {/if}
         {/each}
     </ul>
 {:else}
-    <details open>
-        <summary>{name}</summary>
+    <details>
+        <summary>
+            {name}
+        </summary>
         <ul>
             {#each files as file}
                 {#if isFile(file.name)}
-                    <File {...file} />
+                    <File {...file}/>
                 {:else}
                     <li>
-                        <svelte:self {...file} />
+                        <svelte:self {...file}/>
                     </li>
                 {/if}
             {/each}

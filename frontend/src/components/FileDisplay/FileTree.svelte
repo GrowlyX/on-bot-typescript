@@ -1,8 +1,8 @@
 <script lang="ts">
-    import {pathsToTree} from "$lib/files/pathsToTree";
-    import {files, viewingScript} from "../../stores";
-    import type {TFile} from "$lib/files/TFile";
-    import {writable} from "svelte/store";
+    import { pathsToTree } from "$lib/files/pathsToTree";
+    import { files, viewingScript } from "../../stores";
+    import type { TFile } from "$lib/files/TFile";
+    import { writable } from "svelte/store";
     import Folder from "./Folder.svelte";
 
     let root = writable<TFile[]>([]);
@@ -15,12 +15,20 @@
 </script>
 
 <section>
-    <div class="flex justify-center">
-        <img on:click={() => { viewingScript.set(null) }}  class="cursor-pointer active:bg-slate-700 rounded-md my-1" src="logo.png" id="logo" alt="OnBot Kotlin Logo">
+    <div on:click={() => { viewingScript.set(null) }} class="flex justify-center">
+        <img class="cursor-pointer active:bg-slate-700 rounded-md my-1"
+             src="logo.png" id="logo" alt="OnBot Kotlin Logo">
     </div>
 
     <ul class="p-5 m-6 rounded-md menu bg-zinc-700">
-        <Folder name="" files={$root} isRoot />
+        {#if $root.length === 0}
+            <div class="flex justify-center">
+                <span class="loading loading-spinner loading-xs p-3" ></span>
+                <div class="pl-2">Loading scripts...</div>
+            </div>
+        {:else}
+            <Folder name="" files={$root} isRoot />
+        {/if}
     </ul>
 </section>
 
