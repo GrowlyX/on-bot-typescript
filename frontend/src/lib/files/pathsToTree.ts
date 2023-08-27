@@ -14,13 +14,11 @@ export const merge = (trees: TFile[]): TFile[] => {
             name: tree.name,
             // we assume that all directories contain at least one file due to the behavior of directories
             path: files.length == 0 ? tree.name : "__node__",
-            files
+            files: merge(files)
         })
     }
 
-    // TODO: actually spend time in this function so that the logic isn't shit
-    // TODO: recursively merge because im like 99% sure that this doesn't work past depth = 1 for the tree
-    return uniqBy(result, "path")
+    return uniqBy(result, "name")
 }
 
 export const pathToTree = (path: string): TFile => {

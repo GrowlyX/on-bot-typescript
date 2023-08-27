@@ -21,3 +21,4 @@ export const files = writable(
 );
 
 export const viewingScript = writable<Script | null>(null)
+export let title = writable<string>("Home")

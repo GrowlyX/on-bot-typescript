@@ -1,6 +1,7 @@
 <script lang="ts">
-    import {findScriptByName} from "$lib/util/api/script/findScript";
-    import {viewingScript} from "../../stores";
+    import { findScriptByName } from "$lib/util/api/script/findScript";
+    import { viewingScript } from "../../stores";
+    import MetaTitle from "../Meta/MetaTitle.svelte";
 
     export let name: string;
     export let path: string;
@@ -24,5 +25,5 @@
 
 <!-- svelte-ignore a11y-missing-attribute -->
 <li>
-    <a class="icon octicon-file kotlin-icon" on:click|preventDefault={handleClick} aria-pressed={isViewingScript()}>{name}</a>
+    <a class="icon octicon-file kotlin-icon" on:click|preventDefault={handleClick}>{name}</a>
 </li>
