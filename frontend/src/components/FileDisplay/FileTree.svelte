@@ -34,6 +34,6 @@
 
 <style>
     #logo {
-        width: 20rem;
+        width: 30rem;
     }
 </style>

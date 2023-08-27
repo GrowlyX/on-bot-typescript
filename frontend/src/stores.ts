@@ -4,6 +4,11 @@ import { findAllScripts } from "$lib/util/api/script/findAllScripts";
 import { onMount } from "svelte";
 import { fetchAPIStatus } from "$lib/util/api/fetchAPIStatus";
 
+import { _api } from '@iconify/svelte';
+import fetch from 'cross-fetch';
+
+_api.setFetch(fetch);
+
 export async function getScriptNames(): Promise<string[]> {
     const backingScripts = await findAllScripts()
     return backingScripts

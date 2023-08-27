@@ -29,10 +29,9 @@
   },
   "type": "module",
   "dependencies": {
-    "@fortawesome/free-solid-svg-icons": "^6.4.2",
+    "@iconify/svelte": "^3.1.4",
     "atom-file-icons": "^1.0.3",
-    "monaco-editor": "^0.40.0",
-    "svelte-fa": "^3.0.4",
-    "svelte-notifications": "^0.9.98"
+    "cross-fetch": "^4.0.0",
+    "monaco-editor": "^0.40.0"
   }
 }

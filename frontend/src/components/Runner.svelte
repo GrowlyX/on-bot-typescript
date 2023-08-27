@@ -5,8 +5,6 @@
     import { createScript } from "$lib/util/api/script/createScript";
     import { copyAndRemoveValue } from "$lib/util/copyArr";
     import { findScriptByName } from "$lib/util/api/script/findScript";
-    import { faSync, faTrash } from "@fortawesome/free-solid-svg-icons";
-    import Fa from "svelte-fa/src/fa.svelte";
 
     let fileName = "example.kts"
     let deleteFileConfirm = ""
@@ -38,7 +36,7 @@
         const script = await findScriptByName($viewingScript?.fileName!!)
         viewingScript.set(script)
 
-        activateToast("Script was synced", "info")
+        activateToast("Script was synced", "info bg-blue-500 text-white")
     }
 
     async function deleteFile() {
@@ -55,12 +53,12 @@
 
         // reset the viewing script to dispose of current model
         viewingScript.set(null);
-        activateToast("Script was deleted!", "success")
+        activateToast("Script was deleted!", "success bg-green-500 text-black")
     }
 
     async function saveFile() {
         await updateScriptContent($viewingScript!!)
-        activateToast("Script was saved!", "success")
+        activateToast("Script was saved!", "success bg-green-500 text-black")
     }
 
     async function createFile() {
@@ -73,7 +71,7 @@
             await createScript({fileName})
             await refreshFileList();
 
-            activateToast("Your script was created!", "success")
+            activateToast("Your script was created!", "success bg-green-500 text-black")
         } catch (error: any) {
             activateToast(error.error, "failure bg-red-600 text-white")
         }
@@ -114,12 +112,14 @@
             </button>
             <button on:click={syncScript} data-tip="sync script"
                     class="tooltip w-[15%] btn bg-blue-500 hover:bg-blue-700 text-gray-100 join-item">
-                <Fa icon={faSync}/>
+                <!-- TODO: icon :) -->
+                🔄
             </button>
 
             <button onclick="confirmDeleteModal.showModal()" data-tip="delete script"
                     class="tooltip w-[15%] btn bg-red-500 hover:bg-red-700 text-gray-100 join-item">
-                <Fa icon={faTrash}/>
+                <!-- TODO: icon :) -->
+                🗑️
             </button>
         </div>
     {:else}
