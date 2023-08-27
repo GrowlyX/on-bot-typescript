@@ -53,7 +53,7 @@
 
         // reset the viewing script to dispose of current model
         viewingScript.set(null);
-        activateToast("Script was deleted!", "success bg-green-500 text-black")
+        activateToast("Script was deleted!", "failure bg-red-600 text-white")
     }
 
     async function saveFile() {
