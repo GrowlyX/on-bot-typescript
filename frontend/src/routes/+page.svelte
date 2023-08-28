@@ -11,26 +11,25 @@
 </script>
 
 <main>
-    <div class="flex flex-row bg-zinc-800">
-        <div class="basis-[19%]">
+    <div class="flex flex-row bg-[#000000]">
+        <div class="basis-[20.01%]">
             <Sidebar/>
         </div>
 
         <div class="grow">
-            <!-- tab logic !-->
-            {#if $viewingScript !== null}
-                <div class="tabs">
+            <!-- TODO: tab logic overflow -->
+            <!--{#if $viewingScript !== null}
+                <div class="tabs bg-black">
                     {#each $visitedTabs as tab}
                         {#if $viewingScript?.fileName === tab}
-                            <a class="tab tab-lifted tab-active">{tab}</a>
+                            <a class="tab-md tab-lifted tab-active">{tab}</a>
                         {:else}
-                            <a class="tab tab-lifted"
+                            <a class="tab-md tab-lifted"
                                on:click={(event) => navigateToScript(event.target.innerText)}>{tab}</a>
                         {/if}
                     {/each}
                 </div>
-            {/if}
-
+            {/if}-->
             <Editor/>
         </div>
     </div>

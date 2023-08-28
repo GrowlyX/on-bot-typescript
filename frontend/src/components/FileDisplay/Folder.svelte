@@ -11,7 +11,7 @@
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 {#if isRoot}
-    <ul>
+    <ul class="hover:text-white">
         {#each files as file}
             {#if isFile(file.name)}
                 <File {...file}/>
@@ -23,7 +23,7 @@
         {/each}
     </ul>
 {:else}
-    <details>
+    <details class="hover:text-white">
         <summary>
             {name}
         </summary>

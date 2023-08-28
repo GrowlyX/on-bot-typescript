@@ -92,8 +92,7 @@
         <dialog id="confirmDeleteModal" class="modal">
             <form on:submit={deleteFile} method="dialog" class="modal-box">
                 <div class="form-control w-full max-w-xs">
-                    <span class="label label-text">Enter "confirm" to delete the the script "{$viewingScript.fileName}
-                        ":</span>
+                    <span class="label label-text">Enter "confirm" to delete the the script "{$viewingScript.fileName}":</span>
                     <input type="text" id="{$viewingScript.fileName}" bind:value={deleteFileConfirm}
                            class="input input-bordered w-full max-w-xs"/>
                     <input class="hidden" type="submit"/>
@@ -124,7 +123,7 @@
         </div>
     {:else}
         <div class="justify-center w-full join">
-            <button class="w-[100%] btn bg-green-600 text-gray-100 hover:bg-green-800 join-item"
+            <button class="w-[100%] btn bg-[#1ed760] text-black hover:bg-[#1ed760] hover:scale-[102%] join-item"
                     onclick="fileCreateModal.showModal()">Create a script
             </button>
         </div>
