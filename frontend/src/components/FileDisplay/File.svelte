@@ -1,7 +1,6 @@
 <script lang="ts">
     import { findScriptByName } from "$lib/util/api/script/findScript";
     import { viewingScript } from "../../stores";
-    import MetaTitle from "../Meta/MetaTitle.svelte";
 
     export let name: string;
     export let path: string;

@@ -5,8 +5,6 @@
     import { title, viewingScript, visitedTabs } from "../stores";
     import type {Script} from "$lib/models/models";
     import { copyArr } from "$lib/util/copyArr";
-    import { redirect } from "@sveltejs/kit";
-    import { goto } from "$app/navigation";
 
     let editor: Monaco.editor.IStandaloneCodeEditor;
     let monaco: typeof Monaco;
