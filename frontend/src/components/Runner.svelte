@@ -1,20 +1,19 @@
 <script lang="ts">
-    import { viewingScript, visitedTabs } from "../stores"
     import { updateScriptContent } from "$lib/util/api/script/updateScriptContent"
+    import { refreshFileList } from "$lib/util/storeManagement/refreshFileList"
     import { deleteScriptByName } from "$lib/util/api/script/deleteScript"
     import { copyAndRemoveValue } from "$lib/util/copyArr"
-    import { findScriptByName } from "$lib/util/api/script/findScript"
+    import { viewingScript, visitedTabs } from "../stores"
 
     import FileCreateModal from "./FileManagement/FileCreateModal.svelte"
+    import { syncScript } from "$lib/util/storeManagement/syncScript"
 
     let deleteFileConfirm = ""
 
     let toastActive = false
     let toastText = ""
     let toastStatus = ""
-    let activeToastTimeout = -1
-
-    
+    let activeToastTimeout = -1 
 
     function activateToast(text: string, status: string) {
         toastText = text
@@ -29,14 +28,7 @@
             toastActive = false
         }, 3000)
     }
-
-    async function syncScript() {
-        const script = await findScriptByName($viewingScript?.fileName!!)
-        viewingScript.set(script)
-
-        activateToast("Script was synced", "info bg-blue-500 text-white")
-    }
-
+    
     async function deleteFile() {
         if (deleteFileConfirm !== "confirm") {
             return
