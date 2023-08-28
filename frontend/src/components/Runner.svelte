@@ -1,9 +1,10 @@
 <script lang="ts">
-    import { apiStatus, files, getScriptNames, viewingScript, visitedTabs } from "../stores"
+    import { viewingScript, visitedTabs } from "../stores"
     import { updateScriptContent } from "$lib/util/api/script/updateScriptContent"
     import { deleteScriptByName } from "$lib/util/api/script/deleteScript"
     import { copyAndRemoveValue } from "$lib/util/copyArr"
     import { findScriptByName } from "$lib/util/api/script/findScript"
+
     import FileCreateModal from "./FileManagement/FileCreateModal.svelte"
 
     let deleteFileConfirm = ""
@@ -13,9 +14,7 @@
     let toastStatus = ""
     let activeToastTimeout = -1
 
-    async function refreshFileList() {
-        files.set(await getScriptNames())
-    }
+    
 
     function activateToast(text: string, status: string) {
         toastText = text
