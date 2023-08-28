@@ -1,31 +1,48 @@
 <script lang="ts">
-    import { createScript } from "$lib/util/api/script/createScript";
+    import { createScript } from "$lib/util/api/script/createScript"
+    import { caretToPosition } from "$lib/util/caretToPosition"
+    import { refreshFileList } from "$lib/util/storeManagement/refreshFileList"
+    import { dispatchToast } from "$lib/util/toast/dispatchToast"
+    import { onMount } from "svelte"
 
-    let name = "example.kts"
+    let name = ".kts"
 
-    async function createFile() {
-        if (name.includes(' ') || !name.endsWith(".kts")) {
-            activateToast(`The script name "${name}" is invalid!`, "failure bg-red-600 text-white")
-            return
+    const init = () => {
+        name = ".kts"
+        caretToPosition("name", 0)
+    }
+
+    const createFile = async () => {
+        if (/\s+/.test(name) || !name.endsWith(".kts")) {
+            return dispatchToast(`"${name}" is not a valid script name.`, "failure")
         }
 
         try {
-            await createScript({name})
-            await refreshFileList();
+            await createScript({ fileName: name })
+            await refreshFileList()
 
-            activateToast("Your script was created!", "success bg-green-500 text-black")
+            dispatchToast("Script created.", "success")
         } catch (error: any) {
-            activateToast(error.error, "failure bg-red-600 text-white")
+            dispatchToast(error.error, "failure")
+        } finally {
+            init()
         }
     }
+
+    // move caret to the start of the input
+    onMount(() => {
+        init()
+    })
 </script>
 
 <dialog id="fileCreateModal" class="modal">
     <form on:submit={createFile} method="dialog" class="modal-box w-96 flex justify-center">
         <div class="form-control w-full">
-            <span class="label label-text">Enter a filename: <span class="italic text-gray-500">enter to submit</span></span>
-            <input type="text" bind:value={name} class="input input-bordered w-full"/>
-            <input class="hidden" type="submit"/>
+            <span class="label label-text">
+                Enter a filename: <span class="italic text-gray-500">enter to submit</span>
+            </span>
+            <input type="text" id="name" bind:value={name} class="input input-bordered w-full" />
+            <input class="hidden" type="submit" />
         </div>
     </form>
 
