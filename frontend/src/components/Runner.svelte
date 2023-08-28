@@ -56,6 +56,38 @@
         activateToast("Script was deleted!", "failure bg-red-600 text-white")
     }
 
+    let isCtrlPressed = false;
+    let isSPressed = false;
+
+    function handleKeyDown(event: KeyboardEvent) {
+        if ($viewingScript === null) {
+            return
+        }
+
+        if (event.key === 'Control') {
+            isCtrlPressed = true;
+        } else if (event.key === 's' || event.key === 'S') {
+            isSPressed = true;
+        }
+
+        if (isCtrlPressed && isSPressed) {
+            event.preventDefault();
+            saveFile();
+        }
+    }
+
+    function handleKeyUp(event: KeyboardEvent) {
+        if ($viewingScript === null) {
+            return
+        }
+
+        if (event.key === 'Control') {
+            isCtrlPressed = false;
+        } else if (event.key === 's' || event.key === 'S') {
+            isSPressed = false;
+        }
+    }
+
     async function saveFile() {
         await updateScriptContent($viewingScript!!)
         activateToast("Script was saved!", "success bg-green-500 text-black")
@@ -76,8 +108,12 @@
             activateToast(error.error, "failure bg-red-600 text-white")
         }
     }
-
 </script>
+
+<svelte:window
+        on:keydown={handleKeyDown}
+        on:keyup={handleKeyUp}
+/>
 
 <section class="flex justify-center p-5">
     {#if toastActive}
