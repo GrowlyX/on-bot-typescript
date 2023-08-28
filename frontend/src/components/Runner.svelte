@@ -99,14 +99,14 @@
                 </div>
             </form>
 
-            <form method="dialog" class="modal-backdrop">
+            <form method="dialog" class="modal-backdrop">x
                 <button>close</button>
             </form>
         </dialog>
 
         <div class="justify-center w-full join">
             <button on:click={saveFile} data-tip="save script"
-                    class="tooltip w-[70%] btn bg-green-600 hover:bg-green-800  text-gray-100 join-item">
+                    class="tooltip w-[70%] btn bg-[#1ed760] text-black hover:bg-[#17b34f] join-item">
                 Save
             </button>
             <button on:click={syncScript} data-tip="sync script"
