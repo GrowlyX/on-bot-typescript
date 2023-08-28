@@ -135,7 +135,7 @@ class ScriptService(database: Database)
     {
         val id = integer("id").autoIncrement()
 
-        val fileName = varchar("name", length = 25)
+        val fileName = varchar("name", length = 45)
         val fileContent = text("file_content", eagerLoading = true)
 
         val lastEdited = datetime("last_edited")
