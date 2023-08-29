@@ -33,9 +33,3 @@
         {/if}
     </ul>
 </section>
-
-<style>
-    #logo {
-        width: 30rem;
-    }
-</style>

@@ -25,6 +25,8 @@
 </script>
 
 <!-- svelte-ignore a11y-missing-attribute -->
+<!-- svelte-ignore a11y-no-static-element-interactions -->
+<!-- svelte-ignore a11y-click-events-have-key-events -->
 <li>
     {#if currentlyViewing}
         <a class="icon octicon-file kotlin-icon hover:text-white">{name}</a>
