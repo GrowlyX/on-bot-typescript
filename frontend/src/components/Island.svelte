@@ -46,7 +46,7 @@
             <button
                     on:click={saveFile}
                     data-tip="save script"
-                    class="tooltip w-[70%] btn bg-green-600 hover:bg-green-800 text-black join-item"
+                    class="tooltip w-[70%] bg-[#1ed760] btn text-black hover:bg-[#1ed760] hover:scale-[102%] join-item"
             >
                 Save
             </button>
@@ -70,7 +70,7 @@
     {:else}
         <div class="justify-center w-full join">
             <button
-                    class="w-[100%] btn bg-[#1ed760] text-black hover:bg-[#1ed760] hover:scale-[102%] join-item"
+                    class="w-[100%] btn bg-[#1ed760] text-black hover:bg-[#1ed760] hover:scale-[102%]"
                     on:click={() => fileCreateModal().showModal()}
             >Create a script
             </button>
