@@ -32,6 +32,7 @@
     "@iconify/svelte": "^3.1.4",
     "atom-file-icons": "^1.0.3",
     "cross-fetch": "^4.0.0",
-    "monaco-editor": "^0.40.0"
+    "monaco-editor": "^0.40.0",
+    "nanoid": "^4.0.2"
   }
 }
