@@ -10,17 +10,23 @@
     import { deleteFile } from "$lib/util/storeManagement/deleteFile"
     import { onMount } from "svelte"
 
+    let mounted = false
+
     let confirmDeleteModal: HTMLDialogElement
     let fileCreateModal: HTMLDialogElement
 
     onMount(() => {
+        mounted = true;
+
         confirmDeleteModal = document.getElementById("confirmDeleteModal") as HTMLDialogElement
         fileCreateModal = document.getElementById("fileCreateModal") as HTMLDialogElement
     })
 
     viewingScript.subscribe(() => {
-        confirmDeleteModal = document.getElementById("confirmDeleteModal") as HTMLDialogElement
-        fileCreateModal = document.getElementById("fileCreateModal") as HTMLDialogElement
+        if (mounted) {
+            confirmDeleteModal = document.getElementById("confirmDeleteModal") as HTMLDialogElement
+            fileCreateModal = document.getElementById("fileCreateModal") as HTMLDialogElement
+        }
     })
 
     let deleteFileConfirm = ""
