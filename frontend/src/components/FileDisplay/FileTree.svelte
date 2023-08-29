@@ -15,11 +15,6 @@
 </script>
 
 <section>
-    <div on:click={() => { viewingScript.set(null) }} class="flex flex-col justify-center hover:drop-shadow-xl">
-        <img class="cursor-pointer hover:bg-[#2a2a2a] rounded-md scale-75"
-             src="logo.png" id="logo" alt="OnBot Kotlin Logo">
-    </div>
-
     <ul class="p-3 m-3 rounded-md menu bg-[#181818] text-white">
         {#if $fileListLoaded === false}
             <div class="flex justify-center">
