@@ -6,6 +6,7 @@
     import type { Script } from "$lib/models/models";
     import { copyArr } from "$lib/util/copyArr";
     import { saveFile } from "$lib/util/storeManagement/saveFile";
+    import { syncScript } from "$lib/util/storeManagement/syncScript";
 
     let editor: Monaco.editor.IStandaloneCodeEditor;
     let monaco: typeof Monaco;
@@ -32,6 +33,14 @@
             monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS,
             () => {
                 saveFile();
+            }
+        );
+
+        editor.addCommand(
+            monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyB,
+            () => {
+                // TODO: update monaco content rather than creating a new modal
+                syncScript();
             }
         );
 
