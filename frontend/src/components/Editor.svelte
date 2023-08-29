@@ -3,8 +3,9 @@
     import { onDestroy, onMount } from "svelte";
     import type * as Monaco from "monaco-editor/esm/vs/editor/editor.api";
     import { title, viewingScript, visitedTabs } from "../stores";
-    import type {Script} from "$lib/models/models";
+    import type { Script } from "$lib/models/models";
     import { copyArr } from "$lib/util/copyArr";
+    import { saveFile } from "$lib/util/storeManagement/saveFile";
 
     let editor: Monaco.editor.IStandaloneCodeEditor;
     let monaco: typeof Monaco;
@@ -14,9 +15,16 @@
         // Remove the next two lines to load the monaco editor from a CDN
         // see https://www.npmjs.com/package/@monaco-editor/loader#config
         const monacoEditor = await import("monaco-editor");
-        loader.config({ monaco: monacoEditor.default });
+        loader.config({monaco: monacoEditor.default});
 
         monaco = await loader.init();
+
+        editor.addCommand(
+            monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS,
+            () => {
+                saveFile();
+            }
+        );
 
         // Your monaco instance is ready, let's display some code!
         editor = monaco.editor.create(editorContainer, {
@@ -69,4 +77,4 @@
     });
 </script>
 
-<section class="h-screen" bind:this={editorContainer} />
+<section class="h-screen" bind:this={editorContainer}/>

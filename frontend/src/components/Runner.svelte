@@ -30,44 +30,7 @@
     })
 
     let deleteFileConfirm = ""
-
-    let isCtrlPressed = false;
-    let isSPressed = false;
-
-    function handleKeyDown(event: KeyboardEvent) {
-        if ($viewingScript === null) {
-            return
-        }
-
-        if (event.key === 'Control') {
-            isCtrlPressed = true;
-        } else if (event.key === 's' || event.key === 'S') {
-            isSPressed = true;
-        }
-
-        if (isCtrlPressed && isSPressed) {
-            event.preventDefault();
-            saveFile();
-        }
-    }
-
-    function handleKeyUp(event: KeyboardEvent) {
-        if ($viewingScript === null) {
-            return
-        }
-
-        if (event.key === 'Control') {
-            isCtrlPressed = false;
-        } else if (event.key === 's' || event.key === 'S') {
-            isSPressed = false;
-        }
-    }
 </script>
-
-<svelte:window
-        on:keydown={handleKeyDown}
-        on:keyup={handleKeyUp}
-/>
 
 <section class="flex justify-center p-5">
     {#if $viewingScript !== null}
