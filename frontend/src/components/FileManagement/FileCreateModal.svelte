@@ -1,9 +1,9 @@
 <script lang="ts">
-    import { createScript } from "$lib/util/api/script/createScript"
     import { caretToPosition } from "$lib/util/caretToPosition"
-    import { refreshFileList } from "$lib/util/storeManagement/refreshFileList"
     import { ToastManager } from "$lib/util/toast/ToastManager"
     import { onMount } from "svelte"
+    import { ScriptService } from "$lib/util/api/script/ScriptService";
+    import { refreshFileList } from "$lib/util/storeManagement/refreshFileList";
 
     let name = ".kts"
 
@@ -18,7 +18,7 @@
         }
 
         try {
-            await createScript({ fileName: name })
+            await ScriptService.create({ fileName: name })
             await refreshFileList()
 
             ToastManager.dispatch("Script created.", "success")

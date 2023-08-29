@@ -1,11 +1,11 @@
 <script lang="ts">
     import Editor from "../components/Editor.svelte";
     import Sidebar from "../components/Sidebar.svelte";
-    import { viewingScript, visitedTabs } from "../stores";
-    import { findScriptByName } from "$lib/util/api/script/findScript";
+    import { viewingScript } from "../stores";
+    import { ScriptService } from "$lib/util/api/script/ScriptService";
 
     async function navigateToScript(innerText: string) {
-        const script = await findScriptByName(innerText)
+        const script = await ScriptService.findByName(innerText)
         viewingScript.set(script)
     }
 </script>

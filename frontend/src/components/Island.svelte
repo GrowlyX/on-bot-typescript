@@ -1,8 +1,5 @@
 <script lang="ts">
-    import { refreshFileList } from "$lib/util/storeManagement/refreshFileList"
-    import { deleteScriptByName } from "$lib/util/api/script/deleteScript"
-    import { copyAndRemoveValue } from "$lib/util/copyArr"
-    import { viewingScript, visitedTabs } from "../stores"
+    import { viewingScript } from "../stores"
 
     import FileCreateModal from "./FileManagement/FileCreateModal.svelte"
     import { syncScript } from "$lib/util/storeManagement/syncScript"

@@ -1,12 +1,12 @@
 import { get } from "svelte/store"
 import { viewingScript, visitedTabs } from "../../../stores"
-import { deleteScriptByName } from "../api/script/deleteScript"
 import { copyAndRemoveValue } from "../copyArr"
 import { refreshFileList } from "./refreshFileList"
 import { ToastManager } from "../toast/ToastManager"
+import { ScriptService } from "$lib/util/api/script/ScriptService";
 
 export const deleteFile = async () => {
-    await deleteScriptByName(get(viewingScript)?.fileName!!)
+    await ScriptService.deleteByName(get(viewingScript)?.fileName!!)
     await refreshFileList()
 
     visitedTabs.set(copyAndRemoveValue(get(visitedTabs), get(viewingScript)?.fileName!!))

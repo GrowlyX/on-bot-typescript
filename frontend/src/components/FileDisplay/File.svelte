@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { findScriptByName } from "$lib/util/api/script/findScript";
     import { viewingScript } from "../../stores";
+    import { ScriptService } from "$lib/util/api/script/ScriptService";
 
     export let name: string;
     export let path: string;
@@ -19,7 +19,7 @@
     })
 
     export async function handleClick() {
-        const script = await findScriptByName(path)
+        const script = await ScriptService.findByName(path)
         viewingScript.set(script)
     }
 </script>

@@ -1,19 +1,19 @@
 import { writable } from "svelte/store";
 import type { APIStatus, Script } from "$lib/models/models";
-import { findAllScripts } from "$lib/util/api/script/findAllScripts";
 import { onMount } from "svelte";
 import { fetchAPIStatus } from "$lib/util/api/fetchAPIStatus";
 
 import { _api } from '@iconify/svelte';
 import fetch from 'cross-fetch';
 import type { ToastEvent } from "$lib/util/toast/ToastEvent";
+import { ScriptService } from "$lib/util/api/script/ScriptService";
 
 _api.setFetch(fetch);
 
 export const toasts = writable<ToastEvent[]>([])
 
 export async function getScriptNames(): Promise<string[]> {
-    const backingScripts = await findAllScripts()
+    const backingScripts = await ScriptService.findAll()
     return backingScripts
         .map((script: Script) =>
             script.fileName
