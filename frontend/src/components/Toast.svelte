@@ -2,12 +2,11 @@
     import type { ToastType } from "$lib/util/toast/ToastEvent"
     import { toasts } from "../stores"
 
-    // TODO: style well
     const style = (type: ToastType) => ({
-        success: "success",
-        failure: "error",
-        warning: "warning",
-        info: "info"
+        success: "success bg-[#4BB543] text-white",
+        failure: "error bg-[#FC100D] text-white",
+        warning: "warning bg-[#ffe900] text-white",
+        info: "info bg-[#fff5f5] text-black"
     }[type])
 </script>
 

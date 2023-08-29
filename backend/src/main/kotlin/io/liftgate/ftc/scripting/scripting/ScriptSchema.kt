@@ -145,7 +145,7 @@ class ScriptService(database: Database)
     init
     {
         transaction(database) {
-            SchemaUtils.createMissingTablesAndColumns(Scripts)
+            SchemaUtils.create(Scripts)
         }
     }
 
