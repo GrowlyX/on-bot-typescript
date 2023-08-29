@@ -6,8 +6,11 @@ import { fetchAPIStatus } from "$lib/util/api/fetchAPIStatus";
 
 import { _api } from '@iconify/svelte';
 import fetch from 'cross-fetch';
+import type { ToastEvent } from "$lib/util/toast/ToastEvent";
 
 _api.setFetch(fetch);
+
+export const toasts = writable<ToastEvent[]>([])
 
 export async function getScriptNames(): Promise<string[]> {
     const backingScripts = await findAllScripts()
