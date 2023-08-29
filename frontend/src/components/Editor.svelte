@@ -19,8 +19,13 @@
         monaco = await loader.init();
 
         // Your monaco instance is ready, let's display some code!
-        editor = monaco.editor.create(editorContainer);
-        monaco.editor.setTheme("vs-dark");
+        editor = monaco.editor.create(editorContainer, {
+            glyphMargin: true,
+            theme: "vs-dark",
+            lightbulb: {
+                enabled: true
+            }
+        });
 
         viewingScript.subscribe((script: any) => {
             editor.getModel()?.dispose()

@@ -13,6 +13,8 @@ import org.reflections.Reflections
 import org.reflections.scanners.Scanners
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.toKotlinLocalDateTime
+import org.jetbrains.exposed.dao.id.EntityID
+import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.kotlin.datetime.CurrentDateTime
 import org.jetbrains.exposed.sql.kotlin.datetime.datetime
 import org.reflections.util.ConfigurationBuilder
@@ -131,30 +133,26 @@ data class Script(
 
 class ScriptService(database: Database)
 {
-    object Scripts : Table()
+    object Scripts : IntIdTable()
     {
-        val id = integer("id").autoIncrement()
-
         val fileName = varchar("name", length = 45)
         val fileContent = text("file_content", eagerLoading = true)
 
         val lastEdited = datetime("last_edited")
             .defaultExpression(CurrentDateTime)
-
-        override val primaryKey = PrimaryKey(id)
     }
 
     init
     {
         transaction(database) {
-            SchemaUtils.create(Scripts)
+            SchemaUtils.createMissingTablesAndColumns(Scripts)
         }
     }
 
     suspend fun <T> asyncTransaction(block: suspend () -> T): T =
         newSuspendedTransaction(Dispatchers.IO) { block() }
 
-    suspend fun create(user: Script): Int = asyncTransaction {
+    suspend fun create(user: Script): EntityID<Int> = asyncTransaction {
         Scripts.insert {
             it[fileName] = user.fileName
             it[fileContent] = user.fileContent

@@ -1,3 +1,5 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
 dependencies {
     api(kotlin("reflect"))
     api(kotlin("script-runtime"))
@@ -17,4 +19,10 @@ dependencies {
 
     testImplementation("junit:junit:4.12")
     testImplementation(fileTree("ftc-libs"))
+}
+
+tasks {
+    withType<ShadowJar> {
+        exclude("**/org/slf4j/**")
+    }
 }
