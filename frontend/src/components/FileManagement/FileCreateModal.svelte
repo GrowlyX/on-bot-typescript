@@ -2,7 +2,7 @@
     import { createScript } from "$lib/util/api/script/createScript"
     import { caretToPosition } from "$lib/util/caretToPosition"
     import { refreshFileList } from "$lib/util/storeManagement/refreshFileList"
-    import { dispatchToast } from "$lib/util/toast/dispatchToast"
+    import { ToastManager } from "$lib/util/toast/ToastManager"
     import { onMount } from "svelte"
 
     let name = ".kts"
@@ -14,16 +14,16 @@
 
     const createFile = async () => {
         if (/\s+/.test(name) || !name.endsWith(".kts")) {
-            return dispatchToast(`"${name}" is not a valid script name.`, "failure")
+            return ToastManager.dispatch(`"${name}" is not a valid script name.`, "failure")
         }
 
         try {
             await createScript({ fileName: name })
             await refreshFileList()
 
-            dispatchToast("Script created.", "success")
+            ToastManager.dispatch("Script created.", "success")
         } catch (error: any) {
-            dispatchToast(error.error, "failure")
+            ToastManager.dispatch(error.error, "failure")
         } finally {
             init()
         }

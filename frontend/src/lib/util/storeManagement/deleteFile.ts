@@ -2,8 +2,8 @@ import { get } from "svelte/store"
 import { viewingScript, visitedTabs } from "../../../stores"
 import { deleteScriptByName } from "../api/script/deleteScript"
 import { copyAndRemoveValue } from "../copyArr"
-import { dispatchToast } from "../toast/dispatchToast"
 import { refreshFileList } from "./refreshFileList"
+import { ToastManager } from "../toast/ToastManager"
 
 export const deleteFile = async () => {
     await deleteScriptByName(get(viewingScript)?.fileName!!)
@@ -13,5 +13,5 @@ export const deleteFile = async () => {
 
     // reset the viewing script to dispose of current model
     viewingScript.set(null)
-    dispatchToast("Script was deleted.", "failure")
+    ToastManager.dispatch("Script was deleted.", "failure")
 }

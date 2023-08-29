@@ -1,9 +1,9 @@
 import { get } from "svelte/store"
 import { viewingScript } from "../../../stores"
 import { updateScriptContent } from "../api/script/updateScriptContent"
-import { dispatchToast } from "../toast/dispatchToast"
+import { ToastManager } from "../toast/ToastManager"
 
 export const saveFile = async () => {
     await updateScriptContent(get(viewingScript)!!)
-    dispatchToast("Script was saved.", "success")
+    ToastManager.dispatch("Script was saved.", "success")
 }

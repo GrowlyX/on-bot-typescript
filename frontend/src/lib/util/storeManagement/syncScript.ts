@@ -1,11 +1,11 @@
 import { viewingScript } from "../../../stores"
 import { findScriptByName } from "../api/script/findScript"
-import { dispatchToast } from "../toast/dispatchToast"
 import { get } from 'svelte/store';
+import { ToastManager } from "../toast/ToastManager";
 
 export const syncScript = async () => {
     const script = await findScriptByName(get(viewingScript)!!.fileName)
     viewingScript.set(script)
 
-    dispatchToast("Script synced.", "info")
+    ToastManager.dispatch("Script synced.", "info")
 }
