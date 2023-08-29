@@ -20,11 +20,13 @@ export async function getScriptNames(): Promise<string[]> {
         )
 }
 
+export const fileListLoaded = writable<boolean>(false)
 export const files = writable(
     [] as string[],
     function start(set) {
         onMount(async () => {
             set(await getScriptNames())
+            fileListLoaded.set(true)
         })
     }
 );
