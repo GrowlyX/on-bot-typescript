@@ -19,13 +19,6 @@
 
         monaco = await loader.init();
 
-        editor.addCommand(
-            monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS,
-            () => {
-                saveFile();
-            }
-        );
-
         // Your monaco instance is ready, let's display some code!
         editor = monaco.editor.create(editorContainer, {
             glyphMargin: true,
@@ -34,6 +27,13 @@
                 enabled: true
             }
         });
+
+        editor.addCommand(
+            monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS,
+            () => {
+                saveFile();
+            }
+        );
 
         viewingScript.subscribe((script: any) => {
             editor.getModel()?.dispose()
