@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { updateScriptContent } from "$lib/util/api/script/updateScriptContent"
     import { refreshFileList } from "$lib/util/storeManagement/refreshFileList"
     import { deleteScriptByName } from "$lib/util/api/script/deleteScript"
     import { copyAndRemoveValue } from "$lib/util/copyArr"
@@ -7,6 +6,7 @@
 
     import FileCreateModal from "./FileManagement/FileCreateModal.svelte"
     import { syncScript } from "$lib/util/storeManagement/syncScript"
+    import { saveFile } from "$lib/util/storeManagement/saveFile"
 
     let deleteFileConfirm = ""
 
@@ -76,10 +76,7 @@
         }
     }
 
-    async function saveFile() {
-        await updateScriptContent($viewingScript!!)
-        activateToast("Script was saved!", "success bg-green-500 text-black")
-    }
+    
 </script>
 
 <svelte:window
