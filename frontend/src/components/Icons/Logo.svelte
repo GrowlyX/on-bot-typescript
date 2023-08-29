@@ -7,6 +7,7 @@ import {viewingScript} from "../../stores.ts";
 <div on:click={() => { viewingScript.set(null) }} class="flex flex-col justify-center hover:bg-[#2a2a2a] transition-colors rounded-md m-4 cursor-pointer">
     <img class="logo scale-75"
          src="logo.png" id="logo" alt="OnBot Kotlin Logo">
+    <p class="font-thin text-center pb-3">OnBot Kotlin Script Editor</p>
 </div>
 
 <style>

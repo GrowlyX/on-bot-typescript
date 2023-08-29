@@ -15,7 +15,7 @@
 </script>
 
 <section>
-    <ul class="p-3 m-3 rounded-md menu bg-[#181818] text-white">
+    <ul class="p-3 m-3 rounded-md menu bg-[#181818] text-white font-thin">
         {#if $fileListLoaded === false}
             <div class="flex justify-center">
                 <span class="loading loading-spinner loading-xs p-3"></span>
