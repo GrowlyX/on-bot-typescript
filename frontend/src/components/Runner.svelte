@@ -7,6 +7,7 @@
     import FileCreateModal from "./FileManagement/FileCreateModal.svelte"
     import { syncScript } from "$lib/util/storeManagement/syncScript"
     import { saveFile } from "$lib/util/storeManagement/saveFile"
+    import { deleteFile } from "$lib/util/storeManagement/deleteFile"
 
     let deleteFileConfirm = ""
 
@@ -27,21 +28,6 @@
         activeToastTimeout = setTimeout(() => {
             toastActive = false
         }, 3000)
-    }
-    
-    async function deleteFile() {
-        if (deleteFileConfirm !== "confirm") {
-            return
-        }
-
-        await deleteScriptByName($viewingScript?.fileName!!)
-        await refreshFileList()
-
-        visitedTabs.set(copyAndRemoveValue($visitedTabs, $viewingScript?.fileName!!))
-
-        // reset the viewing script to dispose of current model
-        viewingScript.set(null)
-        activateToast("Script was deleted!", "failure bg-red-600 text-white")
     }
 
     let isCtrlPressed = false;
@@ -75,8 +61,6 @@
             isSPressed = false;
         }
     }
-
-    
 </script>
 
 <svelte:window
