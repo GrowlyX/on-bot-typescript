@@ -18,6 +18,11 @@
         fileCreateModal = document.getElementById("fileCreateModal") as HTMLDialogElement
     })
 
+    viewingScript.subscribe(() => {
+        confirmDeleteModal = document.getElementById("confirmDeleteModal") as HTMLDialogElement
+        fileCreateModal = document.getElementById("fileCreateModal") as HTMLDialogElement
+    })
+
     let deleteFileConfirm = ""
 
     let isCtrlPressed = false;
