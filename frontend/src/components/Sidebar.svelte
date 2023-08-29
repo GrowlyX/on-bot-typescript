@@ -1,6 +1,6 @@
 <script lang="ts">
     import FileTree from "./FileDisplay/FileTree.svelte";
-    import Runner from "./Runner.svelte";
+    import Runner from "./Island.svelte";
     import { files } from "../stores";
 </script>
 
