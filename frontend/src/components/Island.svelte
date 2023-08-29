@@ -5,28 +5,18 @@
     import { syncScript } from "$lib/util/storeManagement/syncScript"
     import { saveFile } from "$lib/util/storeManagement/saveFile"
     import { deleteFile } from "$lib/util/storeManagement/deleteFile"
-    import { onMount } from "svelte"
-
-    let mounted = false
-
-    let confirmDeleteModal: HTMLDialogElement
-    let fileCreateModal: HTMLDialogElement
-
-    onMount(() => {
-        mounted = true;
-
-        confirmDeleteModal = document.getElementById("confirmDeleteModal") as HTMLDialogElement
-        fileCreateModal = document.getElementById("fileCreateModal") as HTMLDialogElement
-    })
-
-    viewingScript.subscribe(() => {
-        if (mounted) {
-            confirmDeleteModal = document.getElementById("confirmDeleteModal") as HTMLDialogElement
-            fileCreateModal = document.getElementById("fileCreateModal") as HTMLDialogElement
-        }
-    })
+    import Sync from "./Icons/Sync.svelte";
 
     let deleteFileConfirm = ""
+
+    // We assume mounted here
+    function confirmDeleteModal(): HTMLDialogElement {
+        return document.getElementById("confirmDeleteModal") as HTMLDialogElement
+    }
+
+    function fileCreateModal(): HTMLDialogElement {
+        return document.getElementById("fileCreateModal") as HTMLDialogElement
+    }
 </script>
 
 <section class="flex justify-center p-5">
@@ -35,15 +25,15 @@
             <form on:submit={deleteFile} method="dialog" class="modal-box">
                 <div class="form-control w-full max-w-xs">
                     <span class="label label-text"
-                        >Enter "confirm" to delete the the script "{$viewingScript.fileName}":</span
+                    >Enter "confirm" to delete the the script "{$viewingScript.fileName}":</span
                     >
                     <input
-                        type="text"
-                        id={$viewingScript.fileName}
-                        bind:value={deleteFileConfirm}
-                        class="input input-bordered w-full max-w-xs"
+                            type="text"
+                            id={$viewingScript.fileName}
+                            bind:value={deleteFileConfirm}
+                            class="input input-bordered w-full max-w-xs"
                     />
-                    <input class="hidden" type="submit" />
+                    <input class="hidden" type="submit"/>
                 </div>
             </form>
 
@@ -54,25 +44,24 @@
 
         <div class="justify-center w-full join">
             <button
-                on:click={saveFile}
-                data-tip="save script"
-                class="tooltip w-[70%] btn bg-green-600 hover:bg-green-800 text-gray-100 join-item"
+                    on:click={saveFile}
+                    data-tip="save script"
+                    class="tooltip w-[70%] btn bg-green-600 hover:bg-green-800 text-black join-item"
             >
                 Save
             </button>
             <button
-                on:click={syncScript}
-                data-tip="sync script"
-                class="tooltip w-[15%] btn bg-blue-500 hover:bg-blue-700 text-gray-100 join-item"
+                    on:click={syncScript}
+                    data-tip="sync script"
+                    class="tooltip w-[15%] btn bg-blue-500 hover:bg-blue-700 text-gray-100 join-item"
             >
-                <!-- TODO: icon :) -->
-                🔄
+                <Sync/>
             </button>
 
             <button
-                on:click={() => confirmDeleteModal.showModal()}
-                data-tip="delete script"
-                class="tooltip w-[15%] btn bg-red-500 hover:bg-red-700 text-gray-100 join-item"
+                    on:click={() => confirmDeleteModal().showModal()}
+                    data-tip="delete script"
+                    class="tooltip w-[15%] btn bg-red-500 hover:bg-red-700 text-gray-100 join-item"
             >
                 <!-- TODO: icon :) -->
                 🗑️
@@ -81,12 +70,12 @@
     {:else}
         <div class="justify-center w-full join">
             <button
-                class="w-[100%] btn bg-[#1ed760] text-black hover:bg-[#1ed760] hover:scale-[102%] join-item"
-                on:click={() => fileCreateModal.showModal()}
-                >Create a script
+                    class="w-[100%] btn bg-[#1ed760] text-black hover:bg-[#1ed760] hover:scale-[102%] join-item"
+                    on:click={() => fileCreateModal().showModal()}
+            >Create a script
             </button>
         </div>
 
-        <FileCreateModal />
+        <FileCreateModal/>
     {/if}
 </section>
