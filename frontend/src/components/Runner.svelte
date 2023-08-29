@@ -8,27 +8,17 @@
     import { syncScript } from "$lib/util/storeManagement/syncScript"
     import { saveFile } from "$lib/util/storeManagement/saveFile"
     import { deleteFile } from "$lib/util/storeManagement/deleteFile"
+    import { onMount } from "svelte"
+
+    let confirmDeleteModal: HTMLDialogElement
+    let fileCreateModal: HTMLDialogElement
+
+    onMount(() => {
+        confirmDeleteModal = document.getElementById("confirmDeleteModal") as HTMLDialogElement
+        fileCreateModal = document.getElementById("fileCreateModal") as HTMLDialogElement
+    })
 
     let deleteFileConfirm = ""
-
-    let toastActive = false
-    let toastText = ""
-    let toastStatus = ""
-    let activeToastTimeout = -1 
-
-    function activateToast(text: string, status: string) {
-        toastText = text
-        toastStatus = status
-        toastActive = true
-
-        if (activeToastTimeout !== -1) {
-            clearTimeout(activeToastTimeout)
-        }
-
-        activeToastTimeout = setTimeout(() => {
-            toastActive = false
-        }, 3000)
-    }
 
     let isCtrlPressed = false;
     let isSPressed = false;
@@ -69,14 +59,6 @@
 />
 
 <section class="flex justify-center p-5">
-    {#if toastActive}
-        <div class="toast toast-start">
-            <div class="alert alert-{toastStatus}">
-                <span>{toastText}</span>
-            </div>
-        </div>
-    {/if}
-
     {#if $viewingScript !== null}
         <dialog id="confirmDeleteModal" class="modal">
             <form on:submit={deleteFile} method="dialog" class="modal-box">
@@ -117,7 +99,7 @@
             </button>
 
             <button
-                onclick="confirmDeleteModal.showModal()"
+                on:click={() => confirmDeleteModal.showModal()}
                 data-tip="delete script"
                 class="tooltip w-[15%] btn bg-red-500 hover:bg-red-700 text-gray-100 join-item"
             >
@@ -129,7 +111,7 @@
         <div class="justify-center w-full join">
             <button
                 class="w-[100%] btn bg-[#1ed760] text-black hover:bg-[#1ed760] hover:scale-[102%] join-item"
-                onclick="fileCreateModal.showModal()"
+                on:click={() => fileCreateModal.showModal()}
                 >Create a script
             </button>
         </div>
