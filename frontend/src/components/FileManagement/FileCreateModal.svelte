@@ -5,43 +5,82 @@
     import { ScriptService } from "$lib/util/api/script/ScriptService";
     import { refreshFileList } from "$lib/util/storeManagement/refreshFileList";
 
-    let name = ".kts"
+    let name = ""
 
-    const init = () => {
-        name = ".kts"
-        caretToPosition("name", 0)
+    type Failure = {
+        error: string
+        enabled: boolean
     }
 
-    const createFile = async () => {
-        if (/\s+/.test(name) || !name.endsWith(".kts")) {
-            return ToastManager.dispatch(`"${name}" is not a valid script name.`, "failure")
+    let failure: Failure = {
+        error: "",
+        enabled: false
+    }
+
+    async function validateScriptName() {
+        if (name.length === 0) {
+            failure = {
+                error: "Script name cannot be empty!",
+                enabled: true
+            }
+            return
+        }
+
+        if (/\s+/.test(name)) {
+            failure = {
+                error: "Script name must not contain whitespaces!",
+                enabled: true
+            }
+            return
         }
 
         try {
-            await ScriptService.create({ fileName: name })
+            await ScriptService.findByName(`${name}.kts`)
+
+            failure = {
+                error: "Script already exists!",
+                enabled: true
+            }
+            return
+        } catch (ignored) {
+
+        }
+
+        failure = {
+            error: "",
+            enabled: false
+        }
+    }
+
+    const createFile = async () => {
+        if (failure.enabled) {
+            return
+        }
+
+        try {
+            await ScriptService.create({ fileName: `${name}.kts` })
             await refreshFileList()
 
             ToastManager.dispatch("Script created.", "success")
         } catch (error: any) {
-            ToastManager.dispatch(error.error, "failure")
-        } finally {
-            init()
+            ToastManager.dispatch(`Couldn't submit script create for ${error.error}`, "failure")
         }
     }
-
-    // move caret to the start of the input
-    onMount(() => {
-        init()
-    })
 </script>
 
 <dialog id="fileCreateModal" class="modal">
-    <form on:submit={createFile} method="dialog" class="modal-box w-96 flex justify-center">
+    <form on:submit|preventDefault={createFile} on:keyup={validateScriptName} method="dialog" class="modal-box w-96 flex justify-center">
         <div class="form-control w-full">
             <span class="label label-text">
                 Enter a filename: <span class="italic text-gray-500">enter to submit</span>
             </span>
-            <input type="text" id="name" bind:value={name} class="input input-bordered w-full" />
+
+            <input type="text" id="name" bind:value={name} class={(failure.enabled ? "border-red-500 " : "") +  "input input-bordered w-full"} />
+
+            {#if failure.enabled}
+                <span class="label label-text text-red-500">{failure.error}</span>
+            {/if}
+
             <input class="hidden" type="submit" />
         </div>
     </form>
