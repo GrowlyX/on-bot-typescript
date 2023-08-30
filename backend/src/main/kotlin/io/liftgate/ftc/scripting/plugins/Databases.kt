@@ -73,6 +73,14 @@ fun Application.configureDatabases()
                 return@post
             }
 
+            if (scriptCreation.fileName == ".kts")
+            {
+                call.respond(
+                    mapOf("error" to "Script name cannot be .kts!")
+                )
+                return@post
+            }
+
             val script = Script(
                 fileName = scriptCreation.fileName,
                 """
