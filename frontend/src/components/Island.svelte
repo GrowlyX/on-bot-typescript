@@ -5,11 +5,10 @@
     import { saveFile } from "$lib/util/storeManagement/saveFile"
 
     import FileCreateModal from "./FileManagement/FileCreateModal.svelte"
-    import { CloudArrowUp, Icon, Trash } from "svelte-hero-icons";
+    import { CloudArrowDown, Icon, Trash } from "svelte-hero-icons";
     import FileDeleteModal from "./FileManagement/FileDeleteModal.svelte";
     import { deleteFile } from "$lib/util/storeManagement/deleteFile";
 
-    // We assume mounted here
     let modalOpen = false
 </script>
 
@@ -28,7 +27,7 @@
                     data-tip="sync script"
                     class="tooltip w-[15%] btn bg-blue-500 hover:bg-blue-700 text-gray-100 join-item"
             >
-                <Icon src="{CloudArrowUp}" solid/>
+                <Icon src="{CloudArrowDown}" solid/>
             </button>
 
             <button
@@ -65,5 +64,4 @@
                 }}
         />
     {/if}
-
 </section>
