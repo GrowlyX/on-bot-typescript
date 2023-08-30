@@ -51,7 +51,7 @@
                 Save
             </button>
             <button
-                    on:click={syncScript}
+                    on:click={$syncScript}
                     data-tip="sync script"
                     class="tooltip w-[15%] btn bg-blue-500 hover:bg-blue-700 text-gray-100 join-item"
             >

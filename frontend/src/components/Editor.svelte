@@ -7,10 +7,25 @@
     import { copyArr } from "$lib/util/copyArr";
     import { saveFile } from "$lib/util/storeManagement/saveFile";
     import { syncScript } from "$lib/util/storeManagement/syncScript";
+    import { ScriptService } from "$lib/util/api/script/ScriptService";
+    import { get } from "svelte/store";
+    import { ToastManager } from "$lib/util/toast/ToastManager";
 
     let editor: Monaco.editor.IStandaloneCodeEditor;
     let monaco: typeof Monaco;
     let editorContainer: HTMLElement;
+
+    syncScript.set(
+        async () => {
+            const script = await ScriptService
+                .findByName(
+                    get(viewingScript)!!.fileName
+                )
+            editor.getModel()?.setValue(script.fileContent)
+
+            ToastManager.dispatch("Script synced.", "info")
+        }
+    )
 
     onMount(async () => {
         // Remove the next two lines to load the monaco editor from a CDN
@@ -29,10 +44,22 @@
             }
         });
 
+        let saveTimeOut = false
+        let syncTimeOut = false
+
         editor.addCommand(
             monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS,
             () => {
+                if (saveTimeOut) {
+                    return
+                }
+
                 saveFile();
+                saveTimeOut = true
+
+                setTimeout(() => {
+                    saveTimeOut = false
+                }, 250)
             }
         );
 
@@ -40,7 +67,16 @@
             monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyB,
             () => {
                 // TODO: update monaco content rather than creating a new modal
-                syncScript();
+                if (syncTimeOut) {
+                    return
+                }
+
+                $syncScript();
+                syncTimeOut = true
+
+                setTimeout(() => {
+                    syncTimeOut = false
+                }, 250)
             }
         );
 
