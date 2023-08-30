@@ -1,5 +1,5 @@
-<div class="w-4 h-4">
-	<svg fill="#ffffff" height="25px" width="25px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+<div class="w-6 h-6">
+	<svg fill="#ffffff" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
 		 viewBox="0 0 511.979 511.979" xml:space="preserve">
 <g>
 	<g>
