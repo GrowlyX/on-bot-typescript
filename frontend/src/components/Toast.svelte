@@ -3,7 +3,7 @@
     import { toasts } from "../stores"
 
     const style = (type: ToastType) => ({
-        success: "success bg-[#4BB543] text-white",
+        success: "success bg-[#4BB543] text-black",
         failure: "error bg-[#FC100D] text-white",
         warning: "warning bg-[#ffe900] text-white",
         info: "info bg-[#fff5f5] text-black"
