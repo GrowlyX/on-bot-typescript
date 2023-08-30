@@ -2,10 +2,11 @@
     import "../app.css";
     import MetaTitle from "../components/Meta/MetaTitle.svelte";
     import Toast from "../components/Toast.svelte"
-    import FileDeleteModal from "../components/FileManagement/FileDeleteModal.svelte";
+    import {SvelteUIProvider} from "@svelteuidev/core";
 </script>
 
-<slot />
-<Toast/>
-<MetaTitle _title="Home" />
-<FileDeleteModal/>
+<SvelteUIProvider themeObserver="dark">
+    <slot />
+    <MetaTitle _title="Home" />
+    <Toast/>
+</SvelteUIProvider>

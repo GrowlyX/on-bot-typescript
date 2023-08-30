@@ -6,15 +6,11 @@
 
     import FileCreateModal from "./FileManagement/FileCreateModal.svelte"
     import { CloudArrowUp, Icon, Trash } from "svelte-hero-icons";
+    import FileDeleteModal from "./FileManagement/FileDeleteModal.svelte";
+    import { deleteFile } from "$lib/util/storeManagement/deleteFile";
 
     // We assume mounted here
-    function confirmDeleteModal(): HTMLDialogElement {
-        return document.getElementById("confirmDeleteModal") as HTMLDialogElement
-    }
-
-    function fileCreateModal(): HTMLDialogElement {
-        return document.getElementById("fileCreateModal") as HTMLDialogElement
-    }
+    let modalOpen = false
 </script>
 
 <section class="flex justify-center p-5">
@@ -32,28 +28,42 @@
                     data-tip="sync script"
                     class="tooltip w-[15%] btn bg-blue-500 hover:bg-blue-700 text-gray-100 join-item"
             >
-                <Icon src="{CloudArrowUp}" solid />
+                <Icon src="{CloudArrowUp}" solid/>
             </button>
 
             <button
-                    on:click={() => confirmDeleteModal().showModal()}
+                    on:click={() => modalOpen = true}
                     data-tip="delete script"
                     class="tooltip w-[15%] btn bg-red-500 hover:bg-red-700 text-gray-100 join-item"
             >
-                <!-- TODO: icon :) -->
-                <Icon src="{Trash}" solid />
+                <Icon src="{Trash}" solid/>
             </button>
         </div>
+
+        <FileDeleteModal
+                opened={modalOpen}
+                onClose={() => {
+                    modalOpen = false
+                }}
+                onDelete={() => {
+                    deleteFile()
+                }}
+        />
     {:else}
         <div class="justify-center w-full join">
             <button
                     class="w-[100%] btn bg-[#1ed760] text-black hover:bg-[#1ed760] hover:scale-[102%]"
-                    on:click={() => fileCreateModal().showModal()}
+                    on:click={() => modalOpen = true}
             >Create a script
             </button>
         </div>
 
-        <FileCreateModal/>
+        <FileCreateModal
+                opened={modalOpen}
+                onClose={() => {
+                    modalOpen = false
+                }}
+        />
     {/if}
 
 </section>

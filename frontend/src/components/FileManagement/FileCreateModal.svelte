@@ -1,10 +1,11 @@
 <script lang="ts">
-    import { caretToPosition } from "$lib/util/caretToPosition"
     import { ToastManager } from "$lib/util/toast/ToastManager"
-    import { onMount } from "svelte"
     import { ScriptService } from "$lib/util/api/script/ScriptService";
     import { refreshFileList } from "$lib/util/storeManagement/refreshFileList";
+    import { Input, Modal } from "@svelteuidev/core"
 
+    export let opened: boolean
+    export let onClose: () => void;
     let name = ""
 
     type Failure = {
@@ -15,6 +16,18 @@
     let failure: Failure = {
         error: "",
         enabled: false
+    }
+
+    function onKeyPress(event: KeyboardEvent) {
+        validateScriptName()
+
+        if (event.key === 'Enter') {
+            if (failure.enabled) {
+                return
+            }
+
+            createFile()
+        }
     }
 
     async function validateScriptName() {
@@ -58,9 +71,10 @@
         }
 
         try {
-            await ScriptService.create({ fileName: `${name}.kts` })
+            await ScriptService.create({fileName: `${name}.kts`})
             await refreshFileList()
 
+            onClose()
             ToastManager.dispatch("Script created.", "success")
         } catch (error: any) {
             ToastManager.dispatch(`Couldn't submit script create for ${error.error}`, "failure")
@@ -68,24 +82,24 @@
     }
 </script>
 
-<dialog id="fileCreateModal" class="modal">
-    <form on:submit|preventDefault={createFile} on:keyup={validateScriptName} method="dialog" class="modal-box w-96 flex justify-center">
-        <div class="form-control w-full">
-            <span class="label label-text">
-                Enter a filename: <span class="italic text-gray-500">enter to submit</span>
-            </span>
+<Modal
+        {opened}
+        centered
+        title="Enter a file name"
+        on:close={() => {
+            opened = false
+            onClose()
+        }}
+>
+    <Input
+            on:keyup={validateScriptName}
+            on:keypress={onKeyPress}
+            invalid={failure.enabled}
+            placeholder="Shared.kts"
+            bind:value={name}
+    />
 
-            <input type="text" id="name" bind:value={name} class={(failure.enabled ? "border-red-500 " : "") +  "input input-bordered w-full"} />
-
-            {#if failure.enabled}
-                <span class="label label-text text-red-500">{failure.error}</span>
-            {/if}
-
-            <input class="hidden" type="submit" />
-        </div>
-    </form>
-
-    <form method="dialog" class="modal-backdrop">
-        <button>close</button>
-    </form>
-</dialog>
+    {#if failure.enabled}
+        <span class="label label-text text-red-500">{failure.error}</span>
+    {/if}
+</Modal>
