@@ -5,8 +5,7 @@
     import { saveFile } from "$lib/util/storeManagement/saveFile"
 
     import FileCreateModal from "./FileManagement/FileCreateModal.svelte"
-    import FileDeleteModal from "./FileManagement/FileDeleteModal.svelte"
-    import Sync from "./Icons/Sync.svelte";
+    import { CloudArrowUp, Icon, Trash } from "svelte-hero-icons";
 
     // We assume mounted here
     function confirmDeleteModal(): HTMLDialogElement {
@@ -33,7 +32,7 @@
                     data-tip="sync script"
                     class="tooltip w-[15%] btn bg-blue-500 hover:bg-blue-700 text-gray-100 join-item"
             >
-                <Sync/>
+                <Icon src="{CloudArrowUp}" solid />
             </button>
 
             <button
@@ -42,7 +41,7 @@
                     class="tooltip w-[15%] btn bg-red-500 hover:bg-red-700 text-gray-100 join-item"
             >
                 <!-- TODO: icon :) -->
-                🗑️
+                <Icon src="{Trash}" solid />
             </button>
         </div>
     {:else}

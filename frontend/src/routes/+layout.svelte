@@ -1,8 +1,8 @@
 <script>
     import "../app.css";
-    import FileDeleteModal from "../components/FileManagement/FileDeleteModal.svelte"
     import MetaTitle from "../components/Meta/MetaTitle.svelte";
     import Toast from "../components/Toast.svelte"
+    import FileDeleteModal from "../components/FileManagement/FileDeleteModal.svelte";
 </script>
 
 <slot />
