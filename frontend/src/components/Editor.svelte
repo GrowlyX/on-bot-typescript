@@ -66,7 +66,6 @@
         editor.addCommand(
             monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyB,
             () => {
-                // TODO: update monaco content rather than creating a new modal
                 if (syncTimeOut) {
                     return
                 }
