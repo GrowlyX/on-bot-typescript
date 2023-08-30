@@ -95,7 +95,7 @@
             on:keyup={validateScriptName}
             on:keypress={onKeyPress}
             invalid={failure.enabled}
-            placeholder="Shared.kts"
+            placeholder="Shared"
             bind:value={name}
     />
 
