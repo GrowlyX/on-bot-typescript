@@ -20,8 +20,6 @@
 
 <section class="flex justify-center p-5">
     {#if $viewingScript !== null}
-        <FileDeleteModal/>
-
         <div class="justify-center w-full join">
             <button
                     on:click={saveFile}
@@ -58,4 +56,5 @@
 
         <FileCreateModal/>
     {/if}
+
 </section>
