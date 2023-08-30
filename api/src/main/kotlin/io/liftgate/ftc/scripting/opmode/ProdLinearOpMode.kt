@@ -2,7 +2,6 @@ package io.liftgate.ftc.scripting.opmode
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import io.liftgate.ftc.scripting.KotlinScript
-import io.liftgate.ftc.scripting.logger.PersistentTelemetryLog
 import io.liftgate.ftc.scripting.plugins.createScriptService
 import io.liftgate.ftc.scripting.plugins.scriptService
 import io.liftgate.ftc.scripting.scripting.ScriptEngineService
@@ -15,10 +14,6 @@ import kotlin.concurrent.thread
  */
 abstract class ProdLinearOpMode : LinearOpMode(), KotlinScript
 {
-    private val logger by lazy {
-        PersistentTelemetryLog(telemetry)
-    }
-
     init
     {
         /**
@@ -60,11 +55,14 @@ abstract class ProdLinearOpMode : LinearOpMode(), KotlinScript
     {
         val existing = scriptService != null
         val dbService = createScriptService()
-        logger.log(
+        telemetry.isAutoClear = false
+
+        telemetry.addLine(
             "Initialized the H2 script database${
                 if (existing) " using existing resources from the script web editor" else ""
             }"
         )
+        telemetry.update()
 
         check(getScriptName() != "Shared.kts") {
             "Shared script cannot be executed by an OpMode"
@@ -73,7 +71,6 @@ abstract class ProdLinearOpMode : LinearOpMode(), KotlinScript
         val script = runBlocking {
             dbService.read(getScriptName())
         } ?: run {
-            logger.destroy()
             telemetry.addLine("No script by name ${getScriptName()} exists in our local database. Stopping!")
             telemetry.update()
             return
@@ -105,8 +102,8 @@ abstract class ProdLinearOpMode : LinearOpMode(), KotlinScript
                             throw ScriptRunException(it)
                         }
 
-                        logger.log("Exception occurred!")
-                        logger.log(it.stackTraceToString())
+                        telemetry.addLine("Exception occurred!")
+                        telemetry.addLine(it.stackTraceToString())
                     }
                 )
             }
@@ -119,13 +116,10 @@ abstract class ProdLinearOpMode : LinearOpMode(), KotlinScript
             runCatching {
                 internal.localRunnerThread!!.join()
             }.onFailure {
-                logger.destroy()
                 // TODO: better exception reporting
                 telemetry.addLine("Exception: ${it.message}")
                 telemetry.addLine(it.stackTraceToString())
                 telemetry.update()
-            }.onSuccess {
-                logger.destroy()
             }
         }
     }

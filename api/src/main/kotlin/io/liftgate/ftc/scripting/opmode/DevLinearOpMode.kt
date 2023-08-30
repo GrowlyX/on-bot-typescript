@@ -1,6 +1,5 @@
 package io.liftgate.ftc.scripting.opmode
 
-import io.liftgate.ftc.scripting.logger.PersistentTelemetryLog
 import io.liftgate.ftc.scripting.scriptApp
 import io.liftgate.ftc.scripting.scriptUpdateHook
 
@@ -10,10 +9,6 @@ import io.liftgate.ftc.scripting.scriptUpdateHook
  */
 abstract class DevLinearOpMode : ProdLinearOpMode()
 {
-    private val logger by lazy {
-        PersistentTelemetryLog(telemetry)
-    }
-
     override fun runOpMode()
     {
         // TODO: Since the robot will stay active, we could probably do an initial configuration of
@@ -31,18 +26,18 @@ abstract class DevLinearOpMode : ProdLinearOpMode()
             }
 
             // used for hot reloading of scripts
-            logger.log(
+            telemetry.addLine(
                 "Received update for script ${it.fileName} (last edited ${it.lastEdited})"
             )
 
             internal.localRunnerThread?.interrupt()
             internal.localRunnerThread = null
 
-            logger.log("Stopped current thread")
+            telemetry.addLine("Stopped current thread")
             super.runOpMode()
 
-            logger.log("Restarted OpMode in the background")
-            logger.log("-- Completed update process --")
+            telemetry.addLine("Restarted OpMode in the background")
+            telemetry.addLine("-- Completed update process --")
         }
 
         // don't join the OpMode runner, it'll run in the background
