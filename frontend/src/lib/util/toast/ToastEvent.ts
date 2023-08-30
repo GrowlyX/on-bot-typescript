@@ -1,2 +1,2 @@
 export type ToastType = "success" | "failure" | "warning" | "info"
-export type ToastEvent = { text: string, type: ToastType, duration: number, id: string }
+export type ToastEvent = { title: string, description: string, type: ToastType, duration: number, id: string }

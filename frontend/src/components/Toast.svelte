@@ -1,21 +1,26 @@
 <script lang="ts">
     import type { ToastType } from "$lib/util/toast/ToastEvent"
     import { toasts } from "../stores"
+    import { Notification } from "@svelteuidev/core";
 
-    const style = (type: ToastType) => ({
-        success: "success bg-[#4BB543] text-black",
-        failure: "error bg-[#FC100D] text-white",
-        warning: "warning bg-[#ffe900] text-white",
-        info: "info bg-[#fff5f5] text-black"
+    const color = (type: ToastType) => ({
+        success: "green",
+        failure: "red",
+        warning: "yellow",
+        info: "indigo"
     }[type])
 </script>
 
 <aside>
     <div class="toast toast-start">
         {#each $toasts as toast}
-            <div class="alert alert-{style(toast.type)}">
-                <span>{toast.text}</span>
-            </div>
+            <Notification
+                    title="{toast.title}"
+                    color="{color(toast.type)}"
+                    withCloseButton={false}
+            >
+                {toast.description}
+            </Notification>
         {/each}
     </div>
 </aside>

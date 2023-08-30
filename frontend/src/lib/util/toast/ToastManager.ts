@@ -1,12 +1,12 @@
 import { nanoid } from "nanoid"
 import { get } from "svelte/store"
 import { toasts } from "../../../stores"
-import type { ToastType } from "./ToastEvent"
+import type { ToastEvent, ToastType } from "./ToastEvent"
 
 class ToastManager {
-    public static dispatch(text: string, type: ToastType, duration: number = 3000) {
+    public static dispatch(title: string, description: string, type: ToastType, duration: number = 3000) {
         const id = nanoid()
-        const toast = { text, type, duration, id }
+        const toast: ToastEvent = { title, description, type, duration, id }
 
         toasts.set([...get(toasts), toast])
 

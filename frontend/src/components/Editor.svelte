@@ -23,7 +23,7 @@
                 )
             editor.getModel()?.setValue(script.fileContent)
 
-            ToastManager.dispatch("Script synced.", "info")
+            ToastManager.dispatch("Sync", `Pulled latest script content for ${get(viewingScript)!!.fileName}`, "info")
         }
     )
 

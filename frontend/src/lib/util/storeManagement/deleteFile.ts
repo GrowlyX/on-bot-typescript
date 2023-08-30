@@ -6,12 +6,13 @@ import { ToastManager } from "../toast/ToastManager"
 import { ScriptService } from "$lib/util/api/script/ScriptService";
 
 export const deleteFile = async () => {
-    await ScriptService.deleteByName(get(viewingScript)?.fileName!!)
+    const fileName = get(viewingScript)?.fileName!!
+    await ScriptService.deleteByName(fileName)
     await refreshFileList()
 
-    visitedTabs.set(copyAndRemoveValue(get(visitedTabs), get(viewingScript)?.fileName!!))
+    visitedTabs.set(copyAndRemoveValue(get(visitedTabs), fileName))
 
     // reset the viewing script to dispose of current model
     viewingScript.set(null)
-    ToastManager.dispatch("Script was deleted.", "failure")
+    ToastManager.dispatch("Script Deleted", `Deleted script by name ${fileName}.`, "failure")
 }

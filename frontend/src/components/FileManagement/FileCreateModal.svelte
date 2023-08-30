@@ -75,9 +75,9 @@
             await refreshFileList()
 
             onClose()
-            ToastManager.dispatch("Script created.", "success")
+            ToastManager.dispatch("New Script", `Created a new script with the name ${name}.kts.`, "success")
         } catch (error: any) {
-            ToastManager.dispatch(`Couldn't submit script create for ${error.error}`, "failure")
+            ToastManager.dispatch("Failure", error.error, "failure")
         }
     }
 </script>
