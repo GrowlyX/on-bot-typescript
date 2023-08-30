@@ -1,13 +1,12 @@
 <script lang="ts">
     import { viewingScript } from "../stores"
 
-    import FileCreateModal from "./FileManagement/FileCreateModal.svelte"
     import { syncScript } from "$lib/util/storeManagement/syncScript"
     import { saveFile } from "$lib/util/storeManagement/saveFile"
-    import { deleteFile } from "$lib/util/storeManagement/deleteFile"
-    import Sync from "./Icons/Sync.svelte";
 
-    let deleteFileConfirm = ""
+    import FileCreateModal from "./FileManagement/FileCreateModal.svelte"
+    import FileDeleteModal from "./FileManagement/FileDeleteModal.svelte"
+    import Sync from "./Icons/Sync.svelte";
 
     // We assume mounted here
     function confirmDeleteModal(): HTMLDialogElement {
@@ -21,26 +20,7 @@
 
 <section class="flex justify-center p-5">
     {#if $viewingScript !== null}
-        <dialog id="confirmDeleteModal" class="modal">
-            <form on:submit={deleteFile} method="dialog" class="modal-box">
-                <div class="form-control w-full max-w-xs">
-                    <span class="label label-text"
-                    >Enter "confirm" to delete the the script "{$viewingScript.fileName}":</span
-                    >
-                    <input
-                            type="text"
-                            id={$viewingScript.fileName}
-                            bind:value={deleteFileConfirm}
-                            class="input input-bordered w-full max-w-xs"
-                    />
-                    <input class="hidden" type="submit"/>
-                </div>
-            </form>
-
-            <form method="dialog" class="modal-backdrop">x
-                <button>close</button>
-            </form>
-        </dialog>
+        <FileDeleteModal/>
 
         <div class="justify-center w-full join">
             <button
