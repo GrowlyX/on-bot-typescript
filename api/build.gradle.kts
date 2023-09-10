@@ -24,5 +24,7 @@ dependencies {
 tasks {
     withType<ShadowJar> {
         exclude("**/org/slf4j/**")
+        exclude("**/com/google/gson/**")
+        exclude("**/META-INF/maven/com.google.code.gson/gson/**")
     }
 }

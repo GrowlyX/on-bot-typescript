@@ -8,10 +8,7 @@ import io.ktor.server.routing.*
 import io.liftgate.ftc.scripting.development
 import io.liftgate.ftc.scripting.scripting.Script
 import io.liftgate.ftc.scripting.scripting.ScriptService
-import kotlinx.datetime.toKotlinLocalDateTime
-import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.sql.Database
-import java.time.LocalDateTime
 
 var scriptService: ScriptService? = null
 
@@ -52,7 +49,6 @@ fun Application.configureDatabases()
         }
 
         post("/api/scripts/create") {
-            @Serializable
             data class CreateScript(val fileName: String)
 
             val scriptCreation = call.receive<CreateScript>()
@@ -91,10 +87,9 @@ fun Application.configureDatabases()
 
             val id = scriptService.create(script)
 
-            @Serializable
             data class ScriptCreated(
                 val id: Int,
-                val creationDate: kotlinx.datetime.LocalDateTime
+                val creationDate: Long
             )
 
             call.respond(
@@ -118,7 +113,6 @@ fun Application.configureDatabases()
         }
 
         post("/api/scripts/update-content") {
-            @Serializable
             data class ScriptContent(val fileName: String, val fileContent: String)
 
             val scriptContent = call.receive<ScriptContent>()
@@ -128,8 +122,7 @@ fun Application.configureDatabases()
                 )
 
             script.fileContent = scriptContent.fileContent
-            script.lastEdited = LocalDateTime.now()
-                .toKotlinLocalDateTime()
+            script.lastEdited = System.currentTimeMillis()
 
             scriptService.update(script)
             call.respond(mapOf(
@@ -149,7 +142,6 @@ fun Application.configureDatabases()
             ))
         }
 
-        @Serializable
         data class ScriptReference(val name: String)
 
         post("/api/scripts/find-name/") {

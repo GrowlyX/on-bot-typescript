@@ -3,20 +3,14 @@ package io.liftgate.ftc.scripting.scripting
 import io.liftgate.ftc.scripting.plugins.scriptService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
-import kotlinx.serialization.Contextual
-import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.reflections.Reflections
 import org.reflections.scanners.Scanners
-import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.toKotlinLocalDateTime
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
-import org.jetbrains.exposed.sql.kotlin.datetime.CurrentDateTime
-import org.jetbrains.exposed.sql.kotlin.datetime.datetime
 import org.reflections.util.ConfigurationBuilder
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.ConcurrentHashMap
@@ -79,12 +73,10 @@ object ScriptEngineService
 
 val reflectionsMappings = ConcurrentHashMap<String, Reflections>()
 
-@Serializable
 data class Script(
     val fileName: String,
     var fileContent: String,
-    var lastEdited: @Contextual LocalDateTime =
-        java.time.LocalDateTime.now().toKotlinLocalDateTime()
+    var lastEdited: Long = System.currentTimeMillis()
 )
 {
     inline fun run(
@@ -138,8 +130,7 @@ class ScriptService(database: Database)
         val fileName = varchar("name", length = 45)
         val fileContent = text("file_content", eagerLoading = true)
 
-        val lastEdited = datetime("last_edited")
-            .defaultExpression(CurrentDateTime)
+        val lastEdited = long("last_edited")
     }
 
     init
