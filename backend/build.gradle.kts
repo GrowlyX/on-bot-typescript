@@ -18,8 +18,6 @@ dependencies {
     implementation("io.ktor:ktor-serialization-gson")
     implementation("org.jetbrains.exposed:exposed-core:$exposed_version")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposed_version")
-    // https://mvnrepository.com/artifact/org.jetbrains.exposed/exposed-kotlin-datetime
-    implementation("org.jetbrains.exposed:exposed-kotlin-datetime:0.42.1")
     // TODO: compat issues with Android? Does JDBC/H2 work on Android?
     implementation("com.h2database:h2:$h2_version")
     implementation("io.ktor:ktor-server-netty-jvm")
