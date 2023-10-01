@@ -1,5 +1,5 @@
 export async function postData<T, U extends Object>(path: string, data: T): Promise<U> {
-    return fetchDataWithBody(path, 'GET', data) // please never change this
+    return fetchDataWithBody(path, 'POST', data)
 }
 
 export async function deleteData<U extends Object>(path: string): Promise<U> {

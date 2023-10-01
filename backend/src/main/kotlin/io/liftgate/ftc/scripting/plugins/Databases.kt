@@ -37,7 +37,7 @@ fun Application.configureDatabases()
             )
         }
 
-        get("/api/scripts/create") {
+        post("/api/scripts/create") {
             data class CreateScript(val fileName: String)
 
             val scriptCreation = call.receive<CreateScript>()
@@ -47,7 +47,7 @@ fun Application.configureDatabases()
                 call.respond(
                     mapOf("error" to "Script by file name already exists.")
                 )
-                return@get
+                return@post
             }
 
             if (!scriptCreation.fileName.endsWith(".ts"))
@@ -55,7 +55,7 @@ fun Application.configureDatabases()
                 call.respond(
                     mapOf("error" to "Script name must end with the .ts extension!")
                 )
-                return@get
+                return@post
             }
 
             if (scriptCreation.fileName == ".ts")
@@ -63,7 +63,7 @@ fun Application.configureDatabases()
                 call.respond(
                     mapOf("error" to "Script name cannot be .ts!")
                 )
-                return@get
+                return@post
             }
 
             val script = Script(
@@ -74,7 +74,13 @@ fun Application.configureDatabases()
                 """.trimIndent()
             )
 
-            scriptService.create(script)
+            val id = runCatching { scriptService.create(script) }
+                .getOrElse {
+                    call.respond(
+                        mapOf("error" to "Failed to create script: ${it.message}")
+                    )
+                    return@post
+                }
 
             data class ScriptCreated(
                 val creationDate: Long
@@ -85,12 +91,12 @@ fun Application.configureDatabases()
             )
         }
 
-        get("/api/scripts/update-content") {
+        post("/api/scripts/update-content") {
             data class ScriptContent(val fileName: String, val fileContent: String)
 
             val scriptContent = call.receive<ScriptContent>()
             val script = scriptService.read(scriptContent.fileName)
-                ?: return@get call.respond(
+                ?: return@post call.respond(
                     mapOf("error" to "Script ${scriptContent.fileName} does not exist in the database")
                 )
 
@@ -105,22 +111,22 @@ fun Application.configureDatabases()
 
         data class ScriptReference(val name: String)
 
-        get("/api/scripts/find-name/") {
+        post("/api/scripts/find-name/") {
             val ref = call.receive<ScriptReference>()
 
             val script = scriptService.read(ref.name)
-                ?: return@get call.respond(
+                ?: return@post call.respond(
                     mapOf("error" to "Script ${ref.name} does not exist in the database")
                 )
 
             call.respond(script)
         }
 
-        get("/api/scripts/delete-name/") {
+        post("/api/scripts/delete-name/") {
             val ref = call.receive<ScriptReference>()
 
             val script = scriptService.read(ref.name)
-                ?: return@get call.respond(
+                ?: return@post call.respond(
                     mapOf("error" to "Script ${ref.name} does not exist in the database")
                 )
 

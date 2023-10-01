@@ -98,7 +98,7 @@
 				"disableBodyPruning": true
 			},
 			"request": {
-				"method": "GET",
+				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
@@ -116,7 +116,7 @@
 					"id": "8a01ad80-9bb0-4d13-9c04-0f6e5d8b531c",
 					"name": "Example creation response",
 					"originalRequest": {
-						"method": "GET",
+						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
