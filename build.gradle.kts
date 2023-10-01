@@ -16,7 +16,7 @@ plugins {
 
 allprojects {
     group = "io.liftgate.robotics.obt"
-    version = "0.0.7-SNAPSHOT"
+    version = "0.0.9-SNAPSHOT"
 
     repositories {
         mavenLocal()
