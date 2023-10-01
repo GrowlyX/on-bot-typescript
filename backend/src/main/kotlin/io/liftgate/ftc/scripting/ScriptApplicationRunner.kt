@@ -6,14 +6,14 @@ import kotlin.concurrent.thread
  * @author GrowlyX
  * @since 8/20/2023
  */
-class ScriptApplicationRunner
+open class ScriptApplicationRunner
 {
-    private var thread: Thread? = null
+    protected var thread: Thread? = null
 
     fun isRunning() = thread != null && thread!!.isAlive
 
     @JvmOverloads
-    fun startApplication(
+    open fun startApplication(
         address: String = "0.0.0.0",
         port: Int = 6969
     )

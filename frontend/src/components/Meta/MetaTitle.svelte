@@ -1,5 +1,5 @@
 <svelte:head>
-    <title>{_title}</title>
+    <title>OBT - {_title}</title>
 </svelte:head>
 
 <script lang="ts">

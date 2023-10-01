@@ -1,7 +1,6 @@
 package io.liftgate.ftc.scripting.opmode.editor
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
-import io.liftgate.ftc.scripting.ScriptApplicationRunner
 
 /**
  * An OpMode that starts up a web scripting
@@ -12,8 +11,6 @@ import io.liftgate.ftc.scripting.ScriptApplicationRunner
  */
 abstract class StopEditorOpMode : LinearOpMode()
 {
-    private val scriptApp by lazy(::ScriptApplicationRunner)
-
     override fun runOpMode()
     {
         if (!scriptApp.isRunning())

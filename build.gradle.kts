@@ -7,16 +7,16 @@ import org.jetbrains.gradle.ext.Gradle
 plugins {
     `maven-publish`
     java
-    kotlin("jvm") version "1.9.0"
-    kotlin("kapt") version "1.9.0"
-    id("org.jetbrains.kotlin.plugin.serialization") version "1.9.0"
+    kotlin("jvm") version "1.9.10"
+    kotlin("kapt") version "1.9.10"
+    kotlin("plugin.serialization") version "1.9.10"
     id("com.github.johnrengelman.shadow") version "7.1.2"
     id("org.jetbrains.gradle.plugin.idea-ext") version "1.1.6"
 }
 
 allprojects {
-    group = "io.liftgate.ftc.scripting"
-    version = "0.1.5-SNAPSHOT"
+    group = "io.liftgate.robotics.obt"
+    version = "0.0.9-SNAPSHOT"
 
     repositories {
         mavenLocal()
@@ -43,7 +43,7 @@ subprojects {
     tasks.withType<ShadowJar> {
         archiveClassifier.set("")
         archiveFileName.set(
-            "on-bot-kotlin-${project.name}.jar"
+            "on-bot-typescript-${project.name}.jar"
         )
     }
 

@@ -1,6 +1,6 @@
 package io.liftgate.ftc.scripting.opmode
 
-import io.liftgate.ftc.scripting.scriptApp
+import io.liftgate.ftc.scripting.opmode.editor.scriptApp
 import io.liftgate.ftc.scripting.scriptUpdateHook
 
 /**

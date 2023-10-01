@@ -5,36 +5,22 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import io.liftgate.ftc.scripting.development
 import io.liftgate.ftc.scripting.scripting.Script
 import io.liftgate.ftc.scripting.scripting.ScriptService
-import kotlinx.datetime.toKotlinLocalDateTime
-import kotlinx.serialization.Serializable
-import org.jetbrains.exposed.sql.Database
-import java.time.LocalDateTime
+import java.io.File
 
 var scriptService: ScriptService? = null
 
-fun createScriptService(): ScriptService
+fun createScriptService(
+    location: File = File("scripts.json")
+): ScriptService
 {
     if (scriptService != null)
     {
         return scriptService!!
     }
 
-    // a default h2 database
-    val url = "jdbc:h2:file:./scripts"
-    val devUrl = "jdbc:h2:mem:myDb"
-
-    val database = Database.connect(
-        url = "${
-            if (development) devUrl else url
-        };DB_CLOSE_DELAY=-1",
-        user = "root",
-        driver = "org.h2.Driver",
-        password = ""
-    )
-    return ScriptService(database)
+    return ScriptService(location)
         .apply {
             scriptService = this
         }
@@ -52,7 +38,6 @@ fun Application.configureDatabases()
         }
 
         post("/api/scripts/create") {
-            @Serializable
             data class CreateScript(val fileName: String)
 
             val scriptCreation = call.receive<CreateScript>()
@@ -65,18 +50,18 @@ fun Application.configureDatabases()
                 return@post
             }
 
-            if (!scriptCreation.fileName.endsWith(".kts"))
+            if (!scriptCreation.fileName.endsWith(".ts"))
             {
                 call.respond(
-                    mapOf("error" to "Script name must end with the .kts extension!")
+                    mapOf("error" to "Script name must end with the .ts extension!")
                 )
                 return@post
             }
 
-            if (scriptCreation.fileName == ".kts")
+            if (scriptCreation.fileName == ".ts")
             {
                 call.respond(
-                    mapOf("error" to "Script name cannot be .kts!")
+                    mapOf("error" to "Script name cannot be .ts!")
                 )
                 return@post
             }
@@ -89,36 +74,25 @@ fun Application.configureDatabases()
                 """.trimIndent()
             )
 
-            val id = scriptService.create(script)
+            val id = runCatching { scriptService.create(script) }
+                .getOrElse {
+                    call.respond(
+                        mapOf("error" to "Failed to create script: ${it.message}")
+                    )
+                    return@post
+                }
 
-            @Serializable
             data class ScriptCreated(
-                val id: Int,
-                val creationDate: kotlinx.datetime.LocalDateTime
+                val creationDate: Long
             )
 
             call.respond(
                 HttpStatusCode.Created,
-                ScriptCreated(id.value, script.lastEdited)
+                ScriptCreated(script.lastEdited)
             )
         }
 
-        get("/api/scripts/find/{id}") {
-            val id = call.parameters["id"]?.toInt()
-                ?: return@get call.respond(
-                    mapOf("error" to "Script id parameter is not an integer")
-                )
-
-            val script = scriptService.read(id)
-                ?: return@get call.respond(
-                    mapOf("error" to "Script $id does not exist in the database")
-                )
-
-            call.respond(script)
-        }
-
         post("/api/scripts/update-content") {
-            @Serializable
             data class ScriptContent(val fileName: String, val fileContent: String)
 
             val scriptContent = call.receive<ScriptContent>()
@@ -128,8 +102,7 @@ fun Application.configureDatabases()
                 )
 
             script.fileContent = scriptContent.fileContent
-            script.lastEdited = LocalDateTime.now()
-                .toKotlinLocalDateTime()
+            script.lastEdited = System.currentTimeMillis()
 
             scriptService.update(script)
             call.respond(mapOf(
@@ -137,19 +110,6 @@ fun Application.configureDatabases()
             ))
         }
 
-        delete("/api/scripts/delete/{id}") {
-            val id = call.parameters["id"]?.toInt()
-                ?: return@delete call.respond(
-                    mapOf("error" to "Script id parameter is not an integer")
-                )
-
-            scriptService.delete(id)
-            call.respond(HttpStatusCode.OK, mapOf(
-                "lastEdited" to ""
-            ))
-        }
-
-        @Serializable
         data class ScriptReference(val name: String)
 
         post("/api/scripts/find-name/") {

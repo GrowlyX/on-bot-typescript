@@ -1,25 +1,11 @@
 package io.liftgate.ftc.scripting.scripting
 
+import com.google.gson.GsonBuilder
+import com.google.gson.LongSerializationPolicy
 import io.liftgate.ftc.scripting.plugins.scriptService
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
-import kotlinx.serialization.Contextual
-import kotlinx.serialization.Serializable
-import org.jetbrains.exposed.sql.*
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
-import org.jetbrains.exposed.sql.transactions.transaction
-import org.reflections.Reflections
-import org.reflections.scanners.Scanners
-import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.toKotlinLocalDateTime
-import org.jetbrains.exposed.dao.id.EntityID
-import org.jetbrains.exposed.dao.id.IntIdTable
-import org.jetbrains.exposed.sql.kotlin.datetime.CurrentDateTime
-import org.jetbrains.exposed.sql.kotlin.datetime.datetime
-import org.reflections.util.ConfigurationBuilder
+import java.io.File
 import java.util.concurrent.CompletableFuture
-import java.util.concurrent.ConcurrentHashMap
 import javax.script.Bindings
 import javax.script.ScriptContext
 import javax.script.ScriptEngine
@@ -28,12 +14,12 @@ import javax.script.ScriptEngineManager
 object ScriptEngineService
 {
     var lock = Any()
-    var ktsEngine: ScriptEngine? = null
+    var tsEngine: ScriptEngine? = null
 
     fun initializeEngine(): CompletableFuture<Void>
     {
         return synchronized(lock) {
-            if (ktsEngine != null)
+            if (tsEngine != null)
             {
                 return@synchronized CompletableFuture
                     .completedFuture(null)
@@ -41,17 +27,12 @@ object ScriptEngineService
 
             CompletableFuture
                 .runAsync {
-                    System.setProperty(
-                        "kotlin.jsr223.experimental.resolve.dependencies.from.context.classloader",
-                        true.toString()
-                    )
-
                     val engine = ScriptEngineManager()
-                        .getEngineByExtension("kts")
+                        .getEngineByExtension("js")
 
                     // Seems to take around 5 seconds for initial start?
-                    engine!!.eval("println(\"test\")")
-                    ktsEngine = engine
+                    engine!!.eval("print(\"test\")")
+                    tsEngine = engine
                 }
         }
     }
@@ -61,34 +42,29 @@ object ScriptEngineService
     )
     {
         synchronized(lock) {
-            checkNotNull(ktsEngine) {
-                "KTS scripting engine has not yet been configured!"
+            checkNotNull(tsEngine) {
+                "TS scripting engine has not yet been configured!"
             }
 
-            val bindings = ktsEngine!!
+            val bindings = tsEngine!!
                 .createBindings()
 
-            ktsEngine!!.setBindings(
+            tsEngine!!.setBindings(
                 bindings,
                 ScriptContext.ENGINE_SCOPE
             )
-            block(ktsEngine!!, bindings)
+            block(tsEngine!!, bindings)
         }
     }
 }
 
-val reflectionsMappings = ConcurrentHashMap<String, Reflections>()
-
-@Serializable
 data class Script(
     val fileName: String,
     var fileContent: String,
-    var lastEdited: @Contextual LocalDateTime =
-        java.time.LocalDateTime.now().toKotlinLocalDateTime()
+    var lastEdited: Long = System.currentTimeMillis()
 )
 {
     inline fun run(
-        packageImports: List<String>,
         vararg context: Pair<String, Any>,
         failure: (Throwable) -> Unit
     )
@@ -97,25 +73,10 @@ data class Script(
             var script = ""
             bindings.putAll(context)
 
-            packageImports.forEach {
-                script += reflectionsMappings
-                    .computeIfAbsent(it) { pkg ->
-                        Reflections(
-                            ConfigurationBuilder()
-                                .addScanners(Scanners.SubTypes)
-                                .forPackages(pkg)
-                        )
-                    }
-                    .getAll(Scanners.SubTypes)
-                    .joinToString("\n") { type ->
-                        "import $type"
-                    }
-            }
-
             // Apply shared script onto this script instance
             runBlocking {
                 scriptService
-                    ?.read("Shared.kts")
+                    ?.read("Shared.ts")
                     ?.apply {
                         script += fileContent
                     }
@@ -131,86 +92,76 @@ data class Script(
     }
 }
 
-class ScriptService(database: Database)
-{
-    object Scripts : IntIdTable()
-    {
-        val fileName = varchar("name", length = 45)
-        val fileContent = text("file_content", eagerLoading = true)
+data class ScriptsContainer(
+    val scripts: MutableList<Script> = mutableListOf()
+)
 
-        val lastEdited = datetime("last_edited")
-            .defaultExpression(CurrentDateTime)
-    }
+private val gson = GsonBuilder()
+    .setLongSerializationPolicy(LongSerializationPolicy.STRING)
+    .setPrettyPrinting()
+    .serializeNulls()
+    .create()
+
+class ScriptService(private val store: File)
+{
+    private val model = ScriptsContainer()
 
     init
     {
-        transaction(database) {
-            SchemaUtils.create(Scripts)
+        if (!store.exists())
+        {
+            store.createNewFile()
+            store.writeText(
+                gson.toJson(model)
+            )
         }
-    }
 
-    suspend fun <T> asyncTransaction(block: suspend () -> T): T =
-        newSuspendedTransaction(Dispatchers.IO) { block() }
-
-    suspend fun create(user: Script): EntityID<Int> = asyncTransaction {
-        Scripts.insert {
-            it[fileName] = user.fileName
-            it[fileContent] = user.fileContent
-            it[lastEdited] = user.lastEdited
-        }[Scripts.id]
-    }
-
-    private fun Query.mapToScript() = map {
-        Script(
-            it[Scripts.fileName],
-            it[Scripts.fileContent],
-            it[Scripts.lastEdited]
+        model.scripts.addAll(
+            gson
+                .fromJson(
+                    store.readText(),
+                    ScriptsContainer::class.java
+                )
+                .scripts
         )
     }
 
-    suspend fun readAll() = asyncTransaction {
-        Scripts.selectAll()
-            .mapToScript()
-            .toList()
+    private fun save()
+    {
+        store.writeText(
+            gson.toJson(model)
+        )
     }
 
-    suspend fun read(id: Int) = read { Scripts.id eq id }
-    suspend fun read(name: String) = read { Scripts.fileName eq name }
-
-    suspend fun read(selection: SqlExpressionBuilder.() -> Op<Boolean>): Script?
-    {
-        return asyncTransaction {
-            Scripts
-                .select(selection)
-                .mapToScript()
-                .singleOrNull()
+    private fun <T> synchronizedModel(block: ScriptsContainer.() -> T) =
+        synchronized(model) {
+            block(model)
         }
+
+    private fun <T> synchronizedModelSaving(block: ScriptsContainer.() -> T) =
+        synchronized(model) {
+            block(model)
+            save()
+        }
+
+    fun create(script: Script) = synchronizedModelSaving {
+        scripts.add(script)
     }
 
-    suspend fun update(script: Script)
-    {
-        asyncTransaction {
-            Scripts.update({
-                Scripts.fileName eq script.fileName
-            }) {
-                it[fileName] = script.fileName
-                it[fileContent] = script.fileContent
-                it[lastEdited] = script.lastEdited
-            }
-        }
+    fun readAll() = synchronizedModel {
+        scripts.toList()
     }
 
-    suspend fun delete(name: String)
-    {
-        asyncTransaction {
-            Scripts.deleteWhere { fileName eq name }
-        }
+    fun read(name: String) = synchronizedModel {
+        scripts.firstOrNull { it.fileName == name }
     }
 
-    suspend fun delete(id: Int)
-    {
-        asyncTransaction {
-            Scripts.deleteWhere { Scripts.id.eq(id) }
-        }
+    fun update(script: Script) = synchronizedModelSaving {
+        scripts.removeIf { it.fileName == script.fileName }
+        scripts.add(script)
+    }
+
+    fun delete(name: String) = synchronizedModelSaving {
+        scripts.removeIf { it.fileName == name }
     }
 }

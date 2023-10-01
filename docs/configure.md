@@ -45,7 +45,7 @@ dependencies {
 }
 ```
 
-Once you have configured the maven/gradle dependency for on-bot-kotlin, follow the instructions below to start writing scripts!
+Once you have configured the maven/gradle dependency for on-bot-typescript, follow the instructions below to start writing scripts!
 
 1. Create your OpMode(s):
 ```java
@@ -57,8 +57,8 @@ Once you have configured the maven/gradle dependency for on-bot-kotlin, follow t
  * functionality for scripts (when a file is saved from the web editor, changes are
  * automatically applied to the robot's running OpMode instance).
  * 
- * The implemented methods in this class are in the {@link KotlinScript} class, so
- *  to avoid boilerplate, you can proxy methods from a shared KotlinScript 
+ * The implemented methods in this class are in the {@link TSScript} class, so
+ *  to avoid boilerplate, you can proxy methods from a shared TSScript 
  * implementation.
  */
 @TeleOp
@@ -67,9 +67,9 @@ public class DevScriptedTeleOp extends DevLinearOpMode {
     public @NotNull String getScriptName() {
         /*
          * Script name can contain directories, delimited by the "/" 
-         * character. Script names must also end with the .kts extension.
+         * character. Script names must also end with the .ts extension.
          */
-        return "dev/TeleOp.kts";
+        return "dev/TeleOp.ts";
     }
 
     @Override
@@ -79,7 +79,7 @@ public class DevScriptedTeleOp extends DevLinearOpMode {
          * having to define them directly. Implied variables can be either methods
          * or variables.
          * 
-         * on-bot-kotlin offers default implied variables, which can be found in the 
+         * on-bot-typescript offers default implied variables, which can be found in the 
          * {@link ProdLinearOpMode} class on GitHub.
          * 
          * Example script using the following implied variables:
@@ -120,7 +120,7 @@ public class ProdScriptedTeleOp extends ProdLinearOpMode {
          * We have changed the script directory from 
          * dev -> prod for consistency. 
          */
-        return "prod/TeleOp.kts";
+        return "prod/TeleOp.ts";
     }
 
     @Override
@@ -166,24 +166,26 @@ public class StartWebEditor extends StopEditorOpMode {
 Scripts should be laid out in the following structure:
 ```
 dev |
-    | DevTeleOp.kts
-    | DevAutonomous.kts
+    | DevTeleOp.ts
+    | DevAutonomous.ts
 
 prod |
-     | ProdTeleOp.kts
-     | ProdAutonomous.kts
+     | ProdTeleOp.ts
+     | ProdAutonomous.ts
 
-Shared.kts
+Shared.ts
 ```
 
 ### Shared Script
 The shared script is applied to every other script in the database. For example:
-```kotlin
+```javascript
 // Shared script:
-import java.lang.System
+var gfg = function() {  
+    print("test");  
+};   
 
-// DevTeleOp.kts
-System.gc() // You're able to use the System class as it was automatically-imported by the Shared script.
+// DevTeleOp.ts
+gfg(); // You're able to use the System class as it was automatically-imported by the Shared script.
 ```
 
-The Shared script must be in the root directory on your web editor, and must be named `Shared.kts`.
+The Shared script must be in the root directory on your web editor, and must be named `Shared.ts`.

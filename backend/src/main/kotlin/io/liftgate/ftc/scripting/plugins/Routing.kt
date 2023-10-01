@@ -16,12 +16,13 @@ fun Application.configureRouting()
         get("/api/status") {
             call.respond(mapOf(
                 "hotReloadEnabled" to (scriptUpdateHook != null),
-                "scriptEngineBooted" to (ScriptEngineService.ktsEngine != null)
+                "scriptEngineBooted" to (ScriptEngineService.tsEngine != null)
             ))
         }
     }
 }
 
+var resourcesPath: String? = null
 private fun Routing.configureSPA()
 {
     // if we are in development, we don't want to serve SPA
@@ -35,8 +36,15 @@ private fun Routing.configureSPA()
 
     // configure KTor to serve Svelte content
     singlePageApplication {
-        useResources = true
-        filesPath = "static"
+        if (resourcesPath == null)
+        {
+            useResources = true
+            filesPath = "static"
+        } else
+        {
+            filesPath = resourcesPath!!
+        }
+
         defaultPage = "index.html"
     }
 }

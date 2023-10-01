@@ -48,7 +48,7 @@
         }
 
         try {
-            await ScriptService.findByName(`${name}.kts`)
+            await ScriptService.findByName(`${name}.ts`)
 
             failure = {
                 error: "Script already exists!",
@@ -71,11 +71,11 @@
         }
 
         try {
-            await ScriptService.create({fileName: `${name}.kts`})
+            await ScriptService.create({fileName: `${name}.ts`})
             await refreshFileList()
 
             onClose()
-            ToastManager.dispatch("New Script", `Created a new script with the name ${name}.kts.`, "success")
+            ToastManager.dispatch("New Script", `Created a new script with the name ${name}.ts.`, "success")
         } catch (error: any) {
             ToastManager.dispatch("Failure", error.error, "failure")
         }

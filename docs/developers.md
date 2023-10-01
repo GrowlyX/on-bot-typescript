@@ -6,13 +6,13 @@
 
 ### Tech Stack:
 - Frontend: `SvelteKit`
-- Backend: `Ktor, JetBrains Exposed`
+- Backend: `Ktor, JSON (Data Store)`
 
 ### Storage configuration:
-Scripts are stored in a H2 database stored in the directory of the app. If the backend server is started in development mode, an in-memory H2 instance will be used instead.
+Scripts are stored in a JSON file stored in the directory of the FIRST app.
 
 ### Setting up:
-- Clone this project using `git clone https://github.com/GrowlyX/on-bot-kotlin`.
+- Clone this project using `git clone https://github.com/GrowlyX/on-bot-typescript`.
 - **Editing frontend:** 
   - Start a development environment using: 
     - `npm run dev`
