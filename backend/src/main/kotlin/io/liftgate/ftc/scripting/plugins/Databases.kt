@@ -5,34 +5,22 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import io.liftgate.ftc.scripting.development
 import io.liftgate.ftc.scripting.scripting.Script
 import io.liftgate.ftc.scripting.scripting.ScriptService
-import org.jetbrains.exposed.sql.Database
+import java.io.File
 
 var scriptService: ScriptService? = null
 
-fun createScriptService(location: String = "./scripts"): ScriptService
+fun createScriptService(
+    location: File = File("scripts.json")
+): ScriptService
 {
     if (scriptService != null)
     {
         return scriptService!!
     }
 
-    // a default h2 database
-    val url = "jdbc:h2:file:$location"
-    val devUrl = "jdbc:h2:mem:myDb"
-
-    val database = Database.connect(
-        url = "${
-            if (development) devUrl else url
-        };DB_CLOSE_DELAY=-1",
-        user = "root",
-        driver = "org.h2.Driver",
-        password = ""
-    )
-
-    return ScriptService(database)
+    return ScriptService(location)
         .apply {
             scriptService = this
         }
@@ -95,28 +83,13 @@ fun Application.configureDatabases()
                 }
 
             data class ScriptCreated(
-                val id: Int,
                 val creationDate: Long
             )
 
             call.respond(
                 HttpStatusCode.Created,
-                ScriptCreated(id.value, script.lastEdited)
+                ScriptCreated(script.lastEdited)
             )
-        }
-
-        get("/api/scripts/find/{id}") {
-            val id = call.parameters["id"]?.toInt()
-                ?: return@get call.respond(
-                    mapOf("error" to "Script id parameter is not an integer")
-                )
-
-            val script = scriptService.read(id)
-                ?: return@get call.respond(
-                    mapOf("error" to "Script $id does not exist in the database")
-                )
-
-            call.respond(script)
         }
 
         post("/api/scripts/update-content") {
@@ -134,18 +107,6 @@ fun Application.configureDatabases()
             scriptService.update(script)
             call.respond(mapOf(
                 "lastEdited" to script.lastEdited
-            ))
-        }
-
-        delete("/api/scripts/delete/{id}") {
-            val id = call.parameters["id"]?.toInt()
-                ?: return@delete call.respond(
-                    mapOf("error" to "Script id parameter is not an integer")
-                )
-
-            scriptService.delete(id)
-            call.respond(HttpStatusCode.OK, mapOf(
-                "lastEdited" to ""
             ))
         }
 

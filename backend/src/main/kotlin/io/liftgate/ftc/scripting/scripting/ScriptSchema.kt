@@ -1,14 +1,10 @@
 package io.liftgate.ftc.scripting.scripting
 
+import com.google.gson.GsonBuilder
+import com.google.gson.LongSerializationPolicy
 import io.liftgate.ftc.scripting.plugins.scriptService
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
-import org.jetbrains.exposed.dao.id.EntityID
-import org.jetbrains.exposed.dao.id.IntIdTable
-import org.jetbrains.exposed.sql.*
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
-import org.jetbrains.exposed.sql.transactions.transaction
+import java.io.File
 import java.util.concurrent.CompletableFuture
 import javax.script.Bindings
 import javax.script.ScriptContext
@@ -69,7 +65,6 @@ data class Script(
 )
 {
     inline fun run(
-        packageImports: List<String>,
         vararg context: Pair<String, Any>,
         failure: (Throwable) -> Unit
     )
@@ -97,85 +92,68 @@ data class Script(
     }
 }
 
-class ScriptService(database: Database)
-{
-    object Scripts : IntIdTable()
-    {
-        val fileName = varchar("name", length = 45)
-        val fileContent = text("file_content", eagerLoading = true)
+data class ScriptsContainer(
+    val scripts: MutableList<Script> = mutableListOf()
+)
 
-        val lastEdited = long("last_edited")
-    }
+private val gson = GsonBuilder()
+    .setLongSerializationPolicy(LongSerializationPolicy.STRING)
+    .setPrettyPrinting()
+    .serializeNulls()
+    .create()
+
+class ScriptService(private val store: File)
+{
+    private val model = ScriptsContainer()
 
     init
     {
-        transaction(database) {
-            SchemaUtils.create(Scripts)
+        if (!store.exists())
+        {
+            store.createNewFile()
+            store.writeText(
+                gson.toJson(model)
+            )
         }
-    }
 
-    suspend fun <T> asyncTransaction(block: suspend () -> T): T =
-        newSuspendedTransaction(Dispatchers.IO) { block() }
-
-    suspend fun create(user: Script): EntityID<Int> = asyncTransaction {
-        Scripts.insert {
-            it[fileName] = user.fileName
-            it[fileContent] = user.fileContent
-            it[lastEdited] = user.lastEdited
-        }[Scripts.id]
-    }
-
-    private fun Query.mapToScript() = map {
-        Script(
-            it[Scripts.fileName],
-            it[Scripts.fileContent],
-            it[Scripts.lastEdited]
+        model.scripts.addAll(
+            gson
+                .fromJson(
+                    store.readText(),
+                    ScriptsContainer::class.java
+                )
+                .scripts
         )
     }
 
-    suspend fun readAll() = asyncTransaction {
-        Scripts.selectAll()
-            .mapToScript()
-            .toList()
+    private fun save()
+    {
+        store.writeText(
+            gson.toJson(model)
+        )
     }
 
-    suspend fun read(id: Int) = read { Scripts.id eq id }
-    suspend fun read(name: String) = read { Scripts.fileName eq name }
-
-    suspend fun read(selection: SqlExpressionBuilder.() -> Op<Boolean>): Script?
-    {
-        return asyncTransaction {
-            Scripts
-                .select(selection)
-                .mapToScript()
-                .singleOrNull()
-        }
+    fun create(script: Script) = with(model) {
+        scripts.add(script)
+        save()
     }
 
-    suspend fun update(script: Script)
-    {
-        asyncTransaction {
-            Scripts.update({
-                Scripts.fileName eq script.fileName
-            }) {
-                it[fileName] = script.fileName
-                it[fileContent] = script.fileContent
-                it[lastEdited] = script.lastEdited
-            }
-        }
+    fun readAll() = with(model) {
+        scripts.toList()
     }
 
-    suspend fun delete(name: String)
-    {
-        asyncTransaction {
-            Scripts.deleteWhere { fileName eq name }
-        }
+    fun read(name: String) = with(model) {
+        scripts.firstOrNull { it.fileName == name }
     }
 
-    suspend fun delete(id: Int)
-    {
-        asyncTransaction {
-            Scripts.deleteWhere { Scripts.id.eq(id) }
-        }
+    fun update(script: Script) = with(model) {
+        scripts.removeIf { it.fileName == script.fileName }
+        scripts.add(script)
+        save()
+    }
+
+    fun delete(name: String) = with(model) {
+        scripts.removeIf { it.fileName == name }
+        save()
     }
 }

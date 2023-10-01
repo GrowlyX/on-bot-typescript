@@ -26,15 +26,6 @@ abstract class ProdLinearOpMode : LinearOpMode(), TSScript
         ScriptEngineService.initializeEngine()
     }
 
-    @Deprecated("Marked as Experimental")
-    open fun packageImports() = emptyList<String>()
-
-    @Deprecated("Marked as Experimental")
-    private fun defaultPackageImports() = listOf(
-        "com.qualcomm.robotcore",
-        "org.firstinspires.ftc.robotcore"
-    )
-
     private fun defaultEnvironmentalVariables() = listOf(
         "telemetry" to telemetry,
         "hardwareMap" to hardwareMap,
@@ -88,10 +79,6 @@ abstract class ProdLinearOpMode : LinearOpMode(), TSScript
         internal.localRunnerThread = thread {
             runBlocking {
                 script.run(
-                    listOf(
-                        *defaultPackageImports().toTypedArray(),
-                        *packageImports().toTypedArray()
-                    ),
                     *defaultEnvironmentalVariables().toTypedArray(),
                     *impliedVariables
                         .map { it.name to it.instance }
