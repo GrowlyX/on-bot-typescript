@@ -1,4 +1,4 @@
-<img src="https://github.com/GrowlyX/ftc-scripting/blob/master/frontend/static/logo-v2.png" align="center">
+<img src="https://github.com/GrowlyX/ftc-scripting/blob/master/frontend/static/OBT.png" align="center">
 
 # OnBot TypeScript (OBT)
 Rapidly edit, test, and run OpModes through the use of TypeScript scripts.
