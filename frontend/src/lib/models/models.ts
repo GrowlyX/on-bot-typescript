@@ -8,7 +8,7 @@ export type CreateScript = {
 }
 
 export type CreateScriptResponse = {
-    id: number
+    creationDate: number
 }
 
 export type ScriptGenericResponse = {

@@ -81,7 +81,6 @@ fun Application.configureDatabases()
             )
 
             call.respond(
-                HttpStatusCode.Created,
                 ScriptCreated(script.lastEdited)
             )
         }

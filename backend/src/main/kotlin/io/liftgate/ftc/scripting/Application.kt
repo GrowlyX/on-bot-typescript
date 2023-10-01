@@ -3,8 +3,8 @@ package io.liftgate.ftc.scripting
 import com.google.gson.LongSerializationPolicy
 import io.ktor.serialization.gson.*
 import io.ktor.server.application.*
+import io.ktor.server.cio.*
 import io.ktor.server.engine.*
-import io.ktor.server.netty.*
 import io.ktor.server.plugins.contentnegotiation.*
 import io.liftgate.ftc.scripting.plugins.configureRouting
 import io.liftgate.ftc.scripting.plugins.configureDatabases
@@ -18,7 +18,7 @@ fun main() = main("0.0.0.0", 6969)
 
 fun main(address: String, port: Int)
 {
-    embeddedServer(Netty, port = port, host = address, module = Application::module)
+    embeddedServer(CIO, port = port, host = address, module = Application::module)
         .start(wait = true)
 }
 
