@@ -31,6 +31,7 @@ fun createScriptService(location: String = "./scripts"): ScriptService
         driver = "org.h2.Driver",
         password = ""
     )
+
     return ScriptService(database)
         .apply {
             scriptService = this
@@ -85,7 +86,13 @@ fun Application.configureDatabases()
                 """.trimIndent()
             )
 
-            val id = scriptService.create(script)
+            val id = runCatching { scriptService.create(script) }
+                .getOrElse {
+                    call.respond(
+                        mapOf("error" to "Failed to create script: ${it.message}")
+                    )
+                    return@post
+                }
 
             data class ScriptCreated(
                 val id: Int,
