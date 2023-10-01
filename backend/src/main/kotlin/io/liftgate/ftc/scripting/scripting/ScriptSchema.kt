@@ -133,27 +133,35 @@ class ScriptService(private val store: File)
         )
     }
 
-    fun create(script: Script) = with(model) {
+    private fun <T> synchronizedModel(block: ScriptsContainer.() -> T) =
+        synchronized(model) {
+            block(model)
+        }
+
+    private fun <T> synchronizedModelSaving(block: ScriptsContainer.() -> T) =
+        synchronized(model) {
+            block(model)
+            save()
+        }
+
+    fun create(script: Script) = synchronizedModelSaving {
         scripts.add(script)
-        save()
     }
 
-    fun readAll() = with(model) {
+    fun readAll() = synchronizedModel {
         scripts.toList()
     }
 
-    fun read(name: String) = with(model) {
+    fun read(name: String) = synchronizedModel {
         scripts.firstOrNull { it.fileName == name }
     }
 
-    fun update(script: Script) = with(model) {
+    fun update(script: Script) = synchronizedModelSaving {
         scripts.removeIf { it.fileName == script.fileName }
         scripts.add(script)
-        save()
     }
 
-    fun delete(name: String) = with(model) {
+    fun delete(name: String) = synchronizedModelSaving {
         scripts.removeIf { it.fileName == name }
-        save()
     }
 }
