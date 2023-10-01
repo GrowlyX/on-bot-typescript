@@ -8,7 +8,7 @@ import java.util.List;
  * @author GrowlyX
  * @since 8/20/2023
  */
-public interface KotlinScript {
+public interface TSScript {
     /**
      * Get the script file name.
      */

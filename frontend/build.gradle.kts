@@ -3,9 +3,7 @@ import java.nio.file.Files
 import kotlin.io.path.Path
 
 plugins {
-    // TODO: compat issues with Android?
     id("org.siouan.frontend-jdk11") version "7.0.0"
-    java
 }
 
 buildscript {
@@ -25,7 +23,7 @@ tasks {
     jar {
         dependsOn("assembleFrontend")
         from("$projectDir/dist")
-        into("static")
+        into("assets/obtstatic")
     }
 }
 

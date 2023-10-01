@@ -1,7 +1,7 @@
 package io.liftgate.ftc.scripting.opmode
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
-import io.liftgate.ftc.scripting.KotlinScript
+import io.liftgate.ftc.scripting.TSScript
 import io.liftgate.ftc.scripting.plugins.createScriptService
 import io.liftgate.ftc.scripting.plugins.scriptService
 import io.liftgate.ftc.scripting.scripting.ScriptEngineService
@@ -12,7 +12,7 @@ import kotlin.concurrent.thread
  * @author GrowlyX
  * @since 8/20/2023
  */
-abstract class ProdLinearOpMode : LinearOpMode(), KotlinScript
+abstract class ProdLinearOpMode : LinearOpMode(), TSScript
 {
     init
     {
@@ -54,7 +54,7 @@ abstract class ProdLinearOpMode : LinearOpMode(), KotlinScript
     override fun runOpMode()
     {
         val existing = scriptService != null
-        val dbService = createScriptService()
+        val dbService = createScriptService(scriptsFile)
         telemetry.isAutoClear = false
 
         telemetry.addLine(
@@ -64,7 +64,7 @@ abstract class ProdLinearOpMode : LinearOpMode(), KotlinScript
         )
         telemetry.update()
 
-        check(getScriptName() != "Shared.kts") {
+        check(getScriptName() != "Shared.ts") {
             "Shared script cannot be executed by an OpMode"
         }
 

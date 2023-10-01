@@ -87,7 +87,7 @@
 					],
 					"cookie": [],
 					"responseTime": null,
-					"body": "[\n    {\n        \"fileName\": \"TestTeleOp.kts\",\n        \"fileContent\": \"// Write your code here!\",\n        \"lastEdited\": \"2023-08-23T18:37:17.034953700\"\n    }\n]"
+					"body": "[\n    {\n        \"fileName\": \"TestTeleOp.ts\",\n        \"fileContent\": \"// Write your code here!\",\n        \"lastEdited\": \"2023-08-23T18:37:17.034953700\"\n    }\n]"
 				}
 			]
 		},
@@ -102,7 +102,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"fileName\": \"TestTeleOp.kts\"\r\n}",
+					"raw": "{\r\n    \"fileName\": \"TestTeleOp.ts\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -120,7 +120,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"fileName\": \"TestTeleOp.kts\"\r\n}",
+							"raw": "{\r\n    \"fileName\": \"TestTeleOp.ts\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -191,7 +191,7 @@
 					],
 					"cookie": [],
 					"responseTime": null,
-					"body": "{\n    \"fileName\": \"TestTeleOp.kts\",\n    \"fileContent\": \"// Write your code here!\",\n    \"lastEdited\": \"2023-08-23T18:37:17.034953700\"\n}"
+					"body": "{\n    \"fileName\": \"TestTeleOp.ts\",\n    \"fileContent\": \"// Write your code here!\",\n    \"lastEdited\": \"2023-08-23T18:37:17.034953700\"\n}"
 				}
 			]
 		}

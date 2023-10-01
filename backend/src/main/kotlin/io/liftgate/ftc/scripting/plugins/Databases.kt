@@ -12,7 +12,7 @@ import org.jetbrains.exposed.sql.Database
 
 var scriptService: ScriptService? = null
 
-fun createScriptService(): ScriptService
+fun createScriptService(location: String = "./scripts"): ScriptService
 {
     if (scriptService != null)
     {
@@ -20,7 +20,7 @@ fun createScriptService(): ScriptService
     }
 
     // a default h2 database
-    val url = "jdbc:h2:file:./scripts"
+    val url = "jdbc:h2:file:$location"
     val devUrl = "jdbc:h2:mem:myDb"
 
     val database = Database.connect(
@@ -61,18 +61,18 @@ fun Application.configureDatabases()
                 return@post
             }
 
-            if (!scriptCreation.fileName.endsWith(".kts"))
+            if (!scriptCreation.fileName.endsWith(".ts"))
             {
                 call.respond(
-                    mapOf("error" to "Script name must end with the .kts extension!")
+                    mapOf("error" to "Script name must end with the .ts extension!")
                 )
                 return@post
             }
 
-            if (scriptCreation.fileName == ".kts")
+            if (scriptCreation.fileName == ".ts")
             {
                 call.respond(
-                    mapOf("error" to "Script name cannot be .kts!")
+                    mapOf("error" to "Script name cannot be .ts!")
                 )
                 return@post
             }

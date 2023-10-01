@@ -3,17 +3,13 @@ package io.liftgate.ftc.scripting.scripting
 import io.liftgate.ftc.scripting.plugins.scriptService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
+import org.jetbrains.exposed.dao.id.EntityID
+import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.transactions.transaction
-import org.reflections.Reflections
-import org.reflections.scanners.Scanners
-import org.jetbrains.exposed.dao.id.EntityID
-import org.jetbrains.exposed.dao.id.IntIdTable
-import org.reflections.util.ConfigurationBuilder
 import java.util.concurrent.CompletableFuture
-import java.util.concurrent.ConcurrentHashMap
 import javax.script.Bindings
 import javax.script.ScriptContext
 import javax.script.ScriptEngine
@@ -22,12 +18,12 @@ import javax.script.ScriptEngineManager
 object ScriptEngineService
 {
     var lock = Any()
-    var ktsEngine: ScriptEngine? = null
+    var tsEngine: ScriptEngine? = null
 
     fun initializeEngine(): CompletableFuture<Void>
     {
         return synchronized(lock) {
-            if (ktsEngine != null)
+            if (tsEngine != null)
             {
                 return@synchronized CompletableFuture
                     .completedFuture(null)
@@ -35,17 +31,12 @@ object ScriptEngineService
 
             CompletableFuture
                 .runAsync {
-                    System.setProperty(
-                        "kotlin.jsr223.experimental.resolve.dependencies.from.context.classloader",
-                        true.toString()
-                    )
-
                     val engine = ScriptEngineManager()
-                        .getEngineByExtension("kts")
+                        .getEngineByExtension("js")
 
                     // Seems to take around 5 seconds for initial start?
-                    engine!!.eval("println(\"test\")")
-                    ktsEngine = engine
+                    engine!!.eval("print(\"test\")")
+                    tsEngine = engine
                 }
         }
     }
@@ -55,23 +46,21 @@ object ScriptEngineService
     )
     {
         synchronized(lock) {
-            checkNotNull(ktsEngine) {
-                "KTS scripting engine has not yet been configured!"
+            checkNotNull(tsEngine) {
+                "TS scripting engine has not yet been configured!"
             }
 
-            val bindings = ktsEngine!!
+            val bindings = tsEngine!!
                 .createBindings()
 
-            ktsEngine!!.setBindings(
+            tsEngine!!.setBindings(
                 bindings,
                 ScriptContext.ENGINE_SCOPE
             )
-            block(ktsEngine!!, bindings)
+            block(tsEngine!!, bindings)
         }
     }
 }
-
-val reflectionsMappings = ConcurrentHashMap<String, Reflections>()
 
 data class Script(
     val fileName: String,
@@ -89,25 +78,10 @@ data class Script(
             var script = ""
             bindings.putAll(context)
 
-            packageImports.forEach {
-                script += reflectionsMappings
-                    .computeIfAbsent(it) { pkg ->
-                        Reflections(
-                            ConfigurationBuilder()
-                                .addScanners(Scanners.SubTypes)
-                                .forPackages(pkg)
-                        )
-                    }
-                    .getAll(Scanners.SubTypes)
-                    .joinToString("\n") { type ->
-                        "import $type"
-                    }
-            }
-
             // Apply shared script onto this script instance
             runBlocking {
                 scriptService
-                    ?.read("Shared.kts")
+                    ?.read("Shared.ts")
                     ?.apply {
                         script += fileContent
                     }

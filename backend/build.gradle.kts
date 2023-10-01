@@ -10,8 +10,6 @@ val exposed_version: String by project
 val h2_version: String by project
 
 dependencies {
-    compileOnly("org.reflections:reflections:0.10.2")
-    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
     implementation("io.ktor:ktor-server-core-jvm")
     implementation("io.ktor:ktor-server-host-common-jvm")
     implementation("io.ktor:ktor-server-content-negotiation-jvm")
