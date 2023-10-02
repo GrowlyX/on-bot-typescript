@@ -1,9 +1,12 @@
 package io.liftgate.ftc.scripting.scripting
 
-import com.google.gson.GsonBuilder
-import com.google.gson.LongSerializationPolicy
+import io.liftgate.ftc.scripting.json
 import io.liftgate.ftc.scripting.plugins.scriptService
 import kotlinx.coroutines.runBlocking
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.decodeFromStream
 import java.io.File
 import java.util.concurrent.CompletableFuture
 import javax.script.Bindings
@@ -58,6 +61,7 @@ object ScriptEngineService
     }
 }
 
+@Serializable
 data class Script(
     val fileName: String,
     var fileContent: String,
@@ -92,16 +96,12 @@ data class Script(
     }
 }
 
+@Serializable
 data class ScriptsContainer(
     val scripts: MutableList<Script> = mutableListOf()
 )
 
-private val gson = GsonBuilder()
-    .setLongSerializationPolicy(LongSerializationPolicy.STRING)
-    .setPrettyPrinting()
-    .serializeNulls()
-    .create()
-
+@OptIn(ExperimentalSerializationApi::class)
 class ScriptService(private val store: File)
 {
     private val model = ScriptsContainer()
@@ -112,24 +112,21 @@ class ScriptService(private val store: File)
         {
             store.createNewFile()
             store.writeText(
-                gson.toJson(model)
+                json.encodeToString(model)
             )
         }
 
-        model.scripts.addAll(
-            gson
-                .fromJson(
-                    store.readText(),
-                    ScriptsContainer::class.java
-                )
-                .scripts
-        )
+        val container = json
+            .decodeFromStream<ScriptsContainer>(
+                store.inputStream()
+            )
+        model.scripts.addAll(container.scripts)
     }
 
     private fun save()
     {
         store.writeText(
-            gson.toJson(model)
+            json.encodeToString(model)
         )
     }
 
