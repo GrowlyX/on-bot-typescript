@@ -1,25 +1,7 @@
 # Configure
 
 ## Configure Dependency
-Current Version: `0.1.2-SNAPSHOT`
-
-### Maven:
-```xml
-<repositories>
-    <repository>
-        <id>artifactory.scala.gg</id>
-        <url>https://artifactory.scala.gg/artifactory/opensource</url>
-    </repository>
-</repositories>
-
-<dependencies>
-    <dependency>
-        <groupId>io.liftgate.ftc.scripting</groupId>
-        <artifactId>[module]</artifactId> 
-        <version>[version]</version>
-    </dependency>
-</dependencies>
-```
+Current Version: `0.2.4-SNAPSHOT`
 
 ### Gradle:
 Groovy:
@@ -42,6 +24,16 @@ repositories {
 
 dependencies {
     implementation("io.liftgate.ftc.scripting:[module]:[version]")
+}
+```
+
+**You must also add the following entries to your android.packagingOptions closure in your TeamCode gradle script!**
+```groovy
+android {
+    packagingOptions {
+        ...
+        pickFirst "assets/obtstatic/**"
+    }
 }
 ```
 
@@ -87,7 +79,7 @@ public class DevScriptedTeleOp extends DevLinearOpMode {
          * while (!isStopRequested)
          * {
          *      // this will compile even though we didn't explicitly define
-         *      leftMotor.power = 1000
+         *      leftMotor.setPower(1000)
          * }
          * </pre>
          */
@@ -180,12 +172,12 @@ Shared.ts
 The shared script is applied to every other script in the database. For example:
 ```javascript
 // Shared script:
-var gfg = function() {  
-    print("test");  
-};   
+function add(a: number, b: number): number {
+    return a + b;
+}
 
 // DevTeleOp.ts
-gfg(); // You're able to use the System class as it was automatically-imported by the Shared script.
+print(add(1, 2)) // You're able to use the add function as DevTeleOp inherits the Shared script.
 ```
 
 The Shared script must be in the root directory on your web editor, and must be named `Shared.ts`.
