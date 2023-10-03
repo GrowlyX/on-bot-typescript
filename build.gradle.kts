@@ -21,6 +21,8 @@ allprojects {
     repositories {
         mavenLocal()
         mavenCentral()
+
+        maven(url = "https://artifactory.scala.gg/artifactory/opensource")
     }
 }
 
