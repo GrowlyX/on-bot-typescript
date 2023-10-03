@@ -85,7 +85,7 @@
             if (script != null) {
                 const model = monaco.editor.createModel(
                     script.fileContent,
-                    "kotlin",
+                    "typescript",
                     undefined
                 );
                 editor.setModel(model)

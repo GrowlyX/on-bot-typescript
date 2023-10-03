@@ -29,8 +29,8 @@
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <li>
     {#if currentlyViewing}
-        <a class="icon octicon-file kotlin-icon hover:text-white">{name}</a>
+        <a class="icon octicon-file ts-icon hover:text-white">{name}</a>
     {:else}
-        <a class="icon octicon-file kotlin-icon hover:text-white" on:click|preventDefault={handleClick}>{name}</a>
+        <a class="icon octicon-file ts-icon hover:text-white" on:click|preventDefault={handleClick}>{name}</a>
     {/if}
 </li>

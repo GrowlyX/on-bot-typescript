@@ -25,6 +25,7 @@ fun main(address: String, port: Int)
 val json = Json {
     prettyPrint = true
     isLenient = true
+    ignoreUnknownKeys = true
 }
 
 fun Application.module()

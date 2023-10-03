@@ -7,6 +7,7 @@ import io.liftgate.ftc.scripting.plugins.scriptService
 import io.liftgate.ftc.scripting.scripting.ScriptEngineService
 import kotlinx.coroutines.runBlocking
 import kotlin.concurrent.thread
+import kotlin.system.measureTimeMillis
 
 /**
  * @author GrowlyX
@@ -14,18 +15,6 @@ import kotlin.concurrent.thread
  */
 abstract class ProdLinearOpMode : LinearOpMode(), TSScript
 {
-    init
-    {
-        /**
-         * Initializes the ScriptEngine which may take up to 10 seconds to properly
-         * boot. This is done in the background, so there won't be any lag with the robot itself.
-         *
-         * ScriptEngineService is properly synchronized, so we won't get any issues with sub-implementations
-         * of ProdLinearOpMode re-initializing the engine.
-         */
-        ScriptEngineService.initializeEngine()
-    }
-
     private fun defaultEnvironmentalVariables() = listOf(
         "telemetry" to telemetry,
         "hardwareMap" to hardwareMap,
@@ -49,10 +38,15 @@ abstract class ProdLinearOpMode : LinearOpMode(), TSScript
         telemetry.isAutoClear = false
 
         telemetry.addLine(
-            "Initialized the H2 script database${
+            "Initialized the script database${
                 if (existing) " using existing resources from the script web editor" else ""
             }"
         )
+        telemetry.update()
+
+        telemetry.addLine("Initialized the TypeScript scripting engine in ${measureTimeMillis {
+            ScriptEngineService.initializeEngine().join()
+        }}ms")
         telemetry.update()
 
         check(getScriptName() != "Shared.ts") {
