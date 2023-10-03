@@ -18,7 +18,7 @@ The use of on-bot-typescript eliminates all the delay layers listed above and is
 - `Shared Scripts`: You can provide shared scripts that are automatically inherited by any OpMode scripts. Variables, methods, and constants can be declared in these shared scripts.
 
 ## Why should you not use this?
-If your team is not comfortable writing TypeScript code for OpModes, don't use this.
+If your team is not comfortable writing TypeScript/JavaScript code, don't use this. Additionally, using OBT presents a unique challenge: no tab completion. Since we have a fairly barebones web editor (monaco editor), nice IDE features such as tab completion, a lot of the major syntax highlighting features, etc. are not present.
 
 ## Alternatives
 - [Fast Load](https://github.com/MatthewOates36/fast-load-plugin/): Allows you to decrease Android Studio ADB reinstall speeds by 80%.
