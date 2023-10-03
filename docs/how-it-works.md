@@ -7,7 +7,7 @@ Modules:
 Since on-bot-typescript uses Jsr223 (javax.script), Java's scripting engine, we are limited to only a few languages when writing OpMode scripts. We chose JavaScript, and then TypeScript as another layer to make things nicer for developers. TypeScript compiler files are loaded in and the files are compiled into raw JavaScript. These files are then processed by Java's built-in Nashorn JS engine.
 
 ## Why should you use this?
-Rebuilding your RobotController project can take anywhere from 15s-2m to fully complete. There are multiple "layers" of delays that are applied during the rebuild process (from longest to shortest in terms of execution time, only significant delays listed):
+Rebuilding your RobotController project can take anywhere from 15s-2m to fully complete. There are multiple "layers" of delays that are applied during the rebuild process (from longest to shortest in terms of execution time, only significant delays are listed):
 1. Android Studio, Gradle, TeamCode rebuild
 2. Android Studio, wireless/wired ADB, app stop -> app reinstall -> app start
 3. *(if applicable)* OnBot Java, Gradle, TeamCode rebuild
@@ -26,8 +26,7 @@ If your team is not comfortable writing TypeScript code for OpModes, don't use t
   - Upsides: No need to learn a new language. Better IDE support (tab completion, etc).
 
 ## Benchmarks
-Cold starts (web server load + script engine load):
-- TODO
-
-Hot-reloads/saves:
-- TODO
+Cold starts (web server load + script engine load): `~6 seconds`
+- `Web Server`: Loaded asynchronously in around 2 seconds
+- `Script Engine`: Blocks the OpMode thread until fully ready (if not already initialized). Takes around 6 seconds.
+Hot-reloads/saves: `90ms` 
