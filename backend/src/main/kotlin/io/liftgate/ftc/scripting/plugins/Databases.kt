@@ -5,6 +5,7 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import io.liftgate.ftc.scripting.scriptUpdateHook
 import io.liftgate.ftc.scripting.scripting.Script
 import io.liftgate.ftc.scripting.scripting.ScriptService
 import kotlinx.serialization.Serializable
@@ -112,6 +113,7 @@ fun Application.configureDatabases()
             script.fileContent = scriptContent.fileContent
             script.lastEdited = System.currentTimeMillis()
 
+            scriptUpdateHook?.invoke(script)
             scriptService.update(script)
 
             call.respond(
