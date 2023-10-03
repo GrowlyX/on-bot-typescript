@@ -5,7 +5,7 @@ Modules:
 - `frontend`: Contains any code related to the actual code editor.
 
 ## Why should you use this?
-Rebuilding your RobotController project can take anywhere from 15s-2m to fully complete. There are multiple "layers" of delays that are applied during the rebuild process (from longest to shortest in terms of execution time, only significant delays listed):
+Rebuilding your RobotController project can take anywhere from 15s-2m to fully complete. There are multiple "layers" of delays that are applied during the rebuild process (from longest to shortest in terms of execution time, only significant delays are listed):
 1. Android Studio, Gradle, TeamCode rebuild
 2. Android Studio, wireless/wired ADB, app stop -> app reinstall -> app start
 3. *(if applicable)* OnBot Java, Gradle, TeamCode rebuild
@@ -23,8 +23,7 @@ Since on-bot-typescript uses Jsr223 (javax.script), Java's scripting engine, we 
   - Downsides: Requires a full reinstall once done with fast-load development. Can be inconsistent at times. (?)
 
 ## Benchmarks
-Cold starts (web server load + script engine load):
-- TODO
-
-Hot-reloads/saves:
-- TODO
+Cold starts (web server load + script engine load): `~6 seconds`
+- `Web Server`: Loaded asynchronously in around 2 seconds
+- `Script Engine`: Blocks the OpMode thread until fully ready (if not already initialized). Takes around 6 seconds.
+Hot-reloads/saves: `90ms` 
