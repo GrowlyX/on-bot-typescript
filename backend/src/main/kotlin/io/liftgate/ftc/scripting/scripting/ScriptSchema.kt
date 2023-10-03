@@ -1,6 +1,5 @@
 package io.liftgate.ftc.scripting.scripting
 
-import com.sun.script.javascript.RhinoScriptEngine
 import io.liftgate.ftc.scripting.json
 import io.liftgate.ftc.scripting.plugins.scriptService
 import kotlinx.coroutines.runBlocking
@@ -32,8 +31,11 @@ object ScriptEngineService
             CompletableFuture
                 .runAsync {
                     val engine = ScriptEngineManager()
-                        .engineFactories.first()
-                        .scriptEngine
+                        .engineFactories
+                        .firstOrNull {
+                            it.engineName == "TypeScript"
+                        }
+                        ?.scriptEngine
 
                     // Seems to take around 5 seconds for initial start?
                     engine!!.eval("print(\"test\")")

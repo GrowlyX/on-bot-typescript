@@ -1,6 +1,5 @@
 package io.liftgate.ftc.scripting;
 
-import kotlin.Pair;
 import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -8,8 +7,6 @@ import org.jetbrains.annotations.Nullable;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author GrowlyX
@@ -43,23 +40,6 @@ public enum AndroidAssetsReflections {
     public static String[] list(@NotNull final String path) {
         try {
             return (String[]) ASSET_MANAGER_LIST.invoke(ASSET_MANAGER, path);
-        } catch (IllegalAccessException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @NotNull
-    public static List<Pair<String, InputStream>> openAll(@NotNull final String path) {
-        try {
-            final String[] files = (String[]) ASSET_MANAGER_LIST
-                    .invoke(ASSET_MANAGER, path);
-            final List<Pair<String, InputStream>> streams = new ArrayList<>(files.length);
-
-            for (final String file : files) {
-                streams.add(new Pair<>(file, open(file)));
-            }
-
-            return streams;
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }

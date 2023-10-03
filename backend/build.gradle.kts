@@ -7,6 +7,7 @@ val logback_version: String by project
 
 dependencies {
     implementation("io.apisense:rhino-android:1.0")
+    implementation("io.liftgate.robotics.ts4j:ts4j-modern:1.0-SNAPSHOT")
 
     implementation("io.ktor:ktor-server-core-jvm")
     implementation("io.ktor:ktor-server-host-common-jvm")
