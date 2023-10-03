@@ -4,7 +4,7 @@ Modules:
 - `backend`: Contains any code related to the web server powering the code editor.
 - `frontend`: Contains any code related to the actual code editor.
 
-Since on-bot-typescript uses Jsr223 (javax.script), Java's scripting engine, we are limited to only a few languages when writing OpMode scripts. We chose JavaScript, and then TypeScript as another layer to make things nicer for developers. TypeScript compiler files are loaded in and the files are compiled into raw JavaScript. These files are then processed by Java's built-in Nashorn JS engine.
+OBT uses the Nashorn ScriptEngine (Jsr223) implementation to dynamically compile JavaScript code written as "Scripts" through the web editor. Since this recompilation process is so quick, we're able to provide quick hot-reloading and a consistent, stable, and robust programming environment for FTC teams. On top of JavaScript, we include the TypeScript compiler (using es3) to allow teams to write their code in TypeScript and take advantage of its features (object-oriented, generics, etc). Having TypeScript keeps the code as close to JVM languages in terms of syntax and design as possible.
 
 ## Why should you use this?
 Rebuilding your RobotController project can take anywhere from 15s-2m to fully complete. There are multiple "layers" of delays that are applied during the rebuild process (from longest to shortest in terms of execution time, only significant delays are listed):
