@@ -11,9 +11,8 @@ abstract class DevLinearOpMode : ProdLinearOpMode()
 {
     override fun runOpMode()
     {
-        // TODO: Since the robot will stay active, we could probably do an initial configuration of
-        //  application and keep it running while the control hub app is running. Needs testing though.
-        //  (the behavior of the code below is what is described above)
+        internal.developmentMode = true
+
         if (!scriptApp.isRunning())
         {
             scriptApp.startApplication()
@@ -25,6 +24,7 @@ abstract class DevLinearOpMode : ProdLinearOpMode()
                 return@context
             }
 
+            telemetry.clearAll()
             // used for hot reloading of scripts
             telemetry.addLine(
                 "Received update for script ${it.fileName} (last edited ${it.lastEdited})"

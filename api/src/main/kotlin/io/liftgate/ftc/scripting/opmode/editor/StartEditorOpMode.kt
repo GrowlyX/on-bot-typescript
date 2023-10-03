@@ -13,6 +13,8 @@ abstract class StartEditorOpMode : LinearOpMode()
 {
     override fun runOpMode()
     {
+        waitForStart()
+
         if (scriptApp.isRunning())
         {
             throw IllegalStateException(

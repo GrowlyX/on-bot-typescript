@@ -2,6 +2,7 @@ package io.liftgate.ftc.scripting.opmode
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import io.liftgate.ftc.scripting.TSScript
+import io.liftgate.ftc.scripting.opmode.editor.scriptApp
 import io.liftgate.ftc.scripting.plugins.createScriptService
 import io.liftgate.ftc.scripting.plugins.scriptService
 import io.liftgate.ftc.scripting.scripting.ScriptEngineService
@@ -27,12 +28,19 @@ abstract class ProdLinearOpMode : LinearOpMode(), TSScript
     {
         var localRunnerThread: Thread? = null
         var joinLocalRunner = true
+        var developmentMode = false
     }
 
     protected val internal = Internal()
 
     override fun runOpMode()
     {
+        if (!internal.developmentMode && scriptApp.isRunning())
+        {
+            telemetry.addLine("You cannot have the script app running during a production OpMode!")
+            return
+        }
+
         val existing = scriptService != null
         val dbService = createScriptService(scriptsFile)
         telemetry.isAutoClear = false
