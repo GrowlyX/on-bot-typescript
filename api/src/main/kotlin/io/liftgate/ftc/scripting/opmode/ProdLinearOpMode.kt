@@ -21,7 +21,8 @@ abstract class ProdLinearOpMode : LinearOpMode(), TSScript
         "hardwareMap" to hardwareMap,
         "gamepad1" to gamepad1,
         "gamepad2" to gamepad2,
-        "isStopRequested" to isStopRequested
+        "isStopRequested" to isStopRequested,
+        "opMode" to this
     )
 
     protected class Internal
