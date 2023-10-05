@@ -1,5 +1,6 @@
 package io.liftgate.ftc.scripting.scripting
 
+import com.xafero.ts4j.TypeScriptEngineFactory
 import io.liftgate.ftc.scripting.json
 import io.liftgate.ftc.scripting.plugins.scriptService
 import kotlinx.coroutines.runBlocking
@@ -30,15 +31,23 @@ object ScriptEngineService
 
             CompletableFuture
                 .runAsync {
+                    /*val nashorn = NashornScriptEngineFactory().scriptEngine
+                    val engine = TypeScriptEngine(
+                        TypeScriptEngineFactory(),
+                        nashorn,
+                        TypeScriptCompiler.create<TypeScriptEngine>(nashorn)
+                    )*/
+
                     val engine = ScriptEngineManager()
-                        .engineFactories
-                        .firstOrNull {
-                            it.engineName == "TypeScript"
+                        .apply {
+                            registerEngineExtension("ts", TypeScriptEngineFactory())
                         }
-                        ?.scriptEngine
+                        .getEngineByExtension("ts")
+
+                    println("Created engine ${engine.factory.engineName}.")
 
                     // Seems to take around 5 seconds for initial start?
-                    engine!!.eval("print(\"test\")")
+                    engine.eval("print(\"test\")")
                     tsEngine = engine
                 }
                 .exceptionally {

@@ -45,6 +45,35 @@ class AndroidScriptApplicationRunner : ScriptApplicationRunner()
         super.startApplication(address, port)
     }
 
+    private var tsAssetsMoved = false
+
+    fun moveTSAssets()
+    {
+        if (!tsAssetsMoved)
+        {
+            tsAssetsMoved = true
+        } else
+        {
+            return
+        }
+
+        val assets = File(
+            AppUtil.ROBOT_DATA_DIR,
+            "tsassets"
+        )
+
+        if (assets.exists())
+        {
+            assets.deleteRecursively()
+        }
+
+        assets.mkdirs()
+        copyAssetsToDataDir(
+            "com.xafero.ts4j",
+            assets.absolutePath.removeSuffix("/")
+        )
+    }
+
     private fun copyAssetsToDataDir(assetsPath: String, destinationPath: String)
     {
         val assetsList = AndroidAssetsReflections.list(assetsPath)

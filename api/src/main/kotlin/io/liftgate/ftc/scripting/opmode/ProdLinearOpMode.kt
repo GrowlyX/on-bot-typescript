@@ -53,6 +53,8 @@ abstract class ProdLinearOpMode : LinearOpMode(), TSScript
         )
         telemetry.update()
 
+        scriptApp.moveTSAssets()
+
         telemetry.addLine("Initialized the TypeScript scripting engine in ${measureTimeMillis {
             ScriptEngineService.initializeEngine().join()
         }}ms")
